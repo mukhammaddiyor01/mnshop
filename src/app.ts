@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import router from "./router";
+import routerAdmin from "./routerAdmin";
 
 /** 1-Entrance */
 const app = express();
@@ -18,6 +19,8 @@ app.set ("view", path.join(__dirname, "view"));
 app.set("view engine", "ejs");
 
 /** 4-Routers */
+
+app.use("/admin", routerAdmin); //BSSR: Backend server site rendering : EJS
 app.use("/", router);   //Middleware design pattern - Bu requestni router.ts ga jo'natadi
 
 

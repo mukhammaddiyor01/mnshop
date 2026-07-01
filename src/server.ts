@@ -16,6 +16,7 @@ import mongoose from "mongoose";
 import app from './app';
 
 mongoose
+    .set("strickQuery", false)
     .connect(process.env.MONGO_URL as string, {})
     .then((data) => {
         console.log("MongoDB is connected successfully");
