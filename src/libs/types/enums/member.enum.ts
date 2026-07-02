@@ -1,7 +1,7 @@
 export enum MemberType {
     BUYER = "BUYER",
     SELLER = "SELLER",
-    RESTAURANT = "RESTAURANT",
+    ADMIN = "ADMIN",
 }
 
 

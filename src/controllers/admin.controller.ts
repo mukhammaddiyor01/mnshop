@@ -3,8 +3,8 @@ import { T } from "../libs/types/common";
 import MemberService from '../models/Member.service';
 
 
-const restaurantController: T = {};
-restaurantController.goHome = (req: Request, res: Response) => {
+const admincontroller: T = {};
+admincontroller.goHome = (req: Request, res: Response) => {
     try {
         res.send("Home Page");
     } catch(err) {
@@ -12,7 +12,7 @@ restaurantController.goHome = (req: Request, res: Response) => {
     }
 };
 
-restaurantController.getLogin = (req: Request, res: Response) => {
+admincontroller.getLogin = (req: Request, res: Response) => {
     try {
         res.send("Login Page");
     } catch(err) {
@@ -20,7 +20,7 @@ restaurantController.getLogin = (req: Request, res: Response) => {
     }
 };
 
-restaurantController.getSignup = (req: Request, res: Response) => {
+admincontroller.getSignup = (req: Request, res: Response) => {
     try {
         res.send("Sign up Page");
     } catch(err) {
@@ -28,4 +28,4 @@ restaurantController.getSignup = (req: Request, res: Response) => {
     }
 };
 
-export default restaurantController;
+export default admincontroller;
