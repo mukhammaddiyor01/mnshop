@@ -6,6 +6,8 @@ import MemberService from '../models/Member.service';
 const admincontroller: T = {};
 admincontroller.goHome = (req: Request, res: Response) => {
     try {
+        console.log("goHome");
+
         res.send("Home Page");
     } catch(err) {
         console.log("Error, goHome:", err);
@@ -14,6 +16,8 @@ admincontroller.goHome = (req: Request, res: Response) => {
 
 admincontroller.getLogin = (req: Request, res: Response) => {
     try {
+        console.log("getLogin");
+
         res.send("Login Page");
     } catch(err) {
         console.log("Error, Login:", err);
@@ -22,6 +26,8 @@ admincontroller.getLogin = (req: Request, res: Response) => {
 
 admincontroller.getSignup = (req: Request, res: Response) => {
     try {
+        console.log("getSignup");
+
         res.send("Sign up Page");
     } catch(err) {
         console.log("Error, getSignUp:", err);
