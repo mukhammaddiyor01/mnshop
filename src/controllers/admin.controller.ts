@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
-import UserService from '../models/Member.service';
+import UserService from '../models/User.service';
 
 
 const admincontroller: T = {};

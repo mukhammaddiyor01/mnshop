@@ -1,7 +1,9 @@
 import express from "express";
 import path from "path";
+import morgan from "morgan";
 import router from "./router";
 import routerAdmin from "./routerAdmin";
+import { MORGAN_FORMAT } from "./libs/config";
 
 /** 1-Entrance */
 const app = express();
@@ -9,6 +11,7 @@ console.log("__dirname:", __dirname);
 app.use(express.static(path.join(__dirname, "public"))); // Public folderni ochiqlayapmiz
 app.use(express.urlencoded({extended: true})); // Traditional API
 app.use(express.json()); //Rest API
+app.use(morgan(MORGAN_FORMAT));
 
 /** 2-Sessions */
 
