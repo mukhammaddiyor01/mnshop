@@ -28,9 +28,27 @@ admincontroller.getSignup = (req: Request, res: Response) => {
     try {
         console.log("getSignup");
 
-        res.send("Sign up Page");
+        res.send("Sign Up Page");
     } catch(err) {
         console.log("Error, getSignUp:", err);
+    }
+};
+
+admincontroller.processLogin = (req: Request, res: Response) => {
+    try {
+        console.log("processLogin");
+        res.send("DONE");
+    } catch(err) {
+        console.log("Error, processLogin:", err)
+    }
+};
+
+admincontroller.processSignup = (req: Request, res: Response) => {
+    try {
+        console.log("processSignup");
+        res.send("DONE");
+    } catch(err) {
+        console.log("Error, processSignup:", err)
     }
 };
 

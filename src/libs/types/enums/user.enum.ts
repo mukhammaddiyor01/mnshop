@@ -1,11 +1,11 @@
-export enum MemberType {
+export enum UserType {
     BUYER = "BUYER",
     SELLER = "SELLER",
     ADMIN = "ADMIN",
 }
 
 
-export enum MemberStatus {
+export enum UserStatus {
     ACTIVE = "ACTIVE",
     BLOCK = "BLOCK",
     DELETE = "DELETE",

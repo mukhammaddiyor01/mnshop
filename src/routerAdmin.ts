@@ -4,8 +4,12 @@ import admincontroller from './controllers/admin.controller';
 
 routerAdmin.get('/', admincontroller.goHome);
 
-routerAdmin.get("/login", admincontroller.getLogin);
+routerAdmin
+    .get("/login", admincontroller.getLogin)
+    .post("/login", admincontroller.processLogin);
 
-routerAdmin.get("/signup", admincontroller.getSignup);
+routerAdmin
+        .get("/signup", admincontroller.getSignup)
+        .post("/signup", admincontroller.processSignup);
 
 export default routerAdmin;
