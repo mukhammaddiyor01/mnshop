@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
 import { AdminRequest, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
@@ -8,8 +8,8 @@ import { Message } from "../libs/Errors"
 
 const userService = new UserService();
 
-const admincontroller: T = {};
-admincontroller.goHome = (req: Request, res: Response) => {
+const adminController: T = {};
+adminController.goHome = (req: Request, res: Response) => {
     try {
         console.log("goHome");
 
@@ -19,7 +19,7 @@ admincontroller.goHome = (req: Request, res: Response) => {
     }
 };
 
-admincontroller.processSignup = async (req: AdminRequest, res: Response) => {
+adminController.processSignup = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processSignup");
         
@@ -43,7 +43,7 @@ admincontroller.processSignup = async (req: AdminRequest, res: Response) => {
 };
 
 
-admincontroller.getSignup = (req: Request, res: Response) => {
+adminController.getSignup = (req: Request, res: Response) => {
     try {
         console.log("getSignup");
 
@@ -55,7 +55,7 @@ admincontroller.getSignup = (req: Request, res: Response) => {
 };
 
 
-admincontroller.getLogin = (req: Request, res: Response) => {
+adminController.getLogin = (req: Request, res: Response) => {
     try {
         console.log("getLogin");
 
@@ -67,7 +67,7 @@ admincontroller.getLogin = (req: Request, res: Response) => {
 };
 
 
-admincontroller.processLogin = async (req: AdminRequest, res: Response) => {
+adminController.processLogin = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processLogin");
 
@@ -91,7 +91,7 @@ admincontroller.processLogin = async (req: AdminRequest, res: Response) => {
 };
 
 
-admincontroller.logout = async (
+adminController.logout = async (
     req: AdminRequest,
     res: Response
 ) => {
@@ -108,7 +108,7 @@ admincontroller.logout = async (
 
 
 
-admincontroller.checkAuthSession = async (
+adminController.checkAuthSession = async (
     req: AdminRequest,
     res: Response
 ) => {
@@ -124,5 +124,7 @@ admincontroller.checkAuthSession = async (
 };
 
 
+adminController
 
-export default admincontroller;
+
+export default adminController;

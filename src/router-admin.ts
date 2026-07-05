@@ -1,21 +1,21 @@
 import express, { Request, Response } from 'express';
 const routerAdmin = express.Router();
-import admincontroller from './controllers/admin.controller';
+import adminController from './controllers/admin.controller';
 import productController from './controllers/product.controller';
 
-routerAdmin.get('/', admincontroller.goHome);
+routerAdmin.get('/', adminController.goHome);
 
 routerAdmin
-    .get("/login", admincontroller.getLogin)
-    .post("/login", admincontroller.processLogin);
+    .get("/login", adminController.getLogin)
+    .post("/login", adminController.processLogin);
 
 routerAdmin
-        .get("/signup", admincontroller.getSignup)
-        .post("/signup", admincontroller.processSignup);
+        .get("/signup", adminController.getSignup)
+        .post("/signup", adminController.processSignup);
 
-routerAdmin.get("/logout", admincontroller.logout);
+routerAdmin.get("/logout", adminController.logout);
 
-routerAdmin.get("/check-me", admincontroller.checkAuthSession);
+routerAdmin.get("/check-me", adminController.checkAuthSession);
 
 /** Seller Product */
 routerAdmin.get("/product/all", productController.getAllProducts);
