@@ -12,4 +12,11 @@ routerAdmin
         .get("/signup", admincontroller.getSignup)
         .post("/signup", admincontroller.processSignup);
 
+routerAdmin.get("/check-me", admincontroller.checkAuthSession);
+
+/** Seller Product */
+
+
+/** Buyer */
+
 export default routerAdmin;

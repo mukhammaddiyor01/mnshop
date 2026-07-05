@@ -4,6 +4,7 @@ import { AdminRequest, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
+import { Message } from "../libs/Errors"
 
 const userService = new UserService();
 
@@ -73,6 +74,22 @@ admincontroller.processLogin = async (req: Request, res: Response) => {
         res.send(result);
     } catch(err) {
         console.log("Error, processLogin:", err)
+        res.send(err);
+    }
+};
+
+
+admincontroller.checkAuthSession = async (
+    req: AdminRequest,
+    res: Response
+) => {
+    try {
+        console.log("checkAuthSessionprocessLogin");
+        if(req.session?.user) 
+            res.send(`<script> alert("${ req.session.user.userStatus }")</script>`);
+        else res.send(`<script> alert("${ Message.NOT_AUTHENTICATED }")</script>`);
+    } catch(err) {
+        console.log("Error, checkAuthSession", err);
         res.send(err);
     }
 };
