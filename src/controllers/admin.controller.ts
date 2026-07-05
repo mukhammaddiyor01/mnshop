@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
-import UserService from '../models/User.service';
+import { UserInput } from "../libs/types/user";
+import { UserType } from "../libs/enums/user.enum";
+import UserService from "../models/User.service";
 
 
 const admincontroller: T = {};
@@ -34,19 +36,28 @@ admincontroller.getSignup = (req: Request, res: Response) => {
     }
 };
 
-admincontroller.processLogin = (req: Request, res: Response) => {
+admincontroller.processLogin = async (req: Request, res: Response) => {
     try {
         console.log("processLogin");
-        res.send("DONE");
+
+        const newUser: UserInput = req.body;
+
     } catch(err) {
         console.log("Error, processLogin:", err)
     }
 };
 
-admincontroller.processSignup = (req: Request, res: Response) => {
+admincontroller.processSignup = async (req: Request, res: Response) => {
     try {
         console.log("processSignup");
-        res.send("DONE");
+        
+        const newUser: UserInput = req.body;
+        newUser.userType = UserType.ADMIN;
+
+        const userService = new UserService();
+        const result = await userService.processSignup(newUser);
+
+        res.send(result);
     } catch(err) {
         console.log("Error, processSignup:", err)
     }

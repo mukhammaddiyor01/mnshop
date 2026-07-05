@@ -1,8 +1,9 @@
-import mongoose, {mongo, Schema} from "mongoose";
-import { UserType, UserStatus } from "../libs/types/enums/user.enum";
+import mongoose, { Schema } from "mongoose";
+import { UserType, UserStatus } from "../libs/enums/user.enum";
+import { User } from "../libs/types/user";
 
 
-const userSchema = new Schema ({
+const userSchema = new Schema<User>({
     userType: {
         type: String,
         enum: UserType,
@@ -43,7 +44,7 @@ const userSchema = new Schema ({
         type: String,
     },
 
-    muserDesc: {
+    userDesc: {
         type: String,
     },
 
@@ -81,4 +82,4 @@ const userSchema = new Schema ({
     {timestamps: true}    // updatedAt, createdAt
 );
 
-export default mongoose.model("member", userSchema);
+export default mongoose.model<User>("user", userSchema);

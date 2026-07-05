@@ -7,3 +7,10 @@
         css => Snake                                  button_style
     - ERROR handling:
 */
+
+/* 
+    Traditional API
+    Rest Api
+    GraphQL Api
+    ...
+*/
