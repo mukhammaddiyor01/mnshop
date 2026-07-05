@@ -14,3 +14,9 @@
     GraphQL Api
     ...
 */
+
+/*
+request join 
+self destruction
+
+*/

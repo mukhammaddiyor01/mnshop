@@ -36,6 +36,9 @@ admincontroller.processSignup = async (req: AdminRequest, res: Response) => {
         
     } catch(err) {
         console.log("Error, processSignup:", err)
+        const message = 
+            err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
+        res.send(`<script> alert("${message}"}); windows.location.replace('admin/signup) </script>`);
     }
 };
 
@@ -47,6 +50,7 @@ admincontroller.getSignup = (req: Request, res: Response) => {
         res.render("signup");
     } catch(err) {
         console.log("Error, getSignUp:", err);
+        res.redirect("/admin");
     }
 };
 
@@ -58,11 +62,12 @@ admincontroller.getLogin = (req: Request, res: Response) => {
         res.render("login");
     } catch(err) {
         console.log("Error, Login:", err);
+        res.redirect("/admin");
     }
 };
 
 
-admincontroller.processLogin = async (req: Request, res: Response) => {
+admincontroller.processLogin = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processLogin");
 
@@ -71,12 +76,36 @@ admincontroller.processLogin = async (req: Request, res: Response) => {
 ;
         const result = await userService.processLogin(input); // CAll
         // TODO: SESSION AUTHENTICATION
-        res.send(result);
+        req.session.user = result;
+        req.session.save(function() {
+            res.send(result);
+        });
+
     } catch(err) {
         console.log("Error, processLogin:", err)
-        res.send(err);
+        const message = 
+            err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
+        res.send(`<script> alert("${message}"}); windows.location.replace('admin/signup) </script>`);
+    }
+    
+};
+
+
+admincontroller.logout = async (
+    req: AdminRequest,
+    res: Response
+) => {
+    try {
+        console.log("processlogout");
+        req.session.destroy(function() {
+            res.redirect("/admin/login")
+        });
+    } catch(err) {
+        console.log("Error, processLogin:", err);
+        res.redirect("/admin");
     }
 };
+
 
 
 admincontroller.checkAuthSession = async (

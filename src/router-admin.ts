@@ -12,6 +12,8 @@ routerAdmin
         .get("/signup", admincontroller.getSignup)
         .post("/signup", admincontroller.processSignup);
 
+routerAdmin.get("/logout", admincontroller.logout);
+
 routerAdmin.get("/check-me", admincontroller.checkAuthSession);
 
 /** Seller Product */
