@@ -18,7 +18,7 @@ app.use(morgan(MORGAN_FORMAT));
 
 /** 3-Views */ 
 // BSSR faylarini .ejs siz ishlatish
-app.set ("view", path.join(__dirname, "view"));
+app.set ("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 /** 4-Routers */

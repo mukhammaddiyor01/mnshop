@@ -1,11 +1,10 @@
 import express, {Request, Response} from "express";
 const router = express.Router();
-import memberController from "./controllers/user.controller";
 import userController from "./controllers/user.controller";
 
-router.post("/login", userController.getLogin);
+router.post("/login", userController.login);
 
-router.post("/signup", userController.getSignUp);
+router.post("/signup", userController.signup);
 
 
 // router.get('/', memberController.goHome);
