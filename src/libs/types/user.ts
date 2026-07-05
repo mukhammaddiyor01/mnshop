@@ -39,3 +39,8 @@ export interface UserInput {
     myProducts?: string;
     myOrders?: string;
 }
+
+export interface LoginInput {
+    userNick: string;
+    userPassword: string;
+}

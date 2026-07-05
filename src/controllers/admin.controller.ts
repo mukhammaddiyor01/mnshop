@@ -3,6 +3,7 @@ import { T } from "../libs/types/common";
 import { UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
+import { LoginInput } from "../libs/types/user";
 
 
 const admincontroller: T = {};
@@ -40,10 +41,16 @@ admincontroller.processLogin = async (req: Request, res: Response) => {
     try {
         console.log("processLogin");
 
-        const newUser: UserInput = req.body;
+        console.log("body:", req.body);
+        const input: LoginInput = req.body;
 
+        const userService = new UserService();
+        const result = await userService.processLogin(input); // CAll
+
+        res.send(result);
     } catch(err) {
         console.log("Error, processLogin:", err)
+        res.send(err);
     }
 };
 
