@@ -5,6 +5,7 @@ import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
 
+const userService = new UserService();
 
 const admincontroller: T = {};
 admincontroller.goHome = (req: Request, res: Response) => {
@@ -17,15 +18,21 @@ admincontroller.goHome = (req: Request, res: Response) => {
     }
 };
 
-admincontroller.getLogin = (req: Request, res: Response) => {
+admincontroller.processSignup = async (req: Request, res: Response) => {
     try {
-        console.log("getLogin");
+        console.log("processSignup");
+        
+        const newUser: UserInput = req.body;
+        newUser.userType = UserType.ADMIN;
 
-        res.send("Login Page");
+        const result = await userService.processSignup(newUser);
+        // TODO: SESSION AUTHENTICATION
+        res.send(result);
     } catch(err) {
-        console.log("Error, Login:", err);
+        console.log("Error, processSignup:", err)
     }
 };
+
 
 admincontroller.getSignup = (req: Request, res: Response) => {
     try {
@@ -37,16 +44,27 @@ admincontroller.getSignup = (req: Request, res: Response) => {
     }
 };
 
+
+admincontroller.getLogin = (req: Request, res: Response) => {
+    try {
+        console.log("getLogin");
+
+        res.send("Login Page");
+    } catch(err) {
+        console.log("Error, Login:", err);
+    }
+};
+
+
 admincontroller.processLogin = async (req: Request, res: Response) => {
     try {
         console.log("processLogin");
 
         console.log("body:", req.body);
         const input: LoginInput = req.body;
-
-        const userService = new UserService();
+;
         const result = await userService.processLogin(input); // CAll
-
+        // TODO: SESSION AUTHENTICATION
         res.send(result);
     } catch(err) {
         console.log("Error, processLogin:", err)
@@ -54,20 +72,6 @@ admincontroller.processLogin = async (req: Request, res: Response) => {
     }
 };
 
-admincontroller.processSignup = async (req: Request, res: Response) => {
-    try {
-        console.log("processSignup");
-        
-        const newUser: UserInput = req.body;
-        newUser.userType = UserType.ADMIN;
 
-        const userService = new UserService();
-        const result = await userService.processSignup(newUser);
-
-        res.send(result);
-    } catch(err) {
-        console.log("Error, processSignup:", err)
-    }
-};
 
 export default admincontroller;
