@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { T } from "../libs/types/common";
-import { UserInput } from "../libs/types/user";
+import { AdminRequest, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
@@ -18,7 +18,7 @@ admincontroller.goHome = (req: Request, res: Response) => {
     }
 };
 
-admincontroller.processSignup = async (req: Request, res: Response) => {
+admincontroller.processSignup = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processSignup");
         
@@ -27,7 +27,12 @@ admincontroller.processSignup = async (req: Request, res: Response) => {
 
         const result = await userService.processSignup(newUser);
         // TODO: SESSION AUTHENTICATION
-        res.send(result);
+
+        req.session.user = result;
+        req.session.save(function() {
+            res.send(result);
+        });
+        
     } catch(err) {
         console.log("Error, processSignup:", err)
     }
