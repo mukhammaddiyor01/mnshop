@@ -2,6 +2,7 @@ import { LoginInput, User, UserInput } from "../libs/types/user"
 import UserModel from "../schema/User.model";
 import Errors, { HttpCode, Message } from "../libs/Errors"
 import { UserType } from "../libs/enums/user.enum"
+import * as bcrypt from "bcryptjs";
 
 
 class UserService {
@@ -19,6 +20,11 @@ class UserService {
             console.log("exist:", exist);
 
         if(exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+
+        // Bu yerda kodni vijr vijr qilyapmiz
+        const salt = await bcrypt.genSalt();
+        input.userPassword = await bcrypt.hash(input.userPassword, salt);
+        console.log("after", input.userPassword);
 
         try {
             const tempResult = new this.userModel(input); // Call
@@ -42,7 +48,14 @@ class UserService {
             .exec();
         if(!user) throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
         
-        const isMatch = input.userPassword === user.userPassword;
+        if(!user.userPassword) {
+            throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+        }
+
+        const isMatch = await bcrypt.compare(
+            input.userPassword,
+            user.userPassword
+        );
 
         if(!isMatch) {
             throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
