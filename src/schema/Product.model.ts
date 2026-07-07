@@ -21,7 +21,6 @@ const productSchema = new Schema(
 
         productDesc: {
             type: String,
-            required: true,
         },
 
         productPrice: {
