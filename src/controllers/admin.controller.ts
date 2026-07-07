@@ -4,7 +4,7 @@ import { AdminRequest, UserInput } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
-import { Message } from "../libs/Errors"
+import Errors, { HttpCode, Message } from "../libs/Errors"
 
 const userService = new UserService();
 
@@ -22,8 +22,14 @@ adminController.goHome = (req: Request, res: Response) => {
 adminController.processSignup = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processSignup");
+        const file = req.file;
+
+        if(!file) 
+            throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
         
+
         const newUser: UserInput = req.body;
+        newUser.userImage = file?.path;
         newUser.userType = UserType.ADMIN;
 
         const result = await userService.processSignup(newUser);
@@ -31,7 +37,7 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
 
         req.session.user = result;
         req.session.save(function() {
-            res.send(result);
+            res.redirect("/admin/product/all");
         });
         
     } catch(err) {
@@ -78,7 +84,7 @@ adminController.processLogin = async (req: AdminRequest, res: Response) => {
         // TODO: SESSION AUTHENTICATION
         req.session.user = result;
         req.session.save(function() {
-            res.send(result);
+            res.redirect("/admin/product/all");
         });
 
     } catch(err) {

@@ -29,6 +29,7 @@ self destruction
 
 /* Validation:
     Frontend  validation
+    (Pipe validation)
     Backend validation
     Database validation
 */
