@@ -107,7 +107,7 @@ class UserService {
 
     public async getUsers(): Promise<User[]> {
         const result = await this.userModel
-            .find({userType: UserType.BUYER}, {userType: UserType.SELLER})
+            .find({userType: UserType.BUYER})
             .exec();
 
             if(!result)

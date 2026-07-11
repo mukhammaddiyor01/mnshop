@@ -26,6 +26,39 @@ routerAdmin.get("/users/all",
     adminController.getUsers
 );
 
+/** 
+routerAdmin.get("/overview",
+    adminController.verifyAdmin,
+    adminController.getOverview
+);
+
+routerAdmin.get("/sellers",
+    adminController.verifyAdmin,
+    adminController.getSellers
+);
+
+routerAdmin.get("/orders",
+    adminController.verifyAdmin,
+    adminController.getOrders
+);
+
+routerAdmin.get("/messages",
+    adminController.verifyAdmin,
+    adminController.getMessages
+);
+
+routerAdmin.get("/analytics",
+    adminController.verifyAdmin,
+    adminController.getAnalytics
+);
+
+routerAdmin.get("/settings",
+    adminController.verifyAdmin,
+    adminController.getSettings
+);
+
+ */
+
 /** Seller Product */
 routerAdmin.get("/product/all", 
     adminController.verifyAdmin,
