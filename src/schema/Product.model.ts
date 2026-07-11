@@ -77,12 +77,12 @@ const productSchema = new Schema(
 
         productFeatured: {
             type: Boolean,
-            default: "",
+            default: false,
         },
 
         productSale: {
             type: Boolean,
-            default: "",
+            default: false,
         },
 
     },
