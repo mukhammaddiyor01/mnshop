@@ -46,3 +46,24 @@ import {
     productFeatured?: boolean;
     productSale?: boolean;
  }
+
+ export interface ProductUpdateInput {
+   _id: ObjectId;
+    productStatus?: ProductStatus;
+    productType: ProductType;
+    productName: string; 
+    productSlug?: string;
+    productDesc?: string;
+    productPrice: number;
+    productDiscountPrice?: number;
+    productImages?: string[];
+    productColors: ProductColors;
+    productSizes?: ProductSizes;
+    productVariants?: string[];
+    productLeftCount: number;
+    productSold?: number;
+    productviews?: number;
+    productRating?: number;
+    productFeatured?: boolean;
+    productSale?: boolean;
+ }

@@ -19,7 +19,7 @@ class UserService {
         try {
             const result = await this.userModel.create(input);
             result.userPassword = "";
-            return result.toJSON();
+            return result.toObject();
         } catch(err) {
             console.error("ERROR, model signup", err)
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
@@ -108,10 +108,10 @@ class UserService {
             throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
         }
 
-        const result = await this.userModel.findById(user._id).exec();
+        const result = await this.userModel.findById(user._id).lean().exec();
         if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
-        return result
+        return result;
     }
 
 }
