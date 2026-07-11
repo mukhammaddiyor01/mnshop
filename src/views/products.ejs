@@ -1,8 +1,14 @@
 <%- include('includes/header')  %>
 
 <body>
-    <div>products PAGE
-    </div>
+    <div>products PAGE</div>
+    <div><% user.userNick %></div>
+
+    <% products.map(function(value, key) { %>
+    <p><%= value.productName %> - <%= value.ProductPrice %></p>
+    <% }) %>
+    <!--loop qilib productning ichidagilardan foydalansak bo'larkan -->
+
 </body>
 </html>
 
