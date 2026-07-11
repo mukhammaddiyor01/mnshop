@@ -10,7 +10,7 @@ export interface User {
     userNick: string;
     userEmail: string;
     userPhone: string;
-    userPassword?: string;
+    userPassword: string;
     userAddress?: string;
     userDesc?: string;
     userImage?: string;

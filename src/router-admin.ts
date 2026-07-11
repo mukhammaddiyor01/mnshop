@@ -21,6 +21,11 @@ routerAdmin.get("/logout", adminController.logout);
 
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
+routerAdmin.get("/users/all",
+    adminController.verifyAdmin,
+    adminController.getUsers
+);
+
 /** Seller Product */
 routerAdmin.get("/product/all", 
     adminController.verifyAdmin,

@@ -1,7 +1,7 @@
 import { LoginInput, User, UserInput } from "../libs/types/user"
 import UserModel from "../schema/User.model";
 import Errors, { HttpCode, Message } from "../libs/Errors"
-import { UserType } from "../libs/enums/user.enum"
+import { UserStatus, UserType } from "../libs/enums/user.enum"
 import * as bcrypt from "bcryptjs";
 
 
@@ -12,6 +12,8 @@ class UserService {
         this.userModel = UserModel;
     }
 
+        /** SPA */
+
     public async signup(input: UserInput): Promise<User> {
         const salt = await bcrypt.genSalt();
         input.userPassword = await bcrypt.hash(input.userPassword, salt);
@@ -19,9 +21,9 @@ class UserService {
         try {
             const result = await this.userModel.create(input);
             result.userPassword = "";
-            return result.toObject();
+            return result.toJSON();
         } catch(err) {
-            console.error("ERROR, model signup", err)
+            console.error("ERROR, modelsignup", err)
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
         }
     }
@@ -38,20 +40,14 @@ class UserService {
             throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
         }
 
-        if(!user.userPassword) {
-            throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
-        }
-
         const isMatch = await bcrypt.compare(input.userPassword, user.userPassword);
 
         if(!isMatch) {
             throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
         }
-
-        const result = await this.userModel.findById(user._id).lean().exec();
-        if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-
-        return result;
+        // @ts-ignore
+        return await this.userModel.findById(user._id).lean().exec();
+        
 
     }
 
@@ -74,9 +70,7 @@ class UserService {
         console.log("after", input.userPassword);
 
         try {
-            const tempResult = new this.userModel(input); // Call
-            const result = await tempResult.save()
-
+            const result = await this.userModel.create(input);
             result.userPassword = "";
 
             return result;
@@ -90,13 +84,11 @@ class UserService {
         const user = await this.userModel
             .findOne(
                 {userNick: input.userNick},
-                {userNick: 1, userPassword: 1} 
+                {userNick: 1, userPassword: 1, userStatus: 1} 
             )
             .exec();
-        if(!user) throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
-        
-        if(!user.userPassword) {
-            throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+        if(!user) {
+            throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
         }
 
         const isMatch = await bcrypt.compare(
@@ -108,10 +100,20 @@ class UserService {
             throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
         }
 
-        const result = await this.userModel.findById(user._id).lean().exec();
-        if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-
+        const result =  await this.userModel.findById(user._id).exec();
+        // @ts-ignore
         return result;
+    }
+
+    public async getUsers(): Promise<User[]> {
+        const result = await this.userModel
+            .find({userType: UserType.BUYER}, {userType: UserType.SELLER})
+            .exec();
+
+            if(!result)
+                throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+            return result;
     }
 
 }

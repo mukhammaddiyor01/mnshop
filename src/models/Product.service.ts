@@ -29,9 +29,7 @@ class ProductService {
 
     public async createNewProduct(input: ProductInput): Promise<Product> {
         try{
-            const product = await this.productModel.create(input);
-
-            return product;
+            return await this.productModel.create(input)
         } catch(err) {
             console.error("Error, model:createNewPeoduct:", err)
             throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
