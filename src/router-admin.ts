@@ -57,13 +57,14 @@ routerAdmin.get("/settings",
  */
 
 /** Seller Product */
+
 routerAdmin.get("/product/all", 
     adminController.verifyAdmin,
     productController.getAllProducts);
-routerAdmin.post("/product/create", 
-    adminController.verifyAdmin,
-    makeUploader("products").array("productImage", 5),
-    productController.createNewProduct);
+// routerAdmin.post("/product/create", 
+//     adminController.verifyAdmin,
+//     makeUploader("products").array("productImage", 5),
+//     productController.createNewProduct);
 routerAdmin.get("/product/:id", 
     adminController.verifyAdmin,
     productController.updateChosenProduct);
