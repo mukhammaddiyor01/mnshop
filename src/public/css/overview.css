@@ -1,0 +1,241 @@
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.stat-box {
+  min-height: 132px;
+  padding: 18px;
+}
+
+.stat-box.gold {
+  border-color: rgba(217, 170, 63, 0.38);
+  background: linear-gradient(135deg, rgba(217, 170, 63, 0.2), rgba(255, 255, 255, 0.06));
+}
+
+.stat-box span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stat-box strong {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.stat-box small {
+  color: var(--gold2);
+}
+
+.dashboard-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  height: 260px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.bar-item {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: end;
+  flex: 1;
+  height: 100%;
+}
+
+.bar-item span {
+  display: block;
+  min-height: 18px;
+  border-radius: 8px 8px 2px 2px;
+  background: linear-gradient(180deg, var(--gold2), var(--gold));
+}
+
+.bar-item small {
+  margin-top: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.main-product,
+.quick-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-logo {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 170, 63, 0.42), rgba(255, 255, 255, 0.08));
+  color: var(--gold2);
+  font-weight: 950;
+}
+
+.activity-box {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 13px;
+}
+
+.activity-box li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.activity-box span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.quick-links {
+  flex-wrap: wrap;
+}
+
+.quick-links a {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.055);
+  font-weight: 850;
+}
+
+@media (max-width: 1180px) {
+  .stats-row,
+  .dashboard-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-row,
+  .dashboard-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Current overview.ejs class names */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.metric-card {
+  min-height: 132px;
+  padding: 18px;
+}
+
+.metric-card.gold {
+  border-color: rgba(217, 170, 63, 0.38);
+  background: linear-gradient(135deg, rgba(217, 170, 63, 0.2), rgba(255, 255, 255, 0.06));
+}
+
+.metric-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.metric-card strong {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.metric-card small {
+  color: var(--gold2);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.hero-product,
+.quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-orbit {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 170, 63, 0.42), rgba(255, 255, 255, 0.08));
+  color: var(--gold2);
+  font-weight: 950;
+}
+
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 13px;
+}
+
+.activity-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.activity-list span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.quick-actions {
+  flex-wrap: wrap;
+}
+
+.quick-actions a {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.055);
+  font-weight: 850;
+}
+
+@media (max-width: 1180px) {
+  .metric-grid,
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .metric-grid,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

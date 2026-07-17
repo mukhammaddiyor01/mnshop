@@ -14,8 +14,8 @@
     { key: "settings", label: "Settings", href: "/admin/settings", icon: "gear" }
   ];
 %>
-<div class="admin-container">
-  <aside class="admin-menu" id="adminSidebar">
+<div class="admin-layout">
+  <aside class="admin-sidebar" id="adminSidebar">
     <a class="logo-area" href="/admin/overview" aria-label="MNShop admin overview">
       <span class="logo-badge">MN</span>
       <span>
@@ -24,38 +24,38 @@
       </span>
     </a>
 
-    <nav class="menu-list" aria-label="Admin navigation">
+    <nav class="side-nav" aria-label="Admin navigation">
       <% navItems.forEach(function(item) { %>
-        <a class="menu-item <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
-          <span class="menu-icon" data-icon="<%= item.icon %>"></span>
+        <a class="side-link <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
+          <span class="side-icon" data-icon="<%= item.icon %>"></span>
           <span><%= item.label %></span>
         </a>
       <% }) %>
     </nav>
 
-    <div class="menu-card">
-      <span class="mini-title">K-culture drop</span>
+    <div class="sidebar-card">
+      <span class="card-kicker">K-culture drop</span>
       <strong>Premium streetwear</strong>
       <p>Track Uzbek buyers, Korean stock, seller activity, and order flow from one place.</p>
     </div>
   </aside>
 
   <main class="admin-main">
-    <header class="admin-header">
-      <button class="icon-btn menu-btn" type="button" data-toggle-sidebar aria-label="Open menu">
+    <header class="admin-topbar">
+      <button class="icon-button mobile-menu" type="button" data-toggle-sidebar aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
       <div>
         <p class="eyebrow"><%= typeof eyebrow !== "undefined" ? eyebrow : "MNShop control center" %></p>
         <h1><%= typeof heading !== "undefined" ? heading : "Dashboard" %></h1>
       </div>
-      <div class="header-actions">
-        <label class="search-form">
+      <div class="topbar-actions">
+        <label class="search-box">
           <span>Search</span>
           <input type="search" placeholder="Search dashboard..." data-admin-search />
         </label>
         <button class="line-btn" type="button" data-toast="Notifications synced">Bell</button>
-        <div class="profile-box">
+        <div class="admin-profile">
           <div class="avatar"><%= adminName.slice(0, 2).toUpperCase() %></div>
           <div>
             <strong><%= adminName %></strong>
@@ -66,4 +66,4 @@
       </div>
     </header>
 
-    <section class="content-area">
+    <section class="admin-content">

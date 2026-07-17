@@ -1,8 +1,8 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Buyers' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Buyers', pageCss: '/css/users.css', pageScript: '/js/users.js' }) %>
 <body class="admin-body" data-page="users">
   <%- include('includes/admin-shell-start', { page: 'users', heading: 'Buyer Management', eyebrow: 'Customers and order history' }) %>
 
-  <div class="page-toolbar">
+  <div class="toolbar">
     <div>
       <h2>Buyers</h2>
       <p>Change buyer status, inspect totals, and follow customer activity.</p>
@@ -10,9 +10,9 @@
     <button class="submit-btn" type="button" data-toast="Buyer CSV prepared">Download CSV</button>
   </div>
 
-  <section class="admin-box">
+  <section class="panel">
     <div class="table-wrap">
-      <table class="data-table" data-search-target>
+      <table class="admin-table" data-search-target>
         <thead>
           <tr>
             <th>Buyer</th>
@@ -34,7 +34,7 @@
           %>
             <tr>
               <td>
-                <div class="user-info">
+                <div class="entity-cell">
                   <div class="avatar"><%= String(buyer.userNick || "BU").slice(0, 2).toUpperCase() %></div>
                   <div><strong><%= buyer.userNick %></strong><small><%= buyer.userEmail %></small></div>
                 </div>

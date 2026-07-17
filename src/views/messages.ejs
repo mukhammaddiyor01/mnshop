@@ -1,31 +1,31 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Messages' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Messages', pageCss: '/css/messages.css', pageScript: '/js/messages.js' }) %>
 <body class="admin-body" data-page="messages">
   <%- include('includes/admin-shell-start', { page: 'messages', heading: 'Messages', eyebrow: 'Buyer, seller, and admin support chat' }) %>
 
-  <section class="chat-box">
-    <aside class="chat-list" data-search-target>
+  <section class="chat-shell">
+    <aside class="conversation-list" data-search-target>
       <% [
         ["Buyer Support", "Azizbek asked about Click payment", "2"],
         ["Seller Support", "Busan Studio needs approval", "4"],
         ["Order MN-2048", "Madina asked for tracking", "1"],
         ["Product Question", "Hoodie black XL stock", "0"]
       ].forEach(function(chat, index) { %>
-        <button class="chat-user <%= index === 0 ? "active" : "" %>" type="button">
+        <button class="conversation-item <%= index === 0 ? "active" : "" %>" type="button">
           <span class="avatar"><%= chat[0].slice(0,2).toUpperCase() %></span>
           <span><strong><%= chat[0] %></strong><small><%= chat[1] %></small></span>
           <% if (chat[2] !== "0") { %><em><%= chat[2] %></em><% } %>
         </button>
       <% }) %>
     </aside>
-    <div class="chat-content">
-      <div class="chat-head">
+    <div class="message-thread">
+      <div class="thread-head">
         <div>
           <h2>Buyer Support</h2>
           <p>Admin can message buyer or seller from the same conversation model.</p>
         </div>
-        <span class="status-badge success">Online</span>
+        <span class="status-pill success">Online</span>
       </div>
-      <div class="chat-body" id="messageList">
+      <div class="message-list" id="messageList">
         <div class="message bubble-left"><strong>Azizbek</strong><p>Click payment qachon ishlaydi?</p><small>10:41</small></div>
         <div class="message bubble-right"><strong>Admin</strong><p>Testing bosqichida. Hozir Payme va Stripe flow tayyorlanmoqda.</p><small>10:42</small></div>
         <div class="message bubble-left"><strong>Azizbek</strong><p>Order statusni qayerdan ko'raman?</p><small>10:43</small></div>

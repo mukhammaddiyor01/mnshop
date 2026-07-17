@@ -1,24 +1,24 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Analytics' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Analytics', pageCss: '/css/analytics.css', pageScript: '/js/analytics.js' }) %>
 <body class="admin-body" data-page="analytics">
   <%- include('includes/admin-shell-start', { page: 'analytics', heading: 'Analytics', eyebrow: 'Revenue, category, and stock signals' }) %>
 
-  <div class="cards-row">
-    <article class="admin-box small-stat"><span>Revenue</span><strong>84.2M</strong><small>UZS this month</small></article>
-    <article class="admin-box small-stat"><span>Units Sold</span><strong>1,208</strong><small>Across all sellers</small></article>
-    <article class="admin-box small-stat"><span>Conversion</span><strong>6.8%</strong><small>Storefront visitors</small></article>
+  <div class="cards-grid">
+    <article class="panel stat-panel"><span>Revenue</span><strong>84.2M</strong><small>UZS this month</small></article>
+    <article class="panel stat-panel"><span>Units Sold</span><strong>1,208</strong><small>Across all sellers</small></article>
+    <article class="panel stat-panel"><span>Conversion</span><strong>6.8%</strong><small>Storefront visitors</small></article>
   </div>
 
-  <div class="dashboard-row">
-    <section class="admin-box wide">
-      <div class="box-head"><div><p class="eyebrow">Revenue</p><h2>90 day trend</h2></div></div>
+  <div class="dashboard-grid">
+    <section class="panel wide">
+      <div class="panel-head"><div><p class="eyebrow">Revenue</p><h2>90 day trend</h2></div></div>
       <div class="line-chart">
         <% [22, 36, 31, 49, 44, 58, 71, 67, 84, 91].forEach(function(value) { %>
           <span style="height:<%= value %>%"></span>
         <% }) %>
       </div>
     </section>
-    <section class="admin-box">
-      <div class="box-head"><div><p class="eyebrow">Categories</p><h2>Sales split</h2></div></div>
+    <section class="panel">
+      <div class="panel-head"><div><p class="eyebrow">Categories</p><h2>Sales split</h2></div></div>
       <div class="donut"></div>
       <ul class="legend-list">
         <li><span class="gold-dot"></span> Hoodies 42%</li>
@@ -27,8 +27,8 @@
         <li><span class="blue-dot"></span> Cups 12%</li>
       </ul>
     </section>
-    <section class="admin-box wide">
-      <div class="box-head"><div><p class="eyebrow">Top products</p><h2>Revenue leaders</h2></div></div>
+    <section class="panel wide">
+      <div class="panel-head"><div><p class="eyebrow">Top products</p><h2>Revenue leaders</h2></div></div>
       <div class="rank-list">
         <div><strong>01</strong><span>Seoul Oversized Hoodie</span><em>38.4M UZS</em></div>
         <div><strong>02</strong><span>MN Signature T-Shirt</span><em>24.1M UZS</em></div>

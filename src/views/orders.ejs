@@ -1,8 +1,8 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Orders' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Orders', pageCss: '/css/orders.css', pageScript: '/js/orders.js' }) %>
 <body class="admin-body" data-page="orders">
   <%- include('includes/admin-shell-start', { page: 'orders', heading: 'Orders', eyebrow: 'Buyer checkout and seller fulfillment' }) %>
 
-  <div class="page-toolbar">
+  <div class="toolbar">
     <div>
       <h2>Order Queue</h2>
       <p>View order totals, payment state, delivery progress, and seller ownership.</p>
@@ -10,9 +10,9 @@
     <button class="submit-btn" type="button" data-toast="Order report exported">Export Orders</button>
   </div>
 
-  <section class="admin-box">
+  <section class="panel">
     <div class="table-wrap">
-      <table class="data-table" data-search-target>
+      <table class="admin-table" data-search-target>
         <thead>
           <tr>
             <th>Order</th>
@@ -35,7 +35,7 @@
               <td><%= order[1] %></td>
               <td><%= order[2] %></td>
               <td><%= order[3] %></td>
-              <td><span class="status-badge <%= order[4] === "PAID" ? "success" : "warning" %>"><%= order[4] %></span></td>
+              <td><span class="status-pill <%= order[4] === "PAID" ? "success" : "warning" %>"><%= order[4] %></span></td>
               <td><%= order[5] %></td>
               <td>
                 <select class="status-change" data-toast="Order status changed">

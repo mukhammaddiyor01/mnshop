@@ -1,0 +1,85 @@
+.login-body {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(217, 170, 63, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 16%, rgba(255, 255, 255, 0.1), transparent 24%),
+    #080808;
+}
+
+.login-wrapper {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-box {
+  width: min(440px, 100%);
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+}
+
+.signup-box {
+  width: min(720px, 100%);
+}
+
+.login-box h1 {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.login-box p,
+.login-link {
+  text-align: center;
+}
+
+.login-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.login-form.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.login-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.login-form input {
+  min-height: 43px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  outline: none;
+}
+
+.span-two {
+  grid-column: span 2;
+}
+
+.login-link {
+  display: block;
+  margin-top: 16px;
+  color: var(--gold2);
+  font-weight: 850;
+}
+
+@media (max-width: 640px) {
+  .login-form.two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .span-two {
+    grid-column: span 1;
+  }
+}

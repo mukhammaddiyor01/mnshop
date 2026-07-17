@@ -1,30 +1,18 @@
-$(function(){     });
+(function () {
+  const form = document.querySelector(".login-form");
+  if (!form) return;
 
-    //   $(".member-nick").click(function() {
-    //     alert(".member-phone").toggle();
-    //   });
-    // 
-function validateSignupForm() {
-        // console.log("Executed validateSignupForm");
-    const userNick = $(".userr-nick").val();
-    const userPhone = $(".user-phone").val();
-    const userPassword = $(".user-password").val();
-    const userPassword = $(".confirm-password").val();
+  form.addEventListener("submit", function (event) {
+    const requiredInputs = form.querySelectorAll("input[required]");
+    let hasEmptyInput = false;
 
-    if (
-    userNick === "" || 
-    userPhone === ""  ||
-    userPassword === "" ||
-    confirmPassword === "" 
-    ) {
-        alert ("Please insert all required inputs");
-        return false;
+    requiredInputs.forEach(function (input) {
+      if (!input.value.trim()) hasEmptyInput = true;
+    });
+
+    if (hasEmptyInput) {
+      event.preventDefault();
+      alert("Please insert all required inputs");
     }
-
-    if (userPassword !== confirmPassword) {
-        alert("Password differs, please check!")
-        return false;
-    }
-
-    
-}
+  });
+})();

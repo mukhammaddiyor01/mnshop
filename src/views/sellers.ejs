@@ -1,8 +1,8 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Sellers' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Sellers', pageCss: '/css/sellers.css', pageScript: '/js/sellers.js' }) %>
 <body class="admin-body" data-page="sellers">
   <%- include('includes/admin-shell-start', { page: 'sellers', heading: 'Seller Management', eyebrow: 'Approvals, commission, and store quality' }) %>
 
-  <div class="page-toolbar">
+  <div class="toolbar">
     <div>
       <h2>Sellers</h2>
       <p>Approve Korean clothing sellers, block risky accounts, and adjust commissions.</p>
@@ -10,15 +10,15 @@
     <button class="submit-btn" type="button" data-toast="Seller invite copied">Invite Seller</button>
   </div>
 
-  <div class="cards-row">
-    <article class="admin-box small-stat"><span>Pending</span><strong>6</strong><small>Need admin review</small></article>
-    <article class="admin-box small-stat"><span>Active</span><strong>38</strong><small>Currently selling</small></article>
-    <article class="admin-box small-stat"><span>Commission</span><strong>12%</strong><small>Default platform rate</small></article>
+  <div class="cards-grid">
+    <article class="panel stat-panel"><span>Pending</span><strong>6</strong><small>Need admin review</small></article>
+    <article class="panel stat-panel"><span>Active</span><strong>38</strong><small>Currently selling</small></article>
+    <article class="panel stat-panel"><span>Commission</span><strong>12%</strong><small>Default platform rate</small></article>
   </div>
 
-  <section class="admin-box">
+  <section class="panel">
     <div class="table-wrap">
-      <table class="data-table" data-search-target>
+      <table class="admin-table" data-search-target>
         <thead>
           <tr>
             <th>Seller</th>
@@ -37,7 +37,7 @@
             ["Korea Cup House", "6", "41", "3.2M UZS", "12%", "BLOCKED"]
           ].forEach(function(row) { %>
             <tr>
-              <td><div class="user-info"><div class="avatar"><%= row[0].slice(0,2).toUpperCase() %></div><div><strong><%= row[0] %></strong><small>seller@mnshop.kr</small></div></div></td>
+              <td><div class="entity-cell"><div class="avatar"><%= row[0].slice(0,2).toUpperCase() %></div><div><strong><%= row[0] %></strong><small>seller@mnshop.kr</small></div></div></td>
               <td><%= row[1] %></td>
               <td><%= row[2] %></td>
               <td><%= row[3] %></td>

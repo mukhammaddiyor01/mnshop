@@ -1,0 +1,227 @@
+.chat-box {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  min-height: 650px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--box);
+}
+
+.chat-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.chat-user {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+
+.chat-user.active,
+.chat-user:hover {
+  border-color: rgba(217, 170, 63, 0.3);
+  background: rgba(217, 170, 63, 0.1);
+}
+
+.chat-user em {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #080808;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.chat-content {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+}
+
+.chat-head,
+.chat-form {
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.chat-body {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 68%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.bubble-right {
+  justify-self: end;
+  border-color: rgba(217, 170, 63, 0.24);
+  background: rgba(217, 170, 63, 0.12);
+}
+
+.message p {
+  margin: 6px 0;
+}
+
+.message small {
+  color: var(--soft);
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+
+.chat-form input {
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  outline: none;
+}
+
+.chat-form button {
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--gold);
+  color: #080808;
+  font-weight: 850;
+}
+
+@media (max-width: 900px) {
+  .chat-box {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+/* Current messages.ejs class names */
+.chat-shell {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  min-height: 650px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--box);
+}
+
+.conversation-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.conversation-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: #fff;
+  text-align: left;
+}
+
+.conversation-item.active,
+.conversation-item:hover {
+  border-color: rgba(217, 170, 63, 0.3);
+  background: rgba(217, 170, 63, 0.1);
+}
+
+.conversation-item em {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #080808;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.message-thread {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+}
+
+.thread-head,
+.chat-form {
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.thread-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.message-list {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .chat-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .conversation-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
