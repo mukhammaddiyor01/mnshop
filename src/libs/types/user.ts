@@ -47,6 +47,20 @@ export interface LoginInput {
     userPassword: string;
 }
 
+export interface UserUpdateInput {
+    _id: Types.ObjectId;
+    userStatus?: UserStatus;
+    userNick: string;
+    userEmail: string;
+    userPhone: string;
+    userPassword: string;
+    userAddress?: string;
+    userDesc?: string;
+    userImage?: string;
+    myProducts?: string;
+    myOrders?: string;
+}
+
 export interface AdminRequest extends Request {
     user: User;
     session: Session & {user: User};

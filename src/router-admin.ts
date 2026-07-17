@@ -21,10 +21,7 @@ routerAdmin.get("/logout", adminController.logout);
 
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
-routerAdmin.get("/users/all",
-    adminController.verifyAdmin,
-    adminController.getUsers
-);
+
 
 /** 
 routerAdmin.get("/overview",
@@ -75,5 +72,15 @@ routerAdmin.get("/product/:id",
 
 
 /** Buyer */
+
+routerAdmin.get("/users/all",
+    adminController.verifyAdmin,
+    adminController.getUsers
+);
+
+routerAdmin.post("/user/edit",
+    adminController.verifyAdmin,
+    adminController.updateChosenUser
+);
 
 export default routerAdmin;

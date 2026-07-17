@@ -123,7 +123,19 @@ adminController.getUsers = async (req: Request, res: Response) => {
         console.log("Error, getUsers:", err);
         res.redirect("/admin/login");
     }
-}
+};
+
+
+adminController.updateChosenUser = async (req: Request, res: Response) => {
+    try {
+        console.log("updateChosenUser");
+        const result = await userService.updateChosenUser(req.body);
+
+        res.status(HttpCode.OK).json({ data: result });
+    } catch(err) {
+
+    }
+};
 
 
 

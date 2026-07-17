@@ -1,4 +1,5 @@
-import { LoginInput, User, UserInput } from "../libs/types/user"
+import { shapeIntoMongooseObjectId } from "../libs/config";
+import { LoginInput, User, UserInput, UserUpdateInput } from "../libs/types/user"
 import UserModel from "../schema/User.model";
 import Errors, { HttpCode, Message } from "../libs/Errors"
 import { UserStatus, UserType } from "../libs/enums/user.enum"
@@ -116,7 +117,20 @@ class UserService {
             return result;
     }
 
-}
+    public async updateChosenUser(input: UserUpdateInput): Promise<User> {
+        input._id = shapeIntoMongooseObjectId(input._id);
+        const result = await this.userModel
+        .findByIdAndUpdate({_id: input._id}, input, {new: true})
+        .exec();
+
+        if(!result)
+            throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+        return result;
+    }
+};
+
+
 
 
 export default UserService;
