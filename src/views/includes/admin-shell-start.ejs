@@ -1,0 +1,69 @@
+<%
+  const activePage = typeof page !== "undefined" ? page : "overview";
+  const adminUser = typeof user !== "undefined" && user ? user : {};
+  const adminName = adminUser.userNick || "MNShop Admin";
+  const adminEmail = adminUser.userEmail || "admin@mnshop.uz";
+  const navItems = [
+    { key: "overview", label: "Overview", href: "/admin/overview", icon: "grid" },
+    { key: "users", label: "Buyers", href: "/admin/users/all", icon: "users" },
+    { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "store" },
+    { key: "products", label: "Products", href: "/admin/product/all", icon: "shirt" },
+    { key: "orders", label: "Orders", href: "/admin/orders", icon: "box" },
+    { key: "messages", label: "Messages", href: "/admin/messages", icon: "chat" },
+    { key: "analytics", label: "Analytics", href: "/admin/analytics", icon: "chart" },
+    { key: "settings", label: "Settings", href: "/admin/settings", icon: "gear" }
+  ];
+%>
+<div class="admin-container">
+  <aside class="admin-menu" id="adminSidebar">
+    <a class="logo-area" href="/admin/overview" aria-label="MNShop admin overview">
+      <span class="logo-badge">MN</span>
+      <span>
+        <strong>MNShop</strong>
+        <small>Admin Studio</small>
+      </span>
+    </a>
+
+    <nav class="menu-list" aria-label="Admin navigation">
+      <% navItems.forEach(function(item) { %>
+        <a class="menu-item <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
+          <span class="menu-icon" data-icon="<%= item.icon %>"></span>
+          <span><%= item.label %></span>
+        </a>
+      <% }) %>
+    </nav>
+
+    <div class="menu-card">
+      <span class="mini-title">K-culture drop</span>
+      <strong>Premium streetwear</strong>
+      <p>Track Uzbek buyers, Korean stock, seller activity, and order flow from one place.</p>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-header">
+      <button class="icon-btn menu-btn" type="button" data-toggle-sidebar aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div>
+        <p class="eyebrow"><%= typeof eyebrow !== "undefined" ? eyebrow : "MNShop control center" %></p>
+        <h1><%= typeof heading !== "undefined" ? heading : "Dashboard" %></h1>
+      </div>
+      <div class="header-actions">
+        <label class="search-form">
+          <span>Search</span>
+          <input type="search" placeholder="Search dashboard..." data-admin-search />
+        </label>
+        <button class="line-btn" type="button" data-toast="Notifications synced">Bell</button>
+        <div class="profile-box">
+          <div class="avatar"><%= adminName.slice(0, 2).toUpperCase() %></div>
+          <div>
+            <strong><%= adminName %></strong>
+            <small><%= adminEmail %></small>
+          </div>
+        </div>
+        <a class="danger-link" href="/admin/logout">Logout</a>
+      </div>
+    </header>
+
+    <section class="content-area">

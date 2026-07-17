@@ -1,9 +1,96 @@
-<%- include('includes/header')  %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Overview' }) %>
+<body class="admin-body" data-page="overview">
+  <%- include('includes/admin-shell-start', { page: 'overview', heading: 'Overview', eyebrow: 'Live commerce pulse' }) %>
 
-<body>
-    <div>Overview PAGE
-    </div>
-</body>
-</html>
+  <div class="stats-row">
+    <article class="stat-box gold">
+      <span>Total Revenue</span>
+      <strong>84.2M UZS</strong>
+      <small>+18% this week</small>
+    </article>
+    <article class="stat-box">
+      <span>Active Buyers</span>
+      <strong>1,284</strong>
+      <small>312 new in 30 days</small>
+    </article>
+    <article class="stat-box">
+      <span>Active Sellers</span>
+      <strong>38</strong>
+      <small>6 pending approval</small>
+    </article>
+    <article class="stat-box">
+      <span>Pending Orders</span>
+      <strong>27</strong>
+      <small>12 need shipment</small>
+    </article>
+  </div>
 
-<%- include('includes/footer') %>
+  <div class="dashboard-row">
+    <section class="admin-box wide">
+      <div class="box-head">
+        <div>
+          <p class="eyebrow">Revenue trend</p>
+          <h2>Last 7 days</h2>
+        </div>
+        <button class="small-btn" type="button" data-toast="Revenue report exported">Export</button>
+      </div>
+      <div class="bar-chart" aria-label="Revenue chart">
+        <% [48, 66, 52, 78, 88, 72, 96].forEach(function(value, index) { %>
+          <div class="bar-item">
+            <span style="height:<%= value %>%"></span>
+            <small>D<%= index + 1 %></small>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="admin-box">
+      <div class="box-head">
+        <div>
+          <p class="eyebrow">Best seller</p>
+          <h2>Oversized Hoodie</h2>
+        </div>
+        <span class="status-badge success">Featured</span>
+      </div>
+      <div class="main-product">
+        <div class="product-logo">MN</div>
+        <div>
+          <strong>Black Seoul Hoodie</strong>
+          <p>316 units sold, 4.9 rating, top in Hoodies category.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-box">
+      <div class="box-head">
+        <div>
+          <p class="eyebrow">Recent activity</p>
+          <h2>Today</h2>
+        </div>
+      </div>
+      <ul class="activity-box">
+        <li><span></span>Madina placed order #MN-2048</li>
+        <li><span></span>Busan Studio requested seller approval</li>
+        <li><span></span>Cap collection stock dropped below 8</li>
+        <li><span></span>Admin featured Seoul Hoodie</li>
+      </ul>
+    </section>
+
+    <section class="admin-box wide">
+      <div class="box-head">
+        <div>
+          <p class="eyebrow">Quick actions</p>
+          <h2>Admin shortcuts</h2>
+        </div>
+      </div>
+      <div class="quick-links">
+        <a href="/admin/users/all">Review buyers</a>
+        <a href="/admin/sellers">Approve sellers</a>
+        <a href="/admin/product/all">Feature products</a>
+        <a href="/admin/orders">Update orders</a>
+      </div>
+    </section>
+  </div>
+
+  <%- include('includes/admin-shell-end') %>
+  <%- include('includes/footer') %>

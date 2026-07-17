@@ -1,9 +1,22 @@
-<%- include('includes/header')  %>
-
-<body>
-    <div>Signup PAGE
-    </div>
-</body>
-</html>
-
-<%- include('includes/footer') %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Signup' }) %>
+<body class="login-body">
+  <main class="login-wrapper">
+    <section class="login-box signup-box">
+      <a class="logo-area centered" href="/admin">
+        <span class="logo-badge">MN</span>
+        <span><strong>MNShop</strong><small>Admin Studio</small></span>
+      </a>
+      <h1>Create admin</h1>
+      <p>This form keeps the same BSSR signup flow and uploads admin avatar through the current backend.</p>
+      <form class="login-form two-col" action="/admin/signup" method="POST" enctype="multipart/form-data">
+        <label>Admin nick<input name="userNick" type="text" required /></label>
+        <label>Email<input name="userEmail" type="email" required /></label>
+        <label>Phone<input name="userPhone" type="text" required /></label>
+        <label>Password<input name="userPassword" type="password" required /></label>
+        <label class="span-two">Avatar<input name="userImage" type="file" accept="image/*" required /></label>
+        <button class="submit-btn full span-two" type="submit">Create Account</button>
+      </form>
+      <a class="login-link" href="/admin/login">Already have an account?</a>
+    </section>
+  </main>
+  <%- include('includes/footer') %>

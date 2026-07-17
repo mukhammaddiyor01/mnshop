@@ -1,15 +1,47 @@
-<%- include('includes/header')  %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Products' }) %>
+<body class="admin-body" data-page="products">
+  <%- include('includes/admin-shell-start', { page: 'products', heading: 'Product Catalog', eyebrow: 'Feature, pause, and inspect MNShop inventory' }) %>
 
-<body>
-    <div>products PAGE</div>
-    <div><% user.userNick %></div>
+  <div class="page-toolbar">
+    <div>
+      <h2>Products</h2>
+      <p>Manage T-shirts, Hoodies, Caps, and Cups from all sellers.</p>
+    </div>
+    <button class="submit-btn" type="button" data-toast="Product form is frontend-ready">Add Product</button>
+  </div>
 
-    <% products.map(function(value, key) { %>
-    <p><%= value.productName %> - <%= value.ProductPrice %></p>
+  <section class="product-list" data-search-target>
+    <%
+      const productRows = typeof products !== "undefined" && products && products.length ? products : [
+        { productName: "Seoul Oversized Hoodie", productPrice: 680000, productDiscountPrice: 590000, productLeftCount: 12, productSold: 316, productStatus: "PROCESS", productFeatured: true, productSale: true },
+        { productName: "MN Signature T-Shirt", productPrice: 320000, productDiscountPrice: 279000, productLeftCount: 40, productSold: 284, productStatus: "PROCESS", productFeatured: true, productSale: false },
+        { productName: "Busan Logo Cap", productPrice: 210000, productDiscountPrice: 189000, productLeftCount: 21, productSold: 144, productStatus: "PAUSE", productFeatured: false, productSale: true },
+        { productName: "K-Culture Ceramic Cup", productPrice: 160000, productDiscountPrice: 140000, productLeftCount: 55, productSold: 92, productStatus: "PROCESS", productFeatured: false, productSale: false }
+      ];
+      productRows.forEach(function(product) {
+    %>
+      <article class="product-box">
+        <div class="product-img"><span>MN</span></div>
+        <div class="product-info">
+          <div class="product-title">
+            <h3><%= product.productName %></h3>
+            <span class="status-badge <%= product.productStatus === "PROCESS" || product.productStatus === "ACTIVE" ? "success" : "warning" %>"><%= product.productStatus %></span>
+          </div>
+          <p><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</p>
+          <div class="product-data">
+            <span>Stock <strong><%= product.productLeftCount || 0 %></strong></span>
+            <span>Sold <strong><%= product.productSold || 0 %></strong></span>
+            <span><%= product.productFeatured ? "Featured" : "Standard" %></span>
+          </div>
+          <div class="btn-row">
+            <button type="button" data-toast="Product feature toggled">Feature</button>
+            <button type="button" data-toast="Product status updated">Pause</button>
+            <button type="button" class="danger" data-toast="Delete is frontend only">Delete</button>
+          </div>
+        </div>
+      </article>
     <% }) %>
-    <!--loop qilib productning ichidagilardan foydalansak bo'larkan -->
+  </section>
 
-</body>
-</html>
-
-<%- include('includes/footer') %>
+  <%- include('includes/admin-shell-end') %>
+  <%- include('includes/footer') %>

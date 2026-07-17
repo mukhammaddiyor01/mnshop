@@ -1,9 +1,61 @@
-<%- include('includes/header')  %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Buyers' }) %>
+<body class="admin-body" data-page="users">
+  <%- include('includes/admin-shell-start', { page: 'users', heading: 'Buyer Management', eyebrow: 'Customers and order history' }) %>
 
-<body>
-    <div>Users PAGE
+  <div class="page-toolbar">
+    <div>
+      <h2>Buyers</h2>
+      <p>Change buyer status, inspect totals, and follow customer activity.</p>
     </div>
-</body>
-</html>
+    <button class="submit-btn" type="button" data-toast="Buyer CSV prepared">Download CSV</button>
+  </div>
 
-<%- include('includes/footer') %>
+  <section class="admin-box">
+    <div class="table-wrap">
+      <table class="data-table" data-search-target>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Orders</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%
+            const buyerRows = typeof users !== "undefined" && users && users.length ? users : [
+              { userNick: "Azizbek Karimov", userEmail: "azizbek@mail.uz", userPhone: "+998 90 000 200", myOrders: "5", userPoints: 1840000, userStatus: "ACTIVE", createdAt: "2026-07-01" },
+              { userNick: "Madina Sobirova", userEmail: "madina@mail.uz", userPhone: "+998 90 000 201", myOrders: "7", userPoints: 4920000, userStatus: "ACTIVE", createdAt: "2026-06-24" },
+              { userNick: "Nodir Yunusov", userEmail: "nodir@mail.uz", userPhone: "+998 90 000 202", myOrders: "1", userPoints: 766000, userStatus: "BLOCKED", createdAt: "2026-06-14" }
+            ];
+            buyerRows.forEach(function(buyer) {
+          %>
+            <tr>
+              <td>
+                <div class="user-info">
+                  <div class="avatar"><%= String(buyer.userNick || "BU").slice(0, 2).toUpperCase() %></div>
+                  <div><strong><%= buyer.userNick %></strong><small><%= buyer.userEmail %></small></div>
+                </div>
+              </td>
+              <td><%= buyer.userPhone || "-" %></td>
+              <td><%= buyer.myOrders || 0 %></td>
+              <td><%= Number(buyer.userPoints || 0).toLocaleString() %> UZS</td>
+              <td>
+                <select class="status-change" data-toast="Buyer status changed">
+                  <option <%= buyer.userStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                  <option <%= buyer.userStatus === "BLOCKED" ? "selected" : "" %>>BLOCKED</option>
+                  <option <%= buyer.userStatus === "DELETED" ? "selected" : "" %>>DELETED</option>
+                </select>
+              </td>
+              <td><%= buyer.createdAt ? String(buyer.createdAt).slice(0, 10) : "-" %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <%- include('includes/admin-shell-end') %>
+  <%- include('includes/footer') %>

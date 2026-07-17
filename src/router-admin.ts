@@ -1,10 +1,10 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 const routerAdmin = express.Router();
 import adminController from './controllers/admin.controller';
 import productController from './controllers/product.controller';
 import makeUploader from './libs/utils/uploader';
 
-/** ADMIN */
+/** ADMIN AUTH */
 routerAdmin.get('/', adminController.goHome);
 
 routerAdmin
@@ -12,74 +12,45 @@ routerAdmin
     .post("/login", adminController.processLogin);
 
 routerAdmin
-        .get("/signup", adminController.getSignup)
-        .post("/signup", 
-            makeUploader("users").single("userImage"),
-            adminController.processSignup);
+    .get("/signup", adminController.getSignup)
+    .post(
+        "/signup",
+        makeUploader("users").single("userImage"),
+        adminController.processSignup
+    );
 
 routerAdmin.get("/logout", adminController.logout);
-
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
+/** ADMIN BSSR FRONTEND */
+routerAdmin.get("/overview", adminController.verifyAdmin, adminController.getOverview);
+routerAdmin.get("/sellers", adminController.verifyAdmin, adminController.getSellers);
+routerAdmin.get("/orders", adminController.verifyAdmin, adminController.getOrders);
+routerAdmin.get("/messages", adminController.verifyAdmin, adminController.getMessages);
+routerAdmin.get("/analytics", adminController.verifyAdmin, adminController.getAnalytics);
+routerAdmin.get("/settings", adminController.verifyAdmin, adminController.getSettings);
 
-
-/** 
-routerAdmin.get("/overview",
+/** PRODUCT MANAGEMENT */
+routerAdmin.get(
+    "/product/all",
     adminController.verifyAdmin,
-    adminController.getOverview
+    productController.getAllProducts
+);
+routerAdmin.post(
+    "/product/:id",
+    adminController.verifyAdmin,
+    productController.updateChosenProduct
 );
 
-routerAdmin.get("/sellers",
-    adminController.verifyAdmin,
-    adminController.getSellers
-);
-
-routerAdmin.get("/orders",
-    adminController.verifyAdmin,
-    adminController.getOrders
-);
-
-routerAdmin.get("/messages",
-    adminController.verifyAdmin,
-    adminController.getMessages
-);
-
-routerAdmin.get("/analytics",
-    adminController.verifyAdmin,
-    adminController.getAnalytics
-);
-
-routerAdmin.get("/settings",
-    adminController.verifyAdmin,
-    adminController.getSettings
-);
-
- */
-
-/** Seller Product */
-
-routerAdmin.get("/product/all", 
-    adminController.verifyAdmin,
-    productController.getAllProducts);
-// routerAdmin.post("/product/create", 
-//     adminController.verifyAdmin,
-//     makeUploader("products").array("productImage", 5),
-//     productController.createNewProduct);
-routerAdmin.get("/product/:id", 
-    adminController.verifyAdmin,
-    productController.updateChosenProduct);
-
-
-
-
-/** Buyer */
-
-routerAdmin.get("/users/all",
+/** BUYER MANAGEMENT */
+routerAdmin.get(
+    "/users/all",
     adminController.verifyAdmin,
     adminController.getUsers
 );
 
-routerAdmin.post("/user/edit",
+routerAdmin.post(
+    "/user/edit",
     adminController.verifyAdmin,
     adminController.updateChosenUser
 );

@@ -1,1 +1,7 @@
-<html></html>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/main.js"></script>
+    <% if (typeof pageScript !== "undefined" && pageScript) { %>
+      <script src="<%= pageScript %>"></script>
+    <% } %>
+  </body>
+</html>

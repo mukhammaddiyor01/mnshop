@@ -9,14 +9,41 @@ import Errors, { HttpCode, Message } from "../libs/Errors"
 const userService = new UserService();
 
 const adminController: T = {};
+
+const renderAdminPage = (res: Response, view: string, data: T = {}) => {
+    res.render(view, data);
+};
+
 adminController.goHome = (req: Request, res: Response) => {
     try {
-        console.log("goHome");
-
-        res.render("home");
+        res.redirect("/admin/overview");
     } catch(err) {
         console.log("Error, goHome:", err);
     }
+};
+
+adminController.getOverview = (req: Request, res: Response) => {
+    renderAdminPage(res, "overview");
+};
+
+adminController.getSellers = (req: Request, res: Response) => {
+    renderAdminPage(res, "sellers");
+};
+
+adminController.getOrders = (req: Request, res: Response) => {
+    renderAdminPage(res, "orders");
+};
+
+adminController.getMessages = (req: Request, res: Response) => {
+    renderAdminPage(res, "messages");
+};
+
+adminController.getAnalytics = (req: Request, res: Response) => {
+    renderAdminPage(res, "analytics");
+};
+
+adminController.getSettings = (req: Request, res: Response) => {
+    renderAdminPage(res, "settings");
 };
 
 adminController.processSignup = async (req: AdminRequest, res: Response) => {
@@ -24,35 +51,30 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
         console.log("processSignup");
         const file = req.file;
 
-        if(!file) 
+        if(!file)
             throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
-        
 
         const newUser: UserInput = req.body;
         newUser.userImage = file?.path;
         newUser.userType = UserType.ADMIN;
 
         const result = await userService.processSignup(newUser);
-        // TODO: SESSION AUTHENTICATION
 
         req.session.user = result;
         req.session.save(function() {
-            res.redirect("/admin/product/all");
+            res.redirect("/admin/overview");
         });
-        
+
     } catch(err) {
         console.log("Error, processSignup:", err)
-        const message = 
+        const message =
             err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-        res.send(`<script> alert("${message}"}); windows.location.replace('admin/signup) </script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/signup'); </script>`);
     }
 };
 
-
 adminController.getSignup = (req: Request, res: Response) => {
     try {
-        console.log("getSignup");
-
         res.render("signup");
     } catch(err) {
         console.log("Error, getSignUp:", err);
@@ -60,11 +82,8 @@ adminController.getSignup = (req: Request, res: Response) => {
     }
 };
 
-
 adminController.getLogin = (req: Request, res: Response) => {
     try {
-        console.log("getLogin");
-
         res.render("login");
     } catch(err) {
         console.log("Error, Login:", err);
@@ -72,30 +91,26 @@ adminController.getLogin = (req: Request, res: Response) => {
     }
 };
 
-
 adminController.processLogin = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processLogin");
 
-        console.log("body:", req.body);
         const input: LoginInput = req.body;
-;
-        const result = await userService.processLogin(input); // CAll
-        // TODO: SESSION AUTHENTICATION
+        const result = await userService.processLogin(input);
+
         req.session.user = result;
         req.session.save(function() {
-            res.redirect("/admin/product/all");
+            res.redirect("/admin/overview");
         });
 
     } catch(err) {
         console.log("Error, processLogin:", err)
-        const message = 
+        const message =
             err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-        res.send(`<script> alert("${message}"); window.location.replace('/admin/signup) </script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/login'); </script>`);
     }
-    
-};
 
+};
 
 adminController.logout = async (
     req: AdminRequest,
@@ -116,15 +131,13 @@ adminController.getUsers = async (req: Request, res: Response) => {
     try{
         console.log("getUsers");
         const result = await userService.getUsers();
-        console.log("result:", result);
 
-        res.render("users", {users: result});
+        res.render("users", { users: result });
     } catch(err) {
         console.log("Error, getUsers:", err);
-        res.redirect("/admin/login");
+        res.render("users", { users: [] });
     }
 };
-
 
 adminController.updateChosenUser = async (req: Request, res: Response) => {
     try {
@@ -133,19 +146,18 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
 
         res.status(HttpCode.OK).json({ data: result });
     } catch(err) {
-
+        console.log("Error, updateChosenUser:", err);
+        if (err instanceof Errors) res.status(err.code).json(err);
+        else res.status(Errors.standard.code).json(Errors.standard);
     }
 };
-
-
 
 adminController.checkAuthSession = async (
     req: AdminRequest,
     res: Response
 ) => {
     try {
-        console.log("checkAuthSessionprocessLogin");
-        if(req.session?.user) 
+        if(req.session?.user)
             res.send(`<script> alert("${ req.session.user.userStatus }")</script>`);
         else res.send(`<script> alert("${ Message.NOT_AUTHENTICATED }")</script>`);
     } catch(err) {
@@ -153,7 +165,6 @@ adminController.checkAuthSession = async (
         res.send(err);
     }
 };
-
 
 adminController.verifyAdmin = (
     req: AdminRequest,
@@ -170,6 +181,5 @@ adminController.verifyAdmin = (
         )
     }
 };
-
 
 export default adminController;
