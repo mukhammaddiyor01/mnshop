@@ -1,181 +1,116 @@
-.cards-row,
-.dashboard-row {
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
-.cards-row {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 18px;
-}
-
-.dashboard-row {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.small-stat {
-  min-height: 128px;
-}
-
-.small-stat span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.small-stat strong {
-  display: block;
-  margin: 12px 0 6px;
-  font-size: 31px;
-  line-height: 1;
-}
-
-.small-stat small {
-  color: var(--gold2);
-}
-
-.line-chart {
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 12px;
-  height: 260px;
+  height: 280px;
+  margin: 20px;
   padding: 16px;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(0, 0, 0, 0.25);
 }
 
-.line-chart span {
-  display: block;
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item {
+  display: flex;
   flex: 1;
-  min-height: 18px;
-  border-radius: 8px 8px 2px 2px;
-  background: linear-gradient(180deg, var(--blue), var(--gold));
-}
-
-.donut {
-  width: 180px;
-  height: 180px;
-  margin: 8px auto 18px;
-  border-radius: 50%;
-  background: conic-gradient(var(--gold) 0 42%, #fff 42% 70%, var(--red) 70% 88%, var(--blue) 88% 100%);
-  position: relative;
-}
-
-.donut::after {
-  content: "";
-  position: absolute;
-  inset: 42px;
-  border-radius: 50%;
-  background: #111;
-}
-
-.legend-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 13px;
-}
-
-.gold-dot,
-.white-dot,
-.red-dot,
-.blue-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.gold-dot { background: var(--gold); }
-.white-dot { background: #fff; }
-.red-dot { background: var(--red); }
-.blue-dot { background: var(--blue); }
-
-.rank-list {
-  display: grid;
-  gap: 10px;
-}
-
-.rank-list div {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 100%;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item span {
+  width: 100%;
+  min-height: 16px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress {
+  display: grid;
+  gap: 20px;
+  padding: 24px 20px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 9px;
+  font-size: 12px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p strong {
+  text-transform: uppercase;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p span {
+  color: var(--muted);
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress .progress-track {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress .progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel {
+  grid-column: span 2;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  padding: 20px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 13px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.rank-list strong {
-  color: var(--gold2);
-}
-
-.rank-list em {
-  color: var(--muted);
-  font-style: normal;
-}
-
-@media (max-width: 1180px) {
-  .cards-row,
-  .dashboard-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .cards-row,
-  .dashboard-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Current analytics.ejs class names */
-.cards-grid,
-.dashboard-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.cards-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 18px;
-}
-
-.dashboard-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.stat-panel {
-  min-height: 128px;
-}
-
-.stat-panel span {
-  color: var(--muted);
   font-size: 13px;
 }
 
-.stat-panel strong {
-  display: block;
-  margin: 12px 0 6px;
-  font-size: 31px;
-  line-height: 1;
+.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list article span {
+  color: var(--accent);
 }
 
-.stat-panel small {
-  color: var(--gold2);
-}
+@media (max-width: 900px) {
+  .admin-body .admin-layout .admin-main .admin-content .analytics-grid {
+    grid-template-columns: 1fr;
+  }
 
-@media (max-width: 1180px) {
-  .cards-grid,
-  .dashboard-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel {
+    grid-column: span 1;
   }
 }
 
-@media (max-width: 640px) {
-  .cards-grid,
-  .dashboard-grid {
+@media (max-width: 620px) {
+  .admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list {
     grid-template-columns: 1fr;
   }
 }

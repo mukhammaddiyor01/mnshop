@@ -1,73 +1,103 @@
-.settings-row {
+.admin-body .admin-layout .admin-main .admin-content .settings-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 16px;
 }
 
-.settings-form {
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form {
   display: grid;
-  gap: 12px;
+  gap: 16px;
+  padding: 20px;
 }
 
-.settings-form label {
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label {
   display: grid;
-  gap: 7px;
-  color: var(--muted);
+  gap: 8px;
+  color: var(--soft);
   font-size: 13px;
 }
 
-.settings-form input {
-  min-height: 43px;
-  padding: 0 12px;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input,
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea {
+  width: 100%;
+  padding: 0 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
   outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
 }
 
-.banner-box {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 12px;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input {
+  min-height: 44px;
 }
 
-.banner-box div,
-.switch-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea {
+  min-height: 112px;
+  padding-top: 12px;
+  resize: vertical;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input:focus,
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea:focus {
+  border-color: var(--accent);
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form .submit-btn {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #05080a;
+  font-weight: 900;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel {
+  padding: 20px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .controls-icon {
+  color: var(--accent);
+  font-size: 24px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel h3 {
+  margin-top: 12px;
+}
+
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row {
+  display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 15px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.045);
 }
 
-.banner-box span {
-  color: var(--gold2);
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row strong,
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row small {
+  display: block;
 }
 
-.banner-box em {
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row small {
+  margin-top: 5px;
   color: var(--muted);
-  font-style: normal;
+  font-size: 11px;
 }
 
-.switch-row {
-  grid-template-columns: 1fr auto;
-  margin-bottom: 10px;
-}
-
-.switch-btn {
-  width: 54px;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn {
+  flex: 0 0 auto;
+  width: 52px;
   height: 30px;
   padding: 3px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.switch-btn span {
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn span {
   display: block;
   width: 22px;
   height: 22px;
@@ -76,89 +106,31 @@
   transition: transform 160ms ease;
 }
 
-.switch-btn.active {
-  background: var(--gold);
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn.active {
+  background: var(--accent);
 }
 
-.switch-btn.active span {
-  transform: translateX(22px);
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn.active span {
+  transform: translateX(21px);
 }
 
-@media (max-width: 1180px) {
-  .settings-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .settings-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Current settings.ejs class names */
-.settings-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.admin-form {
-  display: grid;
-  gap: 12px;
-}
-
-.admin-form label {
-  display: grid;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.admin-form input {
-  min-height: 43px;
-  padding: 0 12px;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .line-btn {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
-  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-weight: 800;
 }
 
-.banner-list {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 12px;
+.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .line-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.banner-list div,
-.toggle-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.banner-list span {
-  color: var(--gold2);
-}
-
-.banner-list em {
-  color: var(--muted);
-  font-style: normal;
-}
-
-.toggle-row {
-  grid-template-columns: 1fr auto;
-  margin-bottom: 10px;
-}
-
-@media (max-width: 640px) {
-  .settings-grid {
+@media (max-width: 960px) {
+  .admin-body .admin-layout .admin-main .admin-content .settings-grid {
     grid-template-columns: 1fr;
   }
 }

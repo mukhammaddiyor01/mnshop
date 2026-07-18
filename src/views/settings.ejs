@@ -1,37 +1,25 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Settings', pageCss: '/css/settings.css', pageScript: '/js/settings.js' }) %>
 <body class="admin-body" data-page="settings">
-  <%- include('includes/admin-shell-start', { page: 'settings', heading: 'Settings', eyebrow: 'Site, banner, and commerce preferences' }) %>
+  <%- include('includes/admin-shell-start', { page: 'settings', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
 
   <div class="settings-grid">
-    <section class="panel">
-      <div class="panel-head"><div><p class="eyebrow">Site settings</p><h2>Brand identity</h2></div></div>
-      <form class="admin-form">
-        <label>Site name<input value="MNShop" /></label>
-        <label>Contact email<input value="support@mnshop.uz" /></label>
-        <label>Phone<input value="+82 10 0000 2026" /></label>
-        <label>Default commission<input value="12%" /></label>
-        <button class="submit-btn" type="button" data-toast="Settings saved locally">Save changes</button>
+    <section class="panel settings-form-panel">
+      <div class="panel-head"><div><h3>Site Settings</h3><p>Brand and notification preferences</p></div></div>
+      <form class="admin-form" data-settings-form>
+        <label>Site name<input name="siteName" value="MNShop" /></label>
+        <label>Contact email<input name="contact" value="hello@mnshop.uz" /></label>
+        <label>Default commission %<input name="commission" type="number" value="12" /></label>
+        <label>Order SMS template<textarea name="orderSms">Buyurtmangiz holati yangilandi: {{status}}</textarea></label>
+        <button class="submit-btn" type="submit">Save Settings</button>
       </form>
     </section>
-    <section class="panel">
-      <div class="panel-head"><div><p class="eyebrow">Hero banners</p><h2>Homepage slider</h2></div></div>
-      <div class="banner-list">
-        <div><span>01</span><strong>New Drop: Oversized Hoodies</strong><em>Active</em></div>
-        <div><span>02</span><strong>Seoul T-shirts for Uzbekistan</strong><em>Active</em></div>
-        <div><span>03</span><strong>Caps sale weekend</strong><em>Draft</em></div>
-      </div>
-      <button class="line-btn full" type="button" data-toast="Banner form is frontend-ready">Add banner</button>
-    </section>
-    <section class="panel wide">
-      <div class="panel-head"><div><p class="eyebrow">Maintenance</p><h2>Store controls</h2></div></div>
-      <div class="toggle-row">
-        <span>Maintenance mode</span>
-        <button class="switch-btn" type="button" data-toggle-state><span></span></button>
-      </div>
-      <div class="toggle-row">
-        <span>Cookie consent banner</span>
-        <button class="switch-btn active" type="button" data-toggle-state><span></span></button>
-      </div>
+    <section class="panel controls-panel">
+      <span class="controls-icon">⚙</span>
+      <h3>Controls</h3>
+      <p>Storefront and communication controls</p>
+      <label class="control-row"><span><strong>Maintenance mode</strong><small>Temporarily pause storefront purchases</small></span><button class="switch-btn" type="button" data-toggle-state><span></span></button></label>
+      <button class="line-btn" type="button" data-toast="Banner draft saved">Save Banner Draft</button>
+      <button class="line-btn" type="button" data-toast="Notification template tested">Send Test Notification</button>
     </section>
   </div>
 

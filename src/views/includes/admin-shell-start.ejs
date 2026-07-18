@@ -3,66 +3,89 @@
   const adminUser = typeof user !== "undefined" && user ? user : {};
   const adminName = adminUser.userNick || "MNShop Admin";
   const adminEmail = adminUser.userEmail || "admin@mnshop.uz";
+  const showFilters = ["users", "sellers", "products", "orders", "messages"].includes(activePage);
   const navItems = [
-    { key: "overview", label: "Overview", href: "/admin/overview", icon: "grid" },
-    { key: "users", label: "Buyers", href: "/admin/users/all", icon: "users" },
-    { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "store" },
-    { key: "products", label: "Products", href: "/admin/product/all", icon: "shirt" },
-    { key: "orders", label: "Orders", href: "/admin/orders", icon: "box" },
-    { key: "messages", label: "Messages", href: "/admin/messages", icon: "chat" },
-    { key: "analytics", label: "Analytics", href: "/admin/analytics", icon: "chart" },
-    { key: "settings", label: "Settings", href: "/admin/settings", icon: "gear" }
+    { key: "overview", label: "Overview", href: "/admin/overview", icon: "▦" },
+    { key: "users", label: "Users", href: "/admin/users/all", icon: "◎" },
+    { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "◇" },
+    { key: "products", label: "Products", href: "/admin/product/all", icon: "□" },
+    { key: "orders", label: "Orders", href: "/admin/orders", icon: "▣" },
+    { key: "messages", label: "Messages", href: "/admin/messages", icon: "✉" },
+    { key: "analytics", label: "Analytics", href: "/admin/analytics", icon: "⌁" },
+    { key: "settings", label: "Settings", href: "/admin/settings", icon: "⚙" }
   ];
 %>
 <div class="admin-layout">
+  <button class="sidebar-backdrop" type="button" data-close-sidebar aria-label="Close menu"></button>
   <aside class="admin-sidebar" id="adminSidebar">
-    <a class="logo-area" href="/admin/overview" aria-label="MNShop admin overview">
-      <span class="logo-badge">MN</span>
-      <span>
-        <strong>MNShop</strong>
-        <small>Admin Studio</small>
-      </span>
-    </a>
+    <div class="sidebar-brand">
+      <div>
+        <p>MNShop</p>
+        <h1>Admin</h1>
+      </div>
+      <span class="brand-shield">M</span>
+    </div>
 
     <nav class="side-nav" aria-label="Admin navigation">
       <% navItems.forEach(function(item) { %>
         <a class="side-link <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
-          <span class="side-icon" data-icon="<%= item.icon %>"></span>
-          <span><%= item.label %></span>
+          <span class="side-link-main">
+            <span class="side-icon"><%= item.icon %></span>
+            <span><%= item.label %></span>
+          </span>
+          <span class="side-arrow">›</span>
         </a>
       <% }) %>
     </nav>
 
-    <div class="sidebar-card">
-      <span class="card-kicker">K-culture drop</span>
-      <strong>Premium streetwear</strong>
-      <p>Track Uzbek buyers, Korean stock, seller activity, and order flow from one place.</p>
+    <div class="sidebar-account">
+      <span class="avatar"><%= adminName.slice(0, 2).toUpperCase() %></span>
+      <span>
+        <strong><%= adminName %></strong>
+        <small><%= adminEmail %></small>
+      </span>
     </div>
   </aside>
 
   <main class="admin-main">
     <header class="admin-topbar">
-      <button class="icon-button mobile-menu" type="button" data-toggle-sidebar aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-      <div>
-        <p class="eyebrow"><%= typeof eyebrow !== "undefined" ? eyebrow : "MNShop control center" %></p>
-        <h1><%= typeof heading !== "undefined" ? heading : "Dashboard" %></h1>
-      </div>
-      <div class="topbar-actions">
-        <label class="search-box">
-          <span>Search</span>
-          <input type="search" placeholder="Search dashboard..." data-admin-search />
-        </label>
-        <button class="line-btn" type="button" data-toast="Notifications synced">Bell</button>
-        <div class="admin-profile">
-          <div class="avatar"><%= adminName.slice(0, 2).toUpperCase() %></div>
+      <div class="topbar-title">
+        <div class="topbar-heading-row">
+          <button class="mobile-menu" type="button" data-toggle-sidebar aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
           <div>
-            <strong><%= adminName %></strong>
-            <small><%= adminEmail %></small>
+            <p><%= typeof eyebrow !== "undefined" ? eyebrow : "Platform Control" %></p>
+            <h2><%= typeof heading !== "undefined" ? heading : "Admin Panel" %></h2>
           </div>
         </div>
-        <a class="danger-link" href="/admin/logout">Logout</a>
+        <small>Live controls are ready in this BSSR dashboard.</small>
+      </div>
+
+      <div class="topbar-actions">
+        <% if (showFilters) { %>
+          <label class="search-box">
+            <span>⌕</span>
+            <input type="search" placeholder="Search <%= activePage %>" data-admin-search />
+          </label>
+          <select class="filter-select" data-status-filter>
+            <option value="all">All status</option>
+            <% if (activePage === "orders") { %>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            <% } else { %>
+              <option value="active">Active</option>
+              <option value="blocked">Blocked</option>
+              <option value="pending">Pending</option>
+              <option value="rejected">Rejected</option>
+              <option value="draft">Draft</option>
+            <% } %>
+          </select>
+        <% } %>
+        <a class="logout-btn" href="/admin/logout">Logout</a>
       </div>
     </header>
 

@@ -1,93 +1,63 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Overview', pageCss: '/css/overview.css', pageScript: '/js/overview.js' }) %>
 <body class="admin-body" data-page="overview">
-  <%- include('includes/admin-shell-start', { page: 'overview', heading: 'Overview', eyebrow: 'Live commerce pulse' }) %>
+  <%- include('includes/admin-shell-start', { page: 'overview', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
 
-  <div class="metric-grid">
-    <article class="metric-card gold">
-      <span>Total Revenue</span>
-      <strong>84.2M UZS</strong>
-      <small>+18% this week</small>
-    </article>
-    <article class="metric-card">
-      <span>Active Buyers</span>
+  <div class="kpi-grid">
+    <article class="kpi-card">
+      <span class="kpi-icon">◎</span>
+      <small>Total Users</small>
       <strong>1,284</strong>
-      <small>312 new in 30 days</small>
     </article>
-    <article class="metric-card">
-      <span>Active Sellers</span>
+    <article class="kpi-card">
+      <span class="kpi-icon">◇</span>
+      <small>Active Sellers</small>
       <strong>38</strong>
-      <small>6 pending approval</small>
     </article>
-    <article class="metric-card">
-      <span>Pending Orders</span>
+    <article class="kpi-card">
+      <span class="kpi-icon">□</span>
+      <small>Products</small>
+      <strong>96</strong>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-icon">$</span>
+      <small>Revenue Today</small>
+      <strong>4.9M</strong>
+    </article>
+    <article class="kpi-card">
+      <span class="kpi-icon">●</span>
+      <small>Pending Orders</small>
       <strong>27</strong>
-      <small>12 need shipment</small>
     </article>
   </div>
 
-  <div class="dashboard-grid">
-    <section class="panel wide">
+  <div class="overview-grid">
+    <section class="panel activity-panel">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Revenue trend</p>
-          <h2>Last 7 days</h2>
+          <h3>Real-time Activity</h3>
+          <p>Latest storefront and admin events</p>
         </div>
-        <button class="small-btn" type="button" data-toast="Revenue report exported">Export</button>
+        <span class="live-badge"><i></i> Live</span>
       </div>
-      <div class="bar-chart" aria-label="Revenue chart">
-        <% [48, 66, 52, 78, 88, 72, 96].forEach(function(value, index) { %>
-          <div class="bar-item">
-            <span style="height:<%= value %>%"></span>
-            <small>D<%= index + 1 %></small>
-          </div>
-        <% }) %>
+      <div class="activity-list">
+        <article><span class="activity-icon">▣</span><strong>New order MN-24002 placed</strong><small>now</small></article>
+        <article><span class="activity-icon">◇</span><strong>Busan Studio waiting approval</strong><small>2 min</small></article>
+        <article><span class="activity-icon">□</span><strong>Seoul Fog Hoodie marked featured</strong><small>8 min</small></article>
+        <article><span class="activity-icon">◎</span><strong>Nodir Yunusov was blocked</strong><small>14 min</small></article>
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel quick-panel">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Best seller</p>
-          <h2>Oversized Hoodie</h2>
-        </div>
-        <span class="status-pill success">Featured</span>
-      </div>
-      <div class="hero-product">
-        <div class="product-orbit">MN</div>
-        <div>
-          <strong>Black Seoul Hoodie</strong>
-          <p>316 units sold, 4.9 rating, top in Hoodies category.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="panel-head">
-        <div>
-          <p class="eyebrow">Recent activity</p>
-          <h2>Today</h2>
-        </div>
-      </div>
-      <ul class="activity-list">
-        <li><span></span>Madina placed order #MN-2048</li>
-        <li><span></span>Busan Studio requested seller approval</li>
-        <li><span></span>Cap collection stock dropped below 8</li>
-        <li><span></span>Admin featured Seoul Hoodie</li>
-      </ul>
-    </section>
-
-    <section class="panel wide">
-      <div class="panel-head">
-        <div>
-          <p class="eyebrow">Quick actions</p>
-          <h2>Admin shortcuts</h2>
+          <h3>Quick Actions</h3>
+          <p>Frequent admin controls</p>
         </div>
       </div>
       <div class="quick-actions">
-        <a href="/admin/users/all">Review buyers</a>
-        <a href="/admin/sellers">Approve sellers</a>
-        <a href="/admin/product/all">Feature products</a>
-        <a href="/admin/orders">Update orders</a>
+        <a class="primary-action" href="/admin/sellers">Review Seller Applications</a>
+        <a href="/admin/orders">Update Orders</a>
+        <button type="button" data-maintenance-toggle>Enable Maintenance Mode</button>
       </div>
     </section>
   </div>

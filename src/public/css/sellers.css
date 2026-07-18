@@ -1,77 +1,13 @@
-.cards-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 18px;
+.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table {
+  min-width: 1080px;
 }
 
-.small-stat {
-  min-height: 128px;
+.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table .commission-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.small-stat span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.small-stat strong {
-  display: block;
-  margin: 12px 0 6px;
-  font-size: 31px;
-  line-height: 1;
-}
-
-.small-stat small {
-  color: var(--gold2);
-}
-
-@media (max-width: 1180px) {
-  .cards-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .cards-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-.stat-panel {
-  min-height: 128px;
-}
-
-.stat-panel span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.stat-panel strong {
-  display: block;
-  margin: 12px 0 6px;
-  font-size: 31px;
-  line-height: 1;
-}
-
-.stat-panel small {
-  color: var(--gold2);
-}
-
-@media (max-width: 1180px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
+.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table .commission-input input {
+  width: 62px;
 }

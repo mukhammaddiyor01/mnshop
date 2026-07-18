@@ -23,12 +23,29 @@ routerAdmin.get("/logout", adminController.logout);
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
 /** ADMIN BSSR FRONTEND */
-routerAdmin.get("/overview", adminController.verifyAdmin, adminController.getOverview);
-routerAdmin.get("/sellers", adminController.verifyAdmin, adminController.getSellers);
-routerAdmin.get("/orders", adminController.verifyAdmin, adminController.getOrders);
-routerAdmin.get("/messages", adminController.verifyAdmin, adminController.getMessages);
-routerAdmin.get("/analytics", adminController.verifyAdmin, adminController.getAnalytics);
-routerAdmin.get("/settings", adminController.verifyAdmin, adminController.getSettings);
+routerAdmin.get("/overview", 
+    adminController.verifyAdmin, 
+    adminController.getOverview);
+
+routerAdmin.get("/sellers", 
+    adminController.verifyAdmin, 
+    adminController.getSellers);
+
+routerAdmin.get("/orders", 
+    adminController.verifyAdmin, 
+    adminController.getOrders);
+
+routerAdmin.get("/messages", 
+    adminController.verifyAdmin, 
+    adminController.getMessages);
+
+routerAdmin.get("/analytics", 
+    adminController.verifyAdmin, 
+    adminController.getAnalytics);
+    
+routerAdmin.get("/settings", 
+    adminController.verifyAdmin, 
+    adminController.getSettings);
 
 /** PRODUCT MANAGEMENT */
 routerAdmin.get(

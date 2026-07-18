@@ -1,55 +1,43 @@
-<%- include('includes/header', { pageTitle: 'MNShop Admin | Buyers', pageCss: '/css/users.css', pageScript: '/js/users.js' }) %>
+<%- include('includes/header', { pageTitle: 'MNShop Admin | Users', pageCss: '/css/users.css', pageScript: '/js/users.js' }) %>
 <body class="admin-body" data-page="users">
-  <%- include('includes/admin-shell-start', { page: 'users', heading: 'Buyer Management', eyebrow: 'Customers and order history' }) %>
+  <%- include('includes/admin-shell-start', { page: 'users', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
 
-  <div class="toolbar">
-    <div>
-      <h2>Buyers</h2>
-      <p>Change buyer status, inspect totals, and follow customer activity.</p>
+  <section class="panel management-panel">
+    <div class="panel-head">
+      <div>
+        <h3>Users Management</h3>
+        <p>Customer accounts, orders, and lifetime spend</p>
+      </div>
+      <span class="panel-control">☷</span>
     </div>
-    <button class="submit-btn" type="button" data-toast="Buyer CSV prepared">Download CSV</button>
-  </div>
-
-  <section class="panel">
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
-        <thead>
-          <tr>
-            <th>Buyer</th>
-            <th>Phone</th>
-            <th>Orders</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Joined</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Orders</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>
           <%
             const buyerRows = typeof users !== "undefined" && users && users.length ? users : [
-              { userNick: "Azizbek Karimov", userEmail: "azizbek@mail.uz", userPhone: "+998 90 000 200", myOrders: "5", userPoints: 1840000, userStatus: "ACTIVE", createdAt: "2026-07-01" },
-              { userNick: "Madina Sobirova", userEmail: "madina@mail.uz", userPhone: "+998 90 000 201", myOrders: "7", userPoints: 4920000, userStatus: "ACTIVE", createdAt: "2026-06-24" },
-              { userNick: "Nodir Yunusov", userEmail: "nodir@mail.uz", userPhone: "+998 90 000 202", myOrders: "1", userPoints: 766000, userStatus: "BLOCKED", createdAt: "2026-06-14" }
+              { userNick: "Azizbek Karimov", userEmail: "azizbek@mail.uz", userPhone: "+998 90 000 200", myOrders: 3, userPoints: 1840000, userStatus: "ACTIVE", createdAt: "2026-05-01" },
+              { userNick: "Madina Sobirova", userEmail: "madina@mail.uz", userPhone: "+998 90 000 201", myOrders: 7, userPoints: 4920000, userStatus: "ACTIVE", createdAt: "2026-04-18" },
+              { userNick: "Nodir Yunusov", userEmail: "nodir@mail.uz", userPhone: "+998 90 000 202", myOrders: 1, userPoints: 766000, userStatus: "BLOCKED", createdAt: "2026-04-03" }
             ];
             buyerRows.forEach(function(buyer) {
+              const status = String(buyer.userStatus || "ACTIVE").toLowerCase();
           %>
-            <tr>
-              <td>
-                <div class="entity-cell">
-                  <div class="avatar"><%= String(buyer.userNick || "BU").slice(0, 2).toUpperCase() %></div>
-                  <div><strong><%= buyer.userNick %></strong><small><%= buyer.userEmail %></small></div>
-                </div>
-              </td>
+            <tr data-status="<%= status %>">
+              <td><strong><%= buyer.userNick %></strong></td>
+              <td><%= buyer.userEmail %></td>
               <td><%= buyer.userPhone || "-" %></td>
+              <td><%= buyer.createdAt ? String(buyer.createdAt).slice(0, 10) : "-" %></td>
               <td><%= buyer.myOrders || 0 %></td>
               <td><%= Number(buyer.userPoints || 0).toLocaleString() %> UZS</td>
+              <td><span class="status-pill <%= status %>"><%= status %></span></td>
               <td>
-                <select class="status-change" data-toast="Buyer status changed">
-                  <option <%= buyer.userStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
-                  <option <%= buyer.userStatus === "BLOCKED" ? "selected" : "" %>>BLOCKED</option>
-                  <option <%= buyer.userStatus === "DELETED" ? "selected" : "" %>>DELETED</option>
-                </select>
+                <div class="table-actions">
+                  <button class="view-action" type="button" data-user-view="<%= buyer.userNick %>">◉ View</button>
+                  <button class="block-action" type="button" data-user-toggle><%= status === "blocked" ? "Activate" : "Block" %></button>
+                  <button class="delete-action" type="button" data-row-delete>⌫ Delete</button>
+                </div>
               </td>
-              <td><%= buyer.createdAt ? String(buyer.createdAt).slice(0, 10) : "-" %></td>
             </tr>
           <% }) %>
         </tbody>

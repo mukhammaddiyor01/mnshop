@@ -1,46 +1,48 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Products', pageCss: '/css/products.css', pageScript: '/js/products.js' }) %>
 <body class="admin-body" data-page="products">
-  <%- include('includes/admin-shell-start', { page: 'products', heading: 'Product Catalog', eyebrow: 'Feature, pause, and inspect MNShop inventory' }) %>
+  <%- include('includes/admin-shell-start', { page: 'products', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
 
-  <div class="toolbar">
-    <div>
-      <h2>Products</h2>
-      <p>Manage T-shirts, Hoodies, Caps, and Cups from all sellers.</p>
+  <section class="panel management-panel product-panel">
+    <div class="panel-head product-panel-head">
+      <div>
+        <h3>Products Management</h3>
+        <p><span data-selected-count>0</span> selected · <span data-visible-count>4</span> visible</p>
+      </div>
+      <div class="bulk-actions">
+        <button type="button" data-bulk-action="active">Activate</button>
+        <button type="button" data-bulk-action="draft">Deactivate</button>
+        <button class="danger" type="button" data-bulk-action="delete">Delete Selected</button>
+      </div>
     </div>
-    <button class="submit-btn" type="button" data-toast="Product form is frontend-ready">Add Product</button>
-  </div>
-
-  <section class="product-admin-grid" data-search-target>
-    <%
-      const productRows = typeof products !== "undefined" && products && products.length ? products : [
-        { productName: "Seoul Oversized Hoodie", productPrice: 680000, productDiscountPrice: 590000, productLeftCount: 12, productSold: 316, productStatus: "PROCESS", productFeatured: true, productSale: true },
-        { productName: "MN Signature T-Shirt", productPrice: 320000, productDiscountPrice: 279000, productLeftCount: 40, productSold: 284, productStatus: "PROCESS", productFeatured: true, productSale: false },
-        { productName: "Busan Logo Cap", productPrice: 210000, productDiscountPrice: 189000, productLeftCount: 21, productSold: 144, productStatus: "PAUSE", productFeatured: false, productSale: true },
-        { productName: "K-Culture Ceramic Cup", productPrice: 160000, productDiscountPrice: 140000, productLeftCount: 55, productSold: 92, productStatus: "PROCESS", productFeatured: false, productSale: false }
-      ];
-      productRows.forEach(function(product) {
-    %>
-      <article class="product-admin-card">
-        <div class="product-media"><span>MN</span></div>
-        <div class="product-card-body">
-          <div class="product-title-row">
-            <h3><%= product.productName %></h3>
-            <span class="status-pill <%= product.productStatus === "PROCESS" || product.productStatus === "ACTIVE" ? "success" : "warning" %>"><%= product.productStatus %></span>
-          </div>
-          <p><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</p>
-          <div class="product-meta">
-            <span>Stock <strong><%= product.productLeftCount || 0 %></strong></span>
-            <span>Sold <strong><%= product.productSold || 0 %></strong></span>
-            <span><%= product.productFeatured ? "Featured" : "Standard" %></span>
-          </div>
-          <div class="button-row">
-            <button type="button" data-toast="Product feature toggled">Feature</button>
-            <button type="button" data-toast="Product status updated">Pause</button>
-            <button type="button" class="danger" data-toast="Delete is frontend only">Delete</button>
-          </div>
-        </div>
-      </article>
-    <% }) %>
+    <div class="table-wrap">
+      <table class="admin-table" data-search-target>
+        <thead><tr><th><input type="checkbox" data-select-all /></th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Featured</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <%
+            const productRows = typeof products !== "undefined" && products && products.length ? products : [
+              { productName: "Seoul Oversized Hoodie", productCollection: "hoodies", productPrice: 680000, productDiscountPrice: 590000, productLeftCount: 12, productSold: 316, productStatus: "ACTIVE", productFeatured: true },
+              { productName: "MN Signature T-Shirt", productCollection: "tshirts", productPrice: 320000, productDiscountPrice: 279000, productLeftCount: 40, productSold: 284, productStatus: "ACTIVE", productFeatured: true },
+              { productName: "Busan Logo Cap", productCollection: "caps", productPrice: 210000, productDiscountPrice: 189000, productLeftCount: 21, productSold: 144, productStatus: "DRAFT", productFeatured: false },
+              { productName: "K-Culture Ceramic Cup", productCollection: "cups", productPrice: 160000, productDiscountPrice: 140000, productLeftCount: 55, productSold: 92, productStatus: "ACTIVE", productFeatured: false }
+            ];
+            productRows.forEach(function(product) {
+              const status = String(product.productStatus || "ACTIVE").toLowerCase() === "process" ? "active" : String(product.productStatus || "ACTIVE").toLowerCase();
+          %>
+            <tr data-status="<%= status %>">
+              <td><input type="checkbox" data-product-select /></td>
+              <td><strong><%= product.productName %></strong></td>
+              <td><%= product.productCollection || product.productCategory || "streetwear" %></td>
+              <td><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</td>
+              <td><%= product.productLeftCount || 0 %></td>
+              <td><%= product.productSold || 0 %></td>
+              <td><button class="feature-toggle <%= product.productFeatured ? "active" : "" %>" type="button" data-feature-toggle><%= product.productFeatured ? "Featured" : "Normal" %></button></td>
+              <td><span class="status-pill <%= status %>"><%= status %></span></td>
+              <td><div class="table-actions"><button class="view-action" type="button" data-product-edit>Edit</button><button class="reject-action" type="button" data-product-status><%= status === "active" ? "Deactivate" : "Activate" %></button></div></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <%- include('includes/admin-shell-end') %>
