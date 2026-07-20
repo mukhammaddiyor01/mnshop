@@ -1,0 +1,244 @@
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(7, 134, 194, 0.18), transparent 34%),
+    #080808;
+}
+
+.home-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.home-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgb(7, 134, 194);
+  color: #030303;
+  font-weight: 900;
+}
+
+.home-brand strong,
+.home-brand small {
+  display: block;
+}
+
+.home-brand strong {
+  font-size: 16px;
+  letter-spacing: 0.03em;
+}
+
+.home-brand small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.home-button:hover {
+  transform: translateY(-2px);
+}
+
+.home-button:focus-visible {
+  outline: 3px solid rgba(7, 134, 194, 0.35);
+  outline-offset: 3px;
+}
+
+.home-button-secondary {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.home-button-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.home-button-primary {
+  background: rgb(7, 134, 194);
+  color: #030303;
+  box-shadow: 0 10px 30px rgba(7, 134, 194, 0.25);
+}
+
+.home-button-primary:hover {
+  background: rgb(24, 158, 220);
+}
+
+.animation-frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: calc(100vh - 93px);
+  place-items: center;
+}
+
+.animation-wrapper,
+.sphere-animation {
+  display: grid;
+  place-items: center;
+}
+
+.sphere {
+  width: min(520px, 72vw);
+  filter: drop-shadow(0 30px 70px rgba(7, 134, 194, 0.18));
+}
+
+@media (max-width: 620px) {
+  .home-header {
+    align-items: stretch;
+    flex-direction: column;
+    width: min(100% - 32px, 1180px);
+    gap: 18px;
+  }
+
+  .home-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .animation-frame {
+    min-height: calc(100vh - 157px);
+  }
+}
+
+/* Animation */
+.home-animation {
+  display: grid;
+  min-height: calc(100vh - 93px);
+  padding: 40px 24px;
+  place-items: center;
+}
+
+.animation-stage {
+  width: min(100%, 1000px);
+}
+
+.animation-slides {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  backface-visibility: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide .row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.slide p {
+  margin: 0.65em;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.82rem, 2.2vw, 2rem);
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.slide p.center {
+  color: red;
+  font-family: Poppins, Inter, sans-serif;
+  font-weight: 900;
+  font-size: 70px;
+}
+
+.extra_color {
+  color: red;
+  font-family: Poppins, Inter, sans-serif;
+  font-weight: 900;
+}
+
+.features p {
+  color: rgb(101, 196, 239);
+}
+
+.slide:last-child p {
+  max-width: 760px;
+  color: #fff;
+  font-family: Poppins, Inter, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+@media (max-width: 620px) {
+  .home-animation {
+    min-height: calc(100vh - 157px);
+    padding: 28px 10px;
+  }
+
+  .animation-slides {
+    aspect-ratio: 4/5;
+  }
+
+  .slide p {
+    margin: 0.55em 0.35em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: none;
+  }
+}

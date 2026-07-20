@@ -1,1 +1,62 @@
-<%- include('overview') %>
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/home.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<body>
+  <div class="home-container">
+    <header class="home-header">
+      <a class="home-brand" href="/admin" aria-label="MNShop home">
+        <span class="home-brand-mark">MN</span>
+        <span>
+          <strong>MNShop</strong>
+          <small>Admin Studio</small>
+        </span>
+      </a>
+
+      <nav class="home-actions" aria-label="Home navigation">
+        <% if(!member) { %>
+          <a class="home-button home-button-secondary" href="/admin/login">Login</a>
+          <a class="home-button home-button-primary" href="/admin/signup">Sign Up</a>
+        <% } else { %>
+          <a class="home-button home-button-secondary" href="/admin/product/all">Products</a>
+          <a class="home-button home-button-secondary" href="/admin/user/all">Users</a>
+          <a
+            class="home-button home-button-primary"
+            href="/admin/logout"
+            onclick="return confirm('Do you want to logout?')"
+          >Logout</a>
+        <% } %>
+      </nav>
+    </header>
+
+    <section class="home-animation" aria-label="MNShop capabilities">
+      <div class="animation-stage">
+          <main class="animation-slides">
+            <div class="slide">
+              <div class="row"><p>Welcome</p><p>Adminjon</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p><p>Welcome</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p><p>Welcome</p><p>Welcome</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p><p class="extra_color">Adminbek</p><p>Welcome</p><p>Welcome</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p><p>Welcome</p><p>Welcome</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p><p>Adminchik</p></div>
+              <div class="row"><p>Welcome</p><p>Welcome</p></div>
+            </div>
+            <div class="slide features">
+              <div class="row"><p data-color="3">Seeing Prices</p><p data-color="8">Changing Statuses</p></div>
+              <div class="row"><p data-color="14">Orders</p><p data-color="0">Seller</p><p data-color="6">Buyer</p></div>
+              <div class="row"><p data-color="3">Messaging</p><p data-color="16">Overviews</p><p data-color="4">Control</p><p data-color="1">Texting</p></div>
+              <div class="row"><p data-color="11">Analysis</p><p data-color="5">Controlling</p><p data-color="10">Deleting</p></div>
+              <div class="row"><p data-color="13">Blocking</p><p data-color="2">Delivery Status</p></div>
+            </div>
+            <div class="slide">
+              <p>Please Login And Take Everything under your CONTROL</p>
+          </main>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/javascript" src="/js/home.js"></script>
+</body>
+
+<%- include('includes/footer') %>

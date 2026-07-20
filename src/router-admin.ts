@@ -5,7 +5,7 @@ import productController from './controllers/product.controller';
 import makeUploader from './libs/utils/uploader';
 
 /** ADMIN AUTH */
-routerAdmin.get('/', adminController.goHome);
+routerAdmin.get(['/', '/home'], adminController.goHome);
 
 routerAdmin
     .get("/login", adminController.getLogin)

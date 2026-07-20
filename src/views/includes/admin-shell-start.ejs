@@ -2,6 +2,8 @@
   const activePage = typeof page !== "undefined" ? page : "overview";
   const showFilters = ["users", "sellers", "products", "orders", "messages"].includes(activePage);
   const navItems = [
+    { key: "home", label: "Home", href: "/admin", icon: "layout-dashboard" },
+    { key: "login", label: "Login", href: "/admin/login", icon: "layout-dashboard" },
     { key: "overview", label: "Overview", href: "/admin/overview", icon: "layout-dashboard" },
     { key: "users", label: "Users", href: "/admin/users/all", icon: "users" },
     { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "user-check" },

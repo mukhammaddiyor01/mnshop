@@ -16,7 +16,8 @@ const renderAdminPage = (res: Response, view: string, data: T = {}) => {
 
 adminController.goHome = (req: Request, res: Response) => {
     try {
-        res.redirect("/admin/overview");
+        const sessionInstance = req.session as T;
+        res.render("home", { member: sessionInstance.user });
     } catch(err) {
         console.log("Error, goHome:", err);
     }
