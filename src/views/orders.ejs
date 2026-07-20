@@ -1,12 +1,9 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Orders', pageCss: '/css/orders.css', pageScript: '/js/orders.js' }) %>
 <body class="admin-body" data-page="orders">
-  <%- include('includes/admin-shell-start', { page: 'orders', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
+  <%- include('includes/admin-shell-start', { page: 'orders' }) %>
 
-  <section class="panel management-panel">
-    <div class="panel-head">
-      <div><h3>Orders Management</h3><p>Filter and update every order status</p></div>
-      <span class="panel-control">☷</span>
-    </div>
+  <section class="glass-panel management-panel">
+    <div class="panel-head"><div><h3>Orders Management</h3><p>Filter and update every order status</p></div><i data-lucide="sliders-horizontal"></i></div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
         <thead><tr><th>Order</th><th>Buyer</th><th>Seller</th><th>Date</th><th>Total</th><th>Tracking</th><th>Status</th><th>Update</th></tr></thead>

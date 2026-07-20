@@ -1,136 +1,16 @@
-.admin-body .admin-layout .admin-main .admin-content .settings-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 16px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form {
-  display: grid;
-  gap: 16px;
-  padding: 20px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label {
-  display: grid;
-  gap: 8px;
-  color: var(--soft);
-  font-size: 13px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input,
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea {
-  width: 100%;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  outline: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input {
-  min-height: 44px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea {
-  min-height: 112px;
-  padding-top: 12px;
-  resize: vertical;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label input:focus,
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form label textarea:focus {
-  border-color: var(--accent);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .settings-form-panel .admin-form .submit-btn {
-  min-height: 44px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #05080a;
-  font-weight: 900;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel {
-  padding: 20px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .controls-icon {
-  color: var(--accent);
-  font-size: 24px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel h3 {
-  margin-top: 12px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row strong,
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row small {
-  display: block;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row small {
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn {
-  flex: 0 0 auto;
-  width: 52px;
-  height: 30px;
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn span {
-  display: block;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 160ms ease;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn.active {
-  background: var(--accent);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .control-row .switch-btn.active span {
-  transform: translateX(21px);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .line-btn {
-  width: 100%;
-  min-height: 44px;
-  margin-top: 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--text);
-  font-weight: 800;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .settings-grid .controls-panel .line-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-@media (max-width: 960px) {
-  .admin-body .admin-layout .admin-main .admin-content .settings-grid {
-    grid-template-columns: 1fr;
-  }
-}
+.settings-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; }
+.settings-grid > section { padding: 20px; }
+.admin-form { display: grid; gap: 16px; margin-top: 20px; }
+.admin-form label { display: grid; gap: 8px; color: rgba(255, 255, 255, 0.6); font-size: 14px; }
+.admin-form input, .admin-form textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius); outline: none; background: rgba(255, 255, 255, 0.05); color: #fff; }
+.admin-form textarea { min-height: 112px; resize: vertical; }
+.admin-form input:focus, .admin-form textarea:focus { border-color: var(--gold); }
+.controls-panel > svg { color: var(--gold); }
+.controls-panel h3 { margin-top: 12px; }
+.control-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); }
+.control-row strong, .control-row small { display: block; }
+.control-row small { margin-top: 3px; color: var(--muted); font-size: 12px; }
+.control-row input { width: 20px; height: 20px; accent-color: var(--gold); }
+.controls-panel > button { width: 100%; min-height: 48px; margin-top: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; color: #fff; font-weight: 700; }
+.controls-panel > button:hover { background: rgba(255, 255, 255, 0.1); }
+@media (max-width: 960px) { .settings-grid { grid-template-columns: 1fr; } }

@@ -1,92 +1,72 @@
 <%
   const activePage = typeof page !== "undefined" ? page : "overview";
-  const adminUser = typeof user !== "undefined" && user ? user : {};
-  const adminName = adminUser.userNick || "MNShop Admin";
-  const adminEmail = adminUser.userEmail || "admin@mnshop.uz";
   const showFilters = ["users", "sellers", "products", "orders", "messages"].includes(activePage);
   const navItems = [
-    { key: "overview", label: "Overview", href: "/admin/overview", icon: "▦" },
-    { key: "users", label: "Users", href: "/admin/users/all", icon: "◎" },
-    { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "◇" },
-    { key: "products", label: "Products", href: "/admin/product/all", icon: "□" },
-    { key: "orders", label: "Orders", href: "/admin/orders", icon: "▣" },
-    { key: "messages", label: "Messages", href: "/admin/messages", icon: "✉" },
-    { key: "analytics", label: "Analytics", href: "/admin/analytics", icon: "⌁" },
-    { key: "settings", label: "Settings", href: "/admin/settings", icon: "⚙" }
+    { key: "overview", label: "Overview", href: "/admin/overview", icon: "layout-dashboard" },
+    { key: "users", label: "Users", href: "/admin/users/all", icon: "users" },
+    { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "user-check" },
+    { key: "products", label: "Products", href: "/admin/product/all", icon: "boxes" },
+    { key: "orders", label: "Orders", href: "/admin/orders", icon: "shopping-bag" },
+    { key: "messages", label: "Messages", href: "/admin/messages", icon: "message-square" },
+    { key: "analytics", label: "Analytics", href: "/admin/analytics", icon: "bar-chart-3" },
+    { key: "settings", label: "Settings", href: "/admin/settings", icon: "settings" }
   ];
 %>
-<div class="admin-layout">
-  <button class="sidebar-backdrop" type="button" data-close-sidebar aria-label="Close menu"></button>
-  <aside class="admin-sidebar" id="adminSidebar">
-    <div class="sidebar-brand">
-      <div>
-        <p>MNShop</p>
-        <h1>Admin</h1>
+<section class="admin-page">
+  <div class="admin-layout">
+    <button class="sidebar-backdrop" type="button" data-close-sidebar aria-label="Close menu"></button>
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <div>
+          <p>MNSHOP Organization</p>
+          <h1>Admin</h1>
+        </div>
+        <i data-lucide="shield-alert" aria-hidden="true"></i>
       </div>
-      <span class="brand-shield">M</span>
-    </div>
 
-    <nav class="side-nav" aria-label="Admin navigation">
-      <% navItems.forEach(function(item) { %>
-        <a class="side-link <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
-          <span class="side-link-main">
-            <span class="side-icon"><%= item.icon %></span>
-            <span><%= item.label %></span>
-          </span>
-          <span class="side-arrow">›</span>
-        </a>
-      <% }) %>
-    </nav>
+      <nav class="side-nav" aria-label="Admin navigation">
+        <% navItems.forEach(function(item) { %>
+          <a class="side-link <%= activePage === item.key ? "active" : "" %>" href="<%= item.href %>">
+            <span><i data-lucide="<%= item.icon %>" aria-hidden="true"></i><%= item.label %></span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </a>
+        <% }) %>
+      </nav>
+    </aside>
 
-    <div class="sidebar-account">
-      <span class="avatar"><%= adminName.slice(0, 2).toUpperCase() %></span>
-      <span>
-        <strong><%= adminName %></strong>
-        <small><%= adminEmail %></small>
-      </span>
-    </div>
-  </aside>
-
-  <main class="admin-main">
-    <header class="admin-topbar">
-      <div class="topbar-title">
-        <div class="topbar-heading-row">
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="topbar-copy">
           <button class="mobile-menu" type="button" data-toggle-sidebar aria-label="Open menu">
             <span></span><span></span><span></span>
           </button>
           <div>
-            <p><%= typeof eyebrow !== "undefined" ? eyebrow : "Platform Control" %></p>
-            <h2><%= typeof heading !== "undefined" ? heading : "Admin Panel" %></h2>
+            <p>Platform Control</p>
+            <h2>Admin Panel</h2>
+            <small>Live controls are ready in this demo dashboard.</small>
           </div>
         </div>
-        <small>Live controls are ready in this BSSR dashboard.</small>
-      </div>
 
-      <div class="topbar-actions">
         <% if (showFilters) { %>
-          <label class="search-box">
-            <span>⌕</span>
-            <input type="search" placeholder="Search <%= activePage %>" data-admin-search />
-          </label>
-          <select class="filter-select" data-status-filter>
-            <option value="all">All status</option>
-            <% if (activePage === "orders") { %>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
-            <% } else { %>
-              <option value="active">Active</option>
-              <option value="blocked">Blocked</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-              <option value="draft">Draft</option>
-            <% } %>
-          </select>
+          <div class="topbar-filters">
+            <label class="search-box">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input type="search" placeholder="Search <%= activePage %>" data-admin-search />
+            </label>
+            <select class="filter-select" data-status-filter>
+              <option value="all">All status</option>
+              <% if (activePage === "orders") { %>
+                <% ["pending", "processing", "shipped", "delivered", "cancelled"].forEach(function(status) { %>
+                  <option value="<%= status %>"><%= status %></option>
+                <% }) %>
+              <% } else { %>
+                <% ["active", "blocked", "pending", "rejected", "draft"].forEach(function(status) { %>
+                  <option value="<%= status %>"><%= status %></option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
         <% } %>
-        <a class="logout-btn" href="/admin/logout">Logout</a>
-      </div>
-    </header>
+      </header>
 
-    <section class="admin-content">
+      <section class="admin-content">

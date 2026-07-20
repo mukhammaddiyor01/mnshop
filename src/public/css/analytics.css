@@ -1,116 +1,17 @@
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  height: 280px;
-  margin: 20px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 100%;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item span {
-  width: 100%;
-  min-height: 16px;
-  border-radius: var(--radius) var(--radius) 0 0;
-  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .revenue-panel .bar-chart .bar-item small {
-  color: var(--muted);
-  font-size: 10px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress {
-  display: grid;
-  gap: 20px;
-  padding: 24px 20px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 0 9px;
-  font-size: 12px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p strong {
-  text-transform: uppercase;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress > div > p span {
-  color: var(--muted);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress .progress-track {
-  height: 12px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .category-panel .category-progress .progress-track span {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: var(--accent);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel {
-  grid-column: span 2;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  padding: 20px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list article {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  font-size: 13px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list article span {
-  color: var(--accent);
-}
-
-@media (max-width: 900px) {
-  .admin-body .admin-layout .admin-main .admin-content .analytics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel {
-    grid-column: span 1;
-  }
-}
-
-@media (max-width: 620px) {
-  .admin-body .admin-layout .admin-main .admin-content .analytics-grid .top-products-panel .top-product-list {
-    grid-template-columns: 1fr;
-  }
-}
+.analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.analytics-grid > section { padding: 20px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 256px; margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); }
+.bar-item { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; height: 100%; }
+.bar-item span { width: 100%; min-height: 12px; border-radius: var(--radius) var(--radius) 0 0; background: var(--gold); }
+.bar-item small { color: rgba(255, 255, 255, 0.35); font-size: 12px; }
+.category-progress { display: grid; gap: 16px; margin-top: 24px; }
+.category-progress article > div:first-child { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+.category-progress small { color: var(--muted); }
+.progress-track { height: 12px; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, 0.1); }
+.progress-track span { display: block; height: 100%; border-radius: 999px; background: var(--gold); }
+.top-products-panel { grid-column: span 2; }
+.top-products-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+.top-products-list article { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); }
+.top-products-list span { color: var(--gold); }
+@media (max-width: 900px) { .analytics-grid { grid-template-columns: 1fr; } .top-products-panel { grid-column: span 1; } }
+@media (max-width: 620px) { .top-products-list { grid-template-columns: 1fr; } }

@@ -1,48 +1,9 @@
-.admin-body .admin-layout .admin-main .admin-content .product-panel .product-panel-head {
-  align-items: center;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .product-panel-head .bulk-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .product-panel-head .bulk-actions button {
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .product-panel-head .bulk-actions button:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .product-panel-head .bulk-actions .danger {
-  border-color: var(--danger);
-  background: var(--danger);
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .table-wrap .admin-table {
-  min-width: 1080px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .table-wrap .admin-table .feature-toggle {
-  padding: 5px 10px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 900;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .product-panel .table-wrap .admin-table .feature-toggle.active {
-  background: var(--accent);
-  color: #05080a;
-}
+.product-panel .admin-table { min-width: 1000px; }
+.product-panel-head { align-items: center; }
+.bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.bulk-actions button, .feature-toggle { border: 1px solid var(--line); border-radius: 999px; background: transparent; color: #fff; font-size: 12px; font-weight: 700; }
+.bulk-actions button { min-height: 36px; padding: 0 16px; }
+.bulk-actions button:hover { background: rgba(255, 255, 255, 0.1); }
+.bulk-actions .danger { border-color: var(--ember); background: var(--ember); font-weight: 900; }
+.feature-toggle { padding: 5px 12px; background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.55); font-weight: 900; }
+.feature-toggle.active { border-color: var(--gold); background: var(--gold); color: #000; }

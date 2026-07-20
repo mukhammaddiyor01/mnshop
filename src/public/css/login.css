@@ -1,85 +1,93 @@
-.login-body {
+.auth-body {
   min-height: 100vh;
   background:
-    linear-gradient(135deg, rgba(114, 210, 255, 0.18), transparent 30%),
-    radial-gradient(circle at 80% 16%, rgba(114, 210, 255, 0.1), transparent 24%),
-    #05090d;
+    radial-gradient(circle at 8% 0%, rgba(214, 168, 79, 0.14), transparent 34rem),
+    linear-gradient(180deg, #0a0a0a 0%, #111111 48%, #0a0a0a 100%);
 }
 
-.login-body .login-wrapper {
+.auth-screen {
   display: grid;
   place-items: center;
   min-height: 100vh;
   padding: 24px;
 }
 
-.login-body .login-wrapper .login-box {
+.auth-panel {
   width: min(440px, 100%);
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.075);
+  background: var(--glass);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(22px);
 }
 
-.login-body .login-wrapper .login-box.signup-box {
+.auth-panel.wide-auth {
   width: min(720px, 100%);
 }
 
-.login-body .login-wrapper .login-box h1 {
-  margin-top: 12px;
+.auth-panel h1 {
+  margin: 12px 0 0;
+  font-family: Poppins, Inter, sans-serif;
+  font-size: 28px;
   text-align: center;
 }
 
-.login-body .login-wrapper .login-box p,
-.login-body .login-wrapper .login-box .login-link {
+.auth-panel > p,
+.auth-link {
+  color: var(--muted);
   text-align: center;
 }
 
-.login-body .login-wrapper .login-box .login-form {
+.auth-form {
   display: grid;
   gap: 12px;
   margin-top: 22px;
 }
 
-.login-body .login-wrapper .login-box .login-form.two-col {
+.auth-form.two-col {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.login-body .login-wrapper .login-box .login-form label {
+.auth-form label {
   display: grid;
   gap: 7px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.login-body .login-wrapper .login-box .login-form label input {
+.auth-form input {
   min-height: 43px;
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   outline: none;
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
 }
 
-.login-body .login-wrapper .login-box .login-form .span-two {
+.auth-form input:focus {
+  border-color: var(--gold);
+}
+
+.span-two {
   grid-column: span 2;
 }
 
-.login-body .login-wrapper .login-box .login-link {
+.auth-link {
   display: block;
   margin-top: 16px;
-  color: var(--accent-soft);
-  font-weight: 850;
+  color: var(--gold-soft);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 @media (max-width: 640px) {
-  .login-body .login-wrapper .login-box .login-form.two-col {
+  .auth-form.two-col {
     grid-template-columns: 1fr;
   }
 
-  .login-body .login-wrapper .login-box .login-form .span-two {
+  .span-two {
     grid-column: span 1;
   }
 }

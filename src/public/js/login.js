@@ -1,4 +1,4 @@
 (function () {
-  const firstInput = document.querySelector(".login-form input");
+  const firstInput = document.querySelector(".auth-form input");
   if (firstInput) firstInput.focus();
 })();

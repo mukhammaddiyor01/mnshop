@@ -1,13 +1,1 @@
-.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table {
-  min-width: 1080px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table .commission-input {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table .commission-input input {
-  width: 62px;
-}
+.management-panel .admin-table { min-width: 980px; }

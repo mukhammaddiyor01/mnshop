@@ -1,5 +1,5 @@
 (function () {
-  const form = document.querySelector(".login-form");
+  const form = document.querySelector(".auth-form");
   if (!form) return;
 
   form.addEventListener("submit", function (event) {

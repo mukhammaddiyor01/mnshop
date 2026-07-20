@@ -1,66 +1,42 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Overview', pageCss: '/css/overview.css', pageScript: '/js/overview.js' }) %>
 <body class="admin-body" data-page="overview">
-  <%- include('includes/admin-shell-start', { page: 'overview', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
+  <%- include('includes/admin-shell-start', { page: 'overview' }) %>
 
   <div class="kpi-grid">
-    <article class="kpi-card">
-      <span class="kpi-icon">◎</span>
-      <small>Total Users</small>
-      <strong>1,284</strong>
-    </article>
-    <article class="kpi-card">
-      <span class="kpi-icon">◇</span>
-      <small>Active Sellers</small>
-      <strong>38</strong>
-    </article>
-    <article class="kpi-card">
-      <span class="kpi-icon">□</span>
-      <small>Products</small>
-      <strong>96</strong>
-    </article>
-    <article class="kpi-card">
-      <span class="kpi-icon">$</span>
-      <small>Revenue Today</small>
-      <strong>4.9M</strong>
-    </article>
-    <article class="kpi-card">
-      <span class="kpi-icon">●</span>
-      <small>Pending Orders</small>
-      <strong>27</strong>
-    </article>
+    <% [
+      ["users", "Total Users", "4"],
+      ["badge-check", "Active Sellers", "1"],
+      ["boxes", "Products", "16"],
+      ["dollar-sign", "Revenue Today", "3,318,000 UZS"],
+      ["bell", "Pending Orders", "1"]
+    ].forEach(function(kpi) { %>
+      <article class="kpi-card">
+        <i data-lucide="<%= kpi[0] %>" aria-hidden="true"></i>
+        <p><%= kpi[1] %></p>
+        <strong><%= kpi[2] %></strong>
+      </article>
+    <% }) %>
   </div>
 
   <div class="overview-grid">
-    <section class="panel activity-panel">
-      <div class="panel-head">
-        <div>
-          <h3>Real-time Activity</h3>
-          <p>Latest storefront and admin events</p>
-        </div>
-        <span class="live-badge"><i></i> Live</span>
-      </div>
+    <section class="glass-panel activity-panel">
+      <h3>Real-time Activity</h3>
       <div class="activity-list">
-        <article><span class="activity-icon">▣</span><strong>New order MN-24002 placed</strong><small>now</small></article>
-        <article><span class="activity-icon">◇</span><strong>Busan Studio waiting approval</strong><small>2 min</small></article>
-        <article><span class="activity-icon">□</span><strong>Seoul Fog Hoodie marked featured</strong><small>8 min</small></article>
-        <article><span class="activity-icon">◎</span><strong>Nodir Yunusov was blocked</strong><small>14 min</small></article>
+        <% ["New order MN-24002 placed", "Busan Studio waiting approval", "Seoul Fog Hoodie marked featured", "Nodir Yunusov was blocked"].forEach(function(item) { %>
+          <article><span><%= item %></span><small>now</small></article>
+        <% }) %>
       </div>
     </section>
 
-    <section class="panel quick-panel">
-      <div class="panel-head">
-        <div>
-          <h3>Quick Actions</h3>
-          <p>Frequent admin controls</p>
-        </div>
-      </div>
+    <section class="glass-panel quick-panel">
+      <h3>Quick Actions</h3>
       <div class="quick-actions">
         <a class="primary-action" href="/admin/sellers">Review Seller Applications</a>
         <a href="/admin/orders">Update Orders</a>
         <button type="button" data-maintenance-toggle>Enable Maintenance Mode</button>
       </div>
     </section>
-  </div>
+  </div>a
 
   <%- include('includes/admin-shell-end') %>
   <%- include('includes/footer') %>

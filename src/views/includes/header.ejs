@@ -12,4 +12,8 @@
     <% if (typeof pageCss !== "undefined" && pageCss) { %>
       <link rel="stylesheet" type="text/css" href="<%= pageCss %>" />
     <% } %>
+    <% if (typeof pageScript !== "undefined" && pageScript) { %>
+      <script src="<%= pageScript %>" defer></script>
+    <% } %>
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   </head>

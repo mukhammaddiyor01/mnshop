@@ -1,3 +1,1 @@
-.admin-body .admin-layout .admin-main .admin-content .management-panel .table-wrap .admin-table {
-  min-width: 1060px;
-}
+.management-panel .admin-table { min-width: 900px; }

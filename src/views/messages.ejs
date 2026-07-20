@@ -1,6 +1,6 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Messages', pageCss: '/css/messages.css', pageScript: '/js/messages.js' }) %>
 <body class="admin-body" data-page="messages">
-  <%- include('includes/admin-shell-start', { page: 'messages', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
+  <%- include('includes/admin-shell-start', { page: 'messages' }) %>
 
   <section class="chat-shell">
     <aside class="conversation-list" data-search-target>
@@ -19,9 +19,9 @@
       <div class="thread-head"><h3 data-thread-title>Buyer support: hoodie size</h3><p>Moderation and support conversation</p></div>
       <div class="message-list" id="messageList">
         <div class="message bubble-left"><small>Madina · 12:20</small><p>M razmer oversized bo'ladimi?</p></div>
-        <div class="message bubble-right"><small>Admin · 12:23</small><p>Ha, MNShop hoodielar loose fit.</p></div>
+        <div class="message bubble-right"><small>Admin · 12:23</small><p>Ha, mnshop_blueprint hoodielar loose fit.</p></div>
       </div>
-      <form class="chat-form" data-chat-form><input type="text" name="message" placeholder="Reply as admin" autocomplete="off" /><button type="submit">Send</button></form>
+      <form class="message-form" data-message-form><input type="text" name="message" placeholder="Reply as admin" autocomplete="off" /><button type="submit">Send</button></form>
     </div>
   </section>
 

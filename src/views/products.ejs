@@ -1,18 +1,11 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Products', pageCss: '/css/products.css', pageScript: '/js/products.js' }) %>
 <body class="admin-body" data-page="products">
-  <%- include('includes/admin-shell-start', { page: 'products', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
+  <%- include('includes/admin-shell-start', { page: 'products' }) %>
 
-  <section class="panel management-panel product-panel">
+  <section class="glass-panel management-panel product-panel">
     <div class="panel-head product-panel-head">
-      <div>
-        <h3>Products Management</h3>
-        <p><span data-selected-count>0</span> selected · <span data-visible-count>4</span> visible</p>
-      </div>
-      <div class="bulk-actions">
-        <button type="button" data-bulk-action="active">Activate</button>
-        <button type="button" data-bulk-action="draft">Deactivate</button>
-        <button class="danger" type="button" data-bulk-action="delete">Delete Selected</button>
-      </div>
+      <div><h3>Products Management</h3><p><span data-selected-count>0</span> selected · <span data-visible-count>4</span> visible</p></div>
+      <div class="bulk-actions"><button type="button" data-bulk-action="active">Activate</button><button type="button" data-bulk-action="draft">Deactivate</button><button class="danger" type="button" data-bulk-action="delete">Delete Selected</button></div>
     </div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
@@ -20,24 +13,19 @@
         <tbody>
           <%
             const productRows = typeof products !== "undefined" && products && products.length ? products : [
-              { productName: "Seoul Oversized Hoodie", productCollection: "hoodies", productPrice: 680000, productDiscountPrice: 590000, productLeftCount: 12, productSold: 316, productStatus: "ACTIVE", productFeatured: true },
-              { productName: "MN Signature T-Shirt", productCollection: "tshirts", productPrice: 320000, productDiscountPrice: 279000, productLeftCount: 40, productSold: 284, productStatus: "ACTIVE", productFeatured: true },
-              { productName: "Busan Logo Cap", productCollection: "caps", productPrice: 210000, productDiscountPrice: 189000, productLeftCount: 21, productSold: 144, productStatus: "DRAFT", productFeatured: false },
-              { productName: "K-Culture Ceramic Cup", productCollection: "cups", productPrice: 160000, productDiscountPrice: 140000, productLeftCount: 55, productSold: 92, productStatus: "ACTIVE", productFeatured: false }
+              { productName: "Oversized Han Hoodie", productCollection: "hoodies", productPrice: 640000, productLeftCount: 12, productSold: 316, productStatus: "ACTIVE", productFeatured: true },
+              { productName: "MN Signature T-Shirt", productCollection: "tshirts", productPrice: 290000, productLeftCount: 40, productSold: 284, productStatus: "ACTIVE", productFeatured: true },
+              { productName: "MN Classic Cap", productCollection: "caps", productPrice: 220000, productLeftCount: 21, productSold: 144, productStatus: "DRAFT", productFeatured: false },
+              { productName: "Morning Seoul Cup", productCollection: "cups", productPrice: 160000, productLeftCount: 55, productSold: 92, productStatus: "ACTIVE", productFeatured: false }
             ];
             productRows.forEach(function(product) {
               const status = String(product.productStatus || "ACTIVE").toLowerCase() === "process" ? "active" : String(product.productStatus || "ACTIVE").toLowerCase();
           %>
             <tr data-status="<%= status %>">
-              <td><input type="checkbox" data-product-select /></td>
-              <td><strong><%= product.productName %></strong></td>
-              <td><%= product.productCollection || product.productCategory || "streetwear" %></td>
-              <td><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</td>
-              <td><%= product.productLeftCount || 0 %></td>
-              <td><%= product.productSold || 0 %></td>
+              <td><input type="checkbox" data-product-select /></td><td><strong><%= product.productName %></strong></td><td><%= product.productCollection || product.productCategory || "streetwear" %></td>
+              <td><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</td><td><%= product.productLeftCount || 0 %></td><td><%= product.productSold || 0 %></td>
               <td><button class="feature-toggle <%= product.productFeatured ? "active" : "" %>" type="button" data-feature-toggle><%= product.productFeatured ? "Featured" : "Normal" %></button></td>
-              <td><span class="status-pill <%= status %>"><%= status %></span></td>
-              <td><div class="table-actions"><button class="view-action" type="button" data-product-edit>Edit</button><button class="reject-action" type="button" data-product-status><%= status === "active" ? "Deactivate" : "Activate" %></button></div></td>
+              <td><span class="status-pill <%= status %>"><%= status %></span></td><td><div class="table-actions"><button class="view-action" type="button" data-product-edit>Edit</button><button class="reject-action" type="button" data-product-status><%= status === "active" ? "Deactivate" : "Activate" %></button></div></td>
             </tr>
           <% }) %>
         </tbody>

@@ -1,29 +1,24 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Analytics', pageCss: '/css/analytics.css', pageScript: '/js/analytics.js' }) %>
 <body class="admin-body" data-page="analytics">
-  <%- include('includes/admin-shell-start', { page: 'analytics', heading: 'Admin Panel', eyebrow: 'Platform Control' }) %>
+  <%- include('includes/admin-shell-start', { page: 'analytics' }) %>
 
   <div class="analytics-grid">
-    <section class="panel revenue-panel">
-      <div class="panel-head"><div><h3>Revenue Trend</h3><p>Current visible orders: 3,318,000 UZS</p></div></div>
-      <div class="bar-chart" data-chart>
-        <% [42, 58, 36, 78, 62, 91, 74].forEach(function(value, index) { %><div class="bar-item"><span style="height:<%= value %>%"></span><small><%= index + 1 %></small></div><% }) %>
-      </div>
+    <section class="glass-panel revenue-panel">
+      <h3>Revenue Trend</h3><p>Current visible orders: 3,318,000 UZS</p>
+      <div class="bar-chart"><% [42, 58, 36, 78, 62, 91, 74].forEach(function(value, index) { %><div class="bar-item"><span style="height:<%= value %>%"></span><small><%= index + 1 %></small></div><% }) %></div>
     </section>
-    <section class="panel category-panel">
-      <div class="panel-head"><div><h3>Category Performance</h3><p>Units sold by collection</p></div></div>
+    <section class="glass-panel category-panel">
+      <h3>Category Performance</h3>
       <div class="category-progress">
-        <% [["T-shirts", 84, 512], ["Hoodies", 100, 608], ["Caps", 46, 278], ["Cups", 30, 184]].forEach(function(item) { %>
-          <div><p><strong><%= item[0] %></strong><span><%= item[2] %> sold</span></p><div class="progress-track"><span style="width:<%= item[1] %>%"></span></div></div>
+        <% [["TSHIRTS", 84, 512], ["HOODIES", 100, 608], ["CAPS", 46, 278], ["CUPS", 30, 184]].forEach(function(item) { %>
+          <article><div><strong><%= item[0] %></strong><small><%= item[2] %> sold</small></div><div class="progress-track"><span style="width:<%= item[1] %>%"></span></div></article>
         <% }) %>
       </div>
     </section>
-    <section class="panel top-products-panel">
-      <div class="panel-head"><div><h3>Top Products by Revenue</h3><p>Best performing inventory</p></div></div>
-      <div class="top-product-list">
-        <article><strong>Seoul Oversized Hoodie</strong><span>186.4M UZS</span></article>
-        <article><strong>MN Signature T-Shirt</strong><span>79.2M UZS</span></article>
-        <article><strong>Busan Logo Cap</strong><span>27.2M UZS</span></article>
-        <article><strong>K-Culture Ceramic Cup</strong><span>12.8M UZS</span></article>
+    <section class="glass-panel top-products-panel">
+      <h3>Top Products by Revenue</h3>
+      <div class="top-products-list">
+        <% [["Oversized Han Hoodie", "202.2M UZS"], ["MN Signature T-Shirt", "82.4M UZS"], ["MN Classic Cap", "31.6M UZS"], ["Morning Seoul Cup", "14.7M UZS"]].forEach(function(product) { %><article><strong><%= product[0] %></strong><span><%= product[1] %></span></article><% }) %>
       </div>
     </section>
   </div>

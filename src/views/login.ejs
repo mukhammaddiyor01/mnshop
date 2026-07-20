@@ -1,19 +1,19 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Login', pageCss: '/css/login.css', pageScript: '/js/login.js' }) %>
-<body class="login-body">
-  <main class="login-wrapper">
-    <section class="login-box">
-      <a class="logo-area centered" href="/admin">
-        <span class="logo-badge">MN</span>
-        <span><strong>MNShop</strong><small>Admin Studio</small></span>
+<body class="auth-body">
+  <main class="auth-screen">
+    <section class="auth-panel">
+      <a class="brand-mark centered" href="/admin">
+        <span class="brand-icon">MN</span>
+        <span><strong>mnshop_blueprint</strong><small>Admin Studio</small></span>
       </a>
       <h1>Welcome back</h1>
       <p>Sign in to manage buyers, sellers, products, orders, and messages.</p>
-      <form class="login-form" action="/admin/login" method="POST">
+      <form class="auth-form" action="/admin/login" method="POST">
         <label>Admin nick<input name="userNick" type="text" placeholder="admin" required /></label>
         <label>Password<input name="userPassword" type="password" placeholder="Password" required /></label>
-        <button class="submit-btn full" type="submit">Sign In</button>
+        <button class="primary-button full" type="submit">Sign In</button>
       </form>
-      <a class="login-link" href="/admin/signup">Create admin account</a>
+      <a class="auth-link" href="/admin/signup">Create admin account</a>
     </section>
   </main>
   <%- include('includes/footer') %>

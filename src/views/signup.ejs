@@ -1,22 +1,22 @@
 <%- include('includes/header', { pageTitle: 'MNShop Admin | Signup', pageCss: '/css/login.css', pageScript: '/js/signup.js' }) %>
-<body class="login-body">
-  <main class="login-wrapper">
-    <section class="login-box signup-box">
-      <a class="logo-area centered" href="/admin">
-        <span class="logo-badge">MN</span>
-        <span><strong>MNShop</strong><small>Admin Studio</small></span>
+<body class="auth-body">
+  <main class="auth-screen">
+    <section class="auth-panel wide-auth">
+      <a class="brand-mark centered" href="/admin">
+        <span class="brand-icon">MN</span>
+        <span><strong>mnshop_blueprint</strong><small>Admin Studio</small></span>
       </a>
       <h1>Create admin</h1>
       <p>This form keeps the same BSSR signup flow and uploads admin avatar through the current backend.</p>
-      <form class="login-form two-col" action="/admin/signup" method="POST" enctype="multipart/form-data">
+      <form class="auth-form two-col" action="/admin/signup" method="POST" enctype="multipart/form-data">
         <label>Admin nick<input name="userNick" type="text" required /></label>
         <label>Email<input name="userEmail" type="email" required /></label>
         <label>Phone<input name="userPhone" type="text" required /></label>
         <label>Password<input name="userPassword" type="password" required /></label>
         <label class="span-two">Avatar<input name="userImage" type="file" accept="image/*" required /></label>
-        <button class="submit-btn full span-two" type="submit">Create Account</button>
+        <button class="primary-button full span-two" type="submit">Create Account</button>
       </form>
-      <a class="login-link" href="/admin/login">Already have an account?</a>
+      <a class="auth-link" href="/admin/login">Already have an account?</a>
     </section>
   </main>
   <%- include('includes/footer') %>
