@@ -8,11 +8,12 @@
       </a>
       <h1>Create admin</h1>
       <p>This form keeps the same BSSR signup flow and uploads admin avatar through the current backend.</p>
-      <form class="auth-form two-col" action="/admin/signup" method="POST" enctype="multipart/form-data">
-        <label>Admin nick<input name="userNick" type="text" required /></label>
-        <label>Email<input name="userEmail" type="email" required /></label>
-        <label>Phone<input name="userPhone" type="text" required /></label>
-        <label>Password<input name="userPassword" type="password" required /></label>
+      <form class="auth-form two-col" action="/admin/signup" method="POST" enctype="multipart/form-data" onsubmit="return validateSignupForm()">
+        <label>Admin nick<input class="user-nick" name="userNick" type="text" required /></label>
+        <label>Email<input class="user-email" name="userEmail" type="email" required /></label>
+        <label>Phone<input class="user-phone" name="userPhone" type="text" required /></label>
+        <label>Password<input class="user-password" name="userPassword" type="password" required /></label>
+        <label class="span-two">Confirm password<input class="confirm-password" type="password" required /></label>
         <label class="span-two">Avatar<input name="userImage" type="file" accept="image/*" required /></label>
         <button class="primary-button full span-two" type="submit">Create Account</button>
       </form>

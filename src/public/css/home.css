@@ -25,15 +25,48 @@
   gap: 12px;
 }
 
-.home-brand-mark {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgb(7, 134, 194);
-  color: #030303;
-  font-weight: 900;
+.home-logo {
+  position: relative;
+  display: block;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+}
+
+.home-logo-ring,
+.home-logo-center {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.home-logo-ring {
+  transform-origin: 50% 50%;
+  animation: mnshop-ring-spin 5s linear infinite;
+  will-change: transform;
+}
+
+.home-logo-center {
+  z-index: 1;
+}
+
+@keyframes mnshop-ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-logo-ring {
+    animation: none;
+  }
 }
 
 .home-brand strong,

@@ -1,18 +1,25 @@
-(function () {
-  const form = document.querySelector(".auth-form");
-  if (!form) return;
+console.log("Signup frontend javascript file");
 
-  form.addEventListener("submit", function (event) {
-    const requiredInputs = form.querySelectorAll("input[required]");
-    let hasEmptyInput = false;
+function validateSignupForm() {
+    const userNick = document.querySelector(".user-nick").value;
+    const userPhone = document.querySelector(".user-phone").value;
+    const userPassword = document.querySelector(".user-password").value;
+    const confirmPassword = document.querySelector(".confirm-password").value;
 
-    requiredInputs.forEach(function (input) {
-      if (!input.value.trim()) hasEmptyInput = true;
-    });
-
-    if (hasEmptyInput) {
-      event.preventDefault();
-      alert("Please insert all required inputs");
+    if (
+    userNick === "" || 
+    userPhone === ""  ||
+    userPassword === "" ||
+    confirmPassword === "" 
+    ) {
+        alert ("Please insert all required inputs");
+        return false;
     }
-  });
-})();
+
+    if (userPassword !== confirmPassword) {
+        alert("Password differs, please check!");
+        return false;
+    }
+
+    return true;
+}
