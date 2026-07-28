@@ -120,7 +120,7 @@ adminController.logout = async (
     try {
         console.log("processlogout");
         req.session.destroy(function() {
-            res.redirect("/admin/login")
+            res.redirect("/admin")
         });
     } catch(err) {
         console.log("Error, processLogin:", err);

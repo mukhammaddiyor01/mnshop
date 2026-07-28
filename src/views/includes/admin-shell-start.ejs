@@ -2,8 +2,6 @@
   const activePage = typeof page !== "undefined" ? page : "overview";
   const showFilters = ["users", "sellers", "products", "orders", "messages"].includes(activePage);
   const navItems = [
-    { key: "home", label: "Home", href: "/admin", icon: "layout-dashboard" },
-    { key: "login", label: "Login", href: "/admin/login", icon: "layout-dashboard" },
     { key: "overview", label: "Overview", href: "/admin/overview", icon: "layout-dashboard" },
     { key: "users", label: "Users", href: "/admin/users/all", icon: "users" },
     { key: "sellers", label: "Sellers", href: "/admin/sellers", icon: "user-check" },
@@ -34,6 +32,11 @@
           </a>
         <% }) %>
       </nav>
+
+      <a class="side-link sidebar-logout" href="/admin/logout">
+        <span><i data-lucide="log-out" aria-hidden="true"></i>Log out</span>
+        <i data-lucide="chevron-right" aria-hidden="true"></i>
+      </a>
     </aside>
 
     <main class="admin-main">

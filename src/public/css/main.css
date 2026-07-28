@@ -22,7 +22,7 @@ button { color: inherit; }
 .admin-page { min-height: 100vh; background: #080808; }
 .admin-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; width: min(1280px, 100%); margin: 0 auto; padding: 24px; }
 .admin-sidebar, .glass-panel, .kpi-card { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(17, 17, 17, 0.68); box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35); backdrop-filter: blur(22px); }
-.admin-sidebar { position: sticky; top: 24px; align-self: start; height: fit-content; padding: 16px; }
+.admin-sidebar { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; min-height: calc(100vh - 48px); padding: 16px; }
 .sidebar-brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .sidebar-brand p, .topbar-copy p { margin: 0; color: rgb(7, 134, 194); font-size: 12px; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; }
 .sidebar-brand h1 { margin: 2px 0 0; font-family: Poppins, Inter, sans-serif; font-size: 30px; font-weight: 900; }
@@ -33,6 +33,8 @@ button { color: inherit; }
 .side-link svg { width: 17px; height: 17px; }
 .side-link:hover { background: rgba(255, 255, 255, 0.1); color: rgb(7, 134, 194); }
 .side-link.active { background: rgb(7, 134, 194); color: #000; }
+.sidebar-logout { margin-top: auto; border: 1px solid rgba(244, 63, 94, 0.22); color: #fda4af; }
+.sidebar-logout:hover { border-color: rgba(244, 63, 94, 0.42); background: rgba(244, 63, 94, 0.1); color: #fecdd3; }
 .sidebar-backdrop { display: none; }
 .admin-main { display: grid; align-content: start; gap: 24px; min-width: 0; }
 .admin-topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255, 255, 255, 0.03); }

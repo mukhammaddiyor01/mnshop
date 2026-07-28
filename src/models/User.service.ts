@@ -4,6 +4,7 @@ import UserModel from "../schema/User.model";
 import Errors, { HttpCode, Message } from "../libs/Errors"
 import { UserStatus, UserType } from "../libs/enums/user.enum"
 import * as bcrypt from "bcryptjs";
+import { Product } from '../libs/types/product';
 
 
 class UserService {
@@ -128,6 +129,9 @@ class UserService {
 
         return result;
     }
+
+    
+    
 };
 
 

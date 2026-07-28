@@ -13,8 +13,7 @@ routerAdmin
 
 routerAdmin
     .get("/signup", adminController.getSignup)
-    .post(
-        "/signup",
+    .post("/signup",
         makeUploader("users").single("userImage"),
         adminController.processSignup
     );
