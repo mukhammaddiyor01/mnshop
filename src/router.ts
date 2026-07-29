@@ -15,7 +15,9 @@ router.post("/signup", userController.signup);
 
 /** 
  
-// SIGNUP/LOGIN
+// Seller
+
+// SIGNUP
 
  routerSeller.get(['/', '/home'], sellerController.goHome);
 
