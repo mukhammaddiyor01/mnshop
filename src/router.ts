@@ -5,16 +5,11 @@ import sellerController from "./controllers/seller.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
 
+// router.get('/', userController.goHome);
+
 router.post("/login", userController.login);
 
 router.post("/signup", userController.signup);
-
-
-// router.get('/', memberController.goHome);
-
-// router.get("/login", memberController.getLogin);
-
-// router.get("/signup", memberController.getSignUp);
 
 
 /** Seller */
@@ -28,6 +23,12 @@ router.post(
     sellerController.verifySeller,
     makeUploader("products").array("productImages", 5),
     productController.createNewProduct
+);
+
+router.post(
+    "/seller/product/:id",
+    sellerController.verifySeller,
+    productController.updateChosenProduct
 );
 
     /** 

@@ -50,12 +50,6 @@ routerAdmin.get(
 );
 
 
-routerAdmin.post(
-    "/product/:id",
-    adminController.verifyAdmin,
-    productController.updateChosenProduct
-);
-
 /** BUYER MANAGEMENT */
 routerAdmin.get(
     "/users/all",
