@@ -12,12 +12,7 @@
         <thead><tr><th><input type="checkbox" data-select-all /></th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Featured</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>
           <%
-            const productRows = typeof products !== "undefined" && products && products.length ? products : [
-              { productName: "Oversized Han Hoodie", productCollection: "hoodies", productPrice: 640000, productLeftCount: 12, productSold: 316, productStatus: "ACTIVE", productFeatured: true },
-              { productName: "MN Signature T-Shirt", productCollection: "tshirts", productPrice: 290000, productLeftCount: 40, productSold: 284, productStatus: "ACTIVE", productFeatured: true },
-              { productName: "MN Classic Cap", productCollection: "caps", productPrice: 220000, productLeftCount: 21, productSold: 144, productStatus: "DRAFT", productFeatured: false },
-              { productName: "Morning Seoul Cup", productCollection: "cups", productPrice: 160000, productLeftCount: 55, productSold: 92, productStatus: "ACTIVE", productFeatured: false }
-            ];
+            const productRows = typeof products !== "undefined" && products ? products : [];
             productRows.forEach(function(product) {
               const status = String(product.productStatus || "ACTIVE").toLowerCase() === "process" ? "active" : String(product.productStatus || "ACTIVE").toLowerCase();
           %>

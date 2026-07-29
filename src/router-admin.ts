@@ -52,6 +52,15 @@ routerAdmin.get(
     adminController.verifyAdmin,
     productController.getAllProducts
 );
+
+routerAdmin.post(
+    "/product/create",
+    adminController.verifyAdmin,
+    makeUploader("products").array("productImages", 5),
+    productController.createNewProduct
+);
+
+
 routerAdmin.post(
     "/product/:id",
     adminController.verifyAdmin,
