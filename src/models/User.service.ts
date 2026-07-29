@@ -5,6 +5,7 @@ import Errors, { HttpCode, Message } from "../libs/Errors"
 import { UserStatus, UserType } from "../libs/enums/user.enum"
 import * as bcrypt from "bcryptjs";
 import { Product } from '../libs/types/product';
+import { Seller } from "../libs/types/seller";
 
 
 class UserService {
@@ -49,8 +50,6 @@ class UserService {
         }
         // @ts-ignore
         return await this.userModel.findById(user._id).lean().exec();
-        
-
     }
 
 
@@ -129,6 +128,8 @@ class UserService {
 
         return result;
     }
+
+    
 
     
     

@@ -24,7 +24,7 @@ export interface Seller {
 }
 
 export interface SellerInput {
-    selleNick: string;
+    sellerNick: string;
     sellerEmail: string;
     sellerPhone: string;
     sellerPassword: string;
@@ -46,7 +46,8 @@ export interface SellerLoginInput {
 }
 
 export interface SellerUpdateInput {
-    selleNick: string;
+    _id: Types.ObjectId;
+    sellerNick: string;
     sellerEmail: string;
     sellerPhone: string;
     sellerPassword: string;

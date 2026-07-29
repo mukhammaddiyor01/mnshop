@@ -26,10 +26,6 @@ routerAdmin.get("/overview",
     adminController.verifyAdmin, 
     adminController.getOverview);
 
-routerAdmin.get("/sellers", 
-    adminController.verifyAdmin, 
-    adminController.getSellers);
-
 routerAdmin.get("/orders", 
     adminController.verifyAdmin, 
     adminController.getOrders);
@@ -79,5 +75,20 @@ routerAdmin.post(
     adminController.verifyAdmin,
     adminController.updateChosenUser
 );
+
+/** Seller MANAGEMENT */
+
+routerAdmin.get(
+    "/sellers",
+    adminController.verifyAdmin,
+    adminController.getSellers
+);
+
+routerAdmin.post(
+    "/seller/edit",
+    adminController.verifyAdmin,
+    adminController.updateChosenSeller
+);
+
 
 export default routerAdmin;

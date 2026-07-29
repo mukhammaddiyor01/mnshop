@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 const router = express.Router();
 import userController from "./controllers/user.controller";
+import sellerController from "./controllers/seller.controller";
 
 router.post("/login", userController.login);
 
@@ -13,9 +14,15 @@ router.post("/signup", userController.signup);
 
 // router.get("/signup", memberController.getSignUp);
 
+
+/** Seller */
+ router
+    .post("/seller/login", sellerController.login)
+router
+    .post("/seller/signup", sellerController.signup);
 /** 
  
-// Seller
+
 
 // SIGNUP
 

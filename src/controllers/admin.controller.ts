@@ -5,8 +5,10 @@ import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors"
+import SellerService from "../models/Seller.service";
 
 const userService = new UserService();
+const sellerService = new SellerService();
 
 const adminController: T = {};
 
@@ -27,9 +29,6 @@ adminController.getOverview = (req: Request, res: Response) => {
     renderAdminPage(res, "overview");
 };
 
-adminController.getSellers = (req: Request, res: Response) => {
-    renderAdminPage(res, "sellers");
-};
 
 adminController.getOrders = (req: Request, res: Response) => {
     renderAdminPage(res, "orders");
@@ -152,6 +151,34 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
         else res.status(Errors.standard.code).json(Errors.standard);
     }
 };
+
+// SELLERS
+
+adminController.getSellers = async (req: Request, res: Response) => {
+    try{
+        console.log("getSellers");
+        const result = await sellerService.getSellers();
+
+        res.render("sellers", { sellers: result });
+    } catch(err) {
+        console.log("Error, getSellers:", err);
+        res.render("sellers", { sellers: [] });
+    }
+};
+
+adminController.updateChosenSeller = async (req: Request, res: Response) => {
+    try {
+        console.log("updateChosenSeller");
+        const result = await sellerService.updateChosenSeller(req.body);
+
+        res.status(HttpCode.OK).json({ data: result });
+    } catch(err) {
+        console.log("Error, updateChosenSeller:", err);
+        if (err instanceof Errors) res.status(err.code).json(err);
+        else res.status(Errors.standard.code).json(Errors.standard);
+    }
+};
+
 
 adminController.checkAuthSession = async (
     req: AdminRequest,
