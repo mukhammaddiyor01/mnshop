@@ -2,6 +2,8 @@ import express, {Request, Response} from "express";
 const router = express.Router();
 import userController from "./controllers/user.controller";
 import sellerController from "./controllers/seller.controller";
+import makeUploader from "./libs/utils/uploader";
+import productController from "./controllers/product.controller";
 
 router.post("/login", userController.login);
 
@@ -20,7 +22,15 @@ router.post("/signup", userController.signup);
     .post("/seller/login", sellerController.login)
 router
     .post("/seller/signup", sellerController.signup);
-/** 
+
+router.post(
+    "/seller/product/create",
+    sellerController.verifySeller,
+    makeUploader("products").array("productImages", 5),
+    productController.createNewProduct
+);
+
+    /** 
  
 
 

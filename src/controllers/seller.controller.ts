@@ -46,6 +46,46 @@ sellerController.login = async (req: Request, res: Response) => {
     }
 };
 
+sellerController.login = async (req: Request, res: Response) => {
+    try {
+        console.log("seller login");
+
+        const input: SellerLoginInput = req.body;
+        const result = await sellerService.login(input);
+
+        const sessionInstance = req.session as T;
+        sessionInstance.user = result;
+
+        req.session.save(function () {
+            res.json({ seller: result });
+        });
+    } catch (err) {
+        console.log("Error, seller login:", err);
+
+        if (err instanceof Errors) {
+            res.status(err.code).json(err);
+        } else {
+            res.status(Errors.standard.code).json(Errors.standard);
+        }
+    }
+};
+
+
+sellerController.verifySeller = (
+    req: AdminRequest,
+    res: Response,
+    next: NextFunction
+) => {
+    if(req.session?.user?.userType === UserType.SELLER) {
+        req.user = req.session.user;
+        next();
+    } else {
+        const message = Message.NOT_AUTHENTICATED;
+        res.send(
+            `<script> alert("${message}"); window.location.replace('/seller/login'); </script>`
+        )
+    }
+};
 
 
 export default sellerController;

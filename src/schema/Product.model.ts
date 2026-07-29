@@ -36,7 +36,7 @@ const productSchema = new Schema(
 
         productDiscountPrice: {
             type: Number,
-            required: true,
+            required: false,
         },
 
         productImages: {

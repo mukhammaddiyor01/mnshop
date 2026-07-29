@@ -49,13 +49,6 @@ routerAdmin.get(
     productController.getAllProducts
 );
 
-routerAdmin.post(
-    "/product/create",
-    adminController.verifyAdmin,
-    makeUploader("products").array("productImages", 5),
-    productController.createNewProduct
-);
-
 
 routerAdmin.post(
     "/product/:id",
@@ -89,6 +82,8 @@ routerAdmin.post(
     adminController.verifyAdmin,
     adminController.updateChosenSeller
 );
+
+
 
 
 export default routerAdmin;
