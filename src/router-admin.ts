@@ -43,11 +43,7 @@ routerAdmin.get("/settings",
     adminController.getSettings);
 
 /** PRODUCT MANAGEMENT */
-routerAdmin.get(
-    "/product/all",
-    adminController.verifyAdmin,
-    productController.getAllProducts
-);
+
 
 
 /** BUYER MANAGEMENT */

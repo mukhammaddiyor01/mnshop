@@ -5,6 +5,9 @@ import sellerController from "./controllers/seller.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
 
+
+/* BUYER */
+
 // router.get('/', userController.goHome);
 
 router.post("/login", userController.login);
@@ -25,9 +28,15 @@ router.post(
     productController.createNewProduct
 );
 
+router.get(
+    "/product/all",
+    sellerController.verifySeller,
+    productController.getAllProducts
+);
+
 router.post(
     "/seller/product/:id",
-    sellerController.verifySeller,
+    // sellerController.verifySeller,
     productController.updateChosenProduct
 );
 
