@@ -33,9 +33,9 @@
       const pill = row && row.querySelector(".status-pill");
       if (!row || !pill) return;
       const active = row.getAttribute("data-status") === "active";
-      row.setAttribute("data-status", active ? "draft" : "active");
-      pill.className = `status-pill ${active ? "draft" : "active"}`;
-      pill.textContent = active ? "draft" : "active";
+      row.setAttribute("data-status", active ? "pause" : "active");
+      pill.className = `status-pill ${active ? "pause" : "active"}`;
+      pill.textContent = active ? "pause" : "active";
       button.textContent = active ? "Activate" : "Deactivate";
       window.showAdminToast && window.showAdminToast("Product updated");
     });

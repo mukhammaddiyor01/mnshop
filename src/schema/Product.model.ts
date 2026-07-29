@@ -9,6 +9,12 @@ const productSchema = new Schema(
             default: ProductStatus.PAUSE,
         },
 
+        productType: {
+            type: String,
+            enum: ProductType,
+            default: ProductType.TSHIRT,
+        },
+
         productName: {
             type: String,
             required: true,
@@ -91,7 +97,7 @@ const productSchema = new Schema(
 );
 
 productSchema.index(
-    {productName: 1, productSize: 1, productColors: 1 },
+    {productName: 1, productSizes: 1, productColors: 1 },
     { unique: true }
 );
 

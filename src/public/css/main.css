@@ -65,7 +65,7 @@ button { color: inherit; }
 .status-pill.blocked, .status-pill.cancelled { background: rgba(244, 63, 94, 0.2); color: #fda4af; }
 .status-pill.pending { background: rgba(250, 204, 21, 0.2); color: #fde68a; }
 .status-pill.processing, .status-pill.shipped { background: rgba(59, 130, 246, 0.2); color: #bfdbfe; }
-.status-pill.draft, .status-pill.rejected { background: rgba(113, 113, 122, 0.2); color: #d4d4d8; }
+.status-pill.pause, .status-pill.draft, .status-pill.rejected { background: rgba(113, 113, 122, 0.2); color: #d4d4d8; }
 .table-actions { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .table-actions button { display: inline-flex; align-items: center; gap: 3px; padding: 0; border: 0; background: transparent; font-size: 13px; }
 .table-actions svg { width: 16px; height: 16px; }

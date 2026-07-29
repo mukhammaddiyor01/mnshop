@@ -1,7 +1,27 @@
-.chat-shell { display: grid; grid-template-columns: 330px minmax(0, 1fr); min-height: 620px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); }
-.conversation-list { border-right: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); }
-.conversation-item { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; border: 0; background: transparent; color: #fff; text-align: left; }
-.conversation-item:hover { background: rgba(255, 255, 255, 0.1); }
+.chat-shell { 
+    display: grid; 
+    grid-template-columns: 330px minmax(0, 1fr); 
+    min-height: 620px; 
+    overflow: hidden; 
+    border: 1px solid var(--line); 
+    border-radius: var(--radius); 
+}
+.conversation-list { 
+    border-right: 1px solid var(--line); 
+    background: rgba(255, 255, 255, 0.03); 
+}
+.conversation-item { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%; 
+    padding: 16px 20px; 
+    border: 0; 
+    background: transparent; 
+    color: #fff; 
+    text-align: left; }
+.conversation-item:hover { 
+    background: rgba(212, 9, 9, 0.1); }
 .conversation-item.active { background: rgba(214, 168, 79, 0.1); color: var(--gold); }
 .conversation-item strong, .conversation-item small { display: block; }
 .conversation-item strong { font-size: 14px; }
