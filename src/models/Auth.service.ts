@@ -1,29 +1,47 @@
-// import { AUTH_TIMER } from "../libs/config";
-// import Errors, { HttpCode, Message } from "../libs/Errors";
-// import { Member } from "../libs/types/member";
-// import jwt from "jsonwebtoken";
+import { AUTH_TIMER } from "../libs/config";
+import Errors, { HttpCode, Message } from "../libs/Errors";
+import { User } from "../libs/types/user";
+import jwt from "jsonwebtoken";
 
+class AuthService {
+    private readonly secretToken: string;
 
+    constructor() {
+        const secretToken =
+            process.env.SECRET_TOKEN ?? process.env.SESSION_SECRET;
 
-// class AuthService {
-//     constructor() {
-//     }
+        if (!secretToken) {
+            throw new Error("SECRET_TOKEN or SESSION_SECRET is required");
+        }
 
-//     public async createToken(payload: Member) {
-//         return new Promise((resolve, reject) => {
-//             const duration = `${AUTH_TIMER}h`;
-//             jwt.sign(payload, process.env.SECRET_TOKEN as string, {
-//                 expiresIn: duration,
-//             }, (err, token) => {
-//                 if (err) 
-//                     reject(
-//                 new Errors(HttpCode.UNAUTHORIZED, Message.TOKEN_CREATION_FAILED)
-//                     );
-//                 else resolve(token as string);
-//             });
-//         });
-//     }
-// }
+        this.secretToken = secretToken;
+    }
 
+    public async createToken(payload: User): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            jwt.sign(payload, this.secretToken, {
+                expiresIn: AUTH_TIMER * 60 * 60,
+            }, (error: Error | null, token?: string) => {
+                if (error || !token) {
+                    reject(
+                        new Errors(
+                            HttpCode.UNAUTHORIZED,
+                            Message.TOKEN_CREATION_FAILED
+                        )
+                    );
+                    return;
+                }
 
-// export default AuthService;
+                resolve(token);
+            });
+        });
+    }
+
+    public async checkAuth(token: string): Promise<User> {
+        const result = jwt.verify(token, this.secretToken) as User;
+        console.log(`--- [AUTH] userNick: ${result.userNick} ---`);
+        return result;
+    }
+}
+
+export default AuthService;
