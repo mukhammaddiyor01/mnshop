@@ -26,14 +26,6 @@ routerAdmin.get("/overview",
     adminController.verifyAdmin, 
     adminController.getOverview);
 
-routerAdmin.get("/orders", 
-    adminController.verifyAdmin, 
-    adminController.getOrders);
-
-routerAdmin.get("/messages", 
-    adminController.verifyAdmin, 
-    adminController.getMessages);
-
 routerAdmin.get("/analytics", 
     adminController.verifyAdmin, 
     adminController.getAnalytics);
@@ -43,8 +35,35 @@ routerAdmin.get("/settings",
     adminController.getSettings);
 
 /** PRODUCT MANAGEMENT */
+routerAdmin.post(
+    "/seller/product/create",
+    adminController.verifySeller,
+    makeUploader("products").array("productImages", 5),
+    productController.createNewProduct
+);
 
+routerAdmin.get(
+    "/product/all",
+    adminController.verifySeller,
+    productController.getAllProducts
+);
 
+routerAdmin.post(
+    "/seller/product/:id",
+    // sellerController.verifySeller,
+    adminController.verifySeller,
+    productController.updateChosenProduct
+);
+
+/** ORDER MANAGEMENT */
+routerAdmin.get("/orders", 
+    adminController.verifyAdmin, 
+    adminController.getOrders);
+
+/** CHAT MANAGEMENT */
+routerAdmin.get("/messages", 
+    adminController.verifyAdmin, 
+    adminController.getMessages);
 
 /** BUYER MANAGEMENT */
 routerAdmin.get(
