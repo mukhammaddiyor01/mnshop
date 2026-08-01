@@ -14,6 +14,23 @@ router.post("/login", userController.login);
 
 router.post("/signup", userController.signup);
 
+/**
+router.get("/products ", usercontroller.products) 
+router.get("/products/product ", usercontroller.product) 
+router.get("/categories/category ", usercontroller.category) 
+router.get("/cart ", usercontroller.cart) 
+router.get("/likes ", usercontroller.likes) 
+router.get("/checkout ", usercontroller.checkout) 
+router.get("/orders ", usercontroller.orders) 
+router.get("/chat ", usercontroller.chat) 
+router.get("/about ", usercontroller.about) 
+router.get("/help ", usercontroller.help)
+ 
+router.get("/orders ", usercontroller.orders) 
+router.post("/order ", usercontroller.order) 
+
+ */
+
 
 /** Seller */
  router
