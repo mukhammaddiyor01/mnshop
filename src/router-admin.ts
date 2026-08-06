@@ -35,23 +35,17 @@ routerAdmin.get("/settings",
     adminController.getSettings);
 
 /** PRODUCT MANAGEMENT */
-routerAdmin.post(
-    "/seller/product/create",
-    adminController.verifySeller,
-    makeUploader("products").array("productImages", 5),
-    productController.createNewProduct
-);
 
 routerAdmin.get(
     "/product/all",
-    adminController.verifySeller,
+    adminController.verifyAdmin,
     productController.getAllProducts
 );
 
 routerAdmin.post(
     "/seller/product/:id",
     // sellerController.verifySeller,
-    adminController.verifySeller,
+    adminController.verifyAdmin,
     productController.updateChosenProduct
 );
 
@@ -59,6 +53,10 @@ routerAdmin.post(
 routerAdmin.get("/orders", 
     adminController.verifyAdmin, 
     adminController.getOrders);
+
+// routerAdmin.post("/order/:id", 
+//     adminController.verifyAdmin, 
+//     orderController.updateChosenOrder);
 
 /** CHAT MANAGEMENT */
 routerAdmin.get("/messages", 
