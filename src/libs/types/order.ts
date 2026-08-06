@@ -1,59 +1,63 @@
 import { Types } from "mongoose";
 import { T } from "./common";
-import { OrderStatus, PaymentStatus, DeliveryStatus, PaymentMethod } from "../enums/order.enum";
-
+import {
+  OrderStatus,
+  PaymentStatus,
+  DeliveryStatus,
+  PaymentMethod,
+} from "../enums/order.enum";
 
 export interface Order {
-    _id: Types.ObjectId;
-    buyerId: Types.ObjectId;
-    orderItems: Array<T>;
-    orderAddress: string;
-    orderSubtotal: number;
-    orderShippingFree: number;
-    orderTotal: number;
-    orderStatus: OrderStatus;
-    orderPaymentStatus: PaymentStatus;
-    orderDeliveryStatus: DeliveryStatus;
-    orderPaymentMethod: PaymentMethod;
-    orderTrackingNumber: string;
-    orderEstimatedDelivery: Date;
-    updatedAt: Date;
-    createdAt: Date;
+  _id: Types.ObjectId;
+  buyerId: Types.ObjectId;
+  orderItems: Array<T>;
+  orderAddress: string;
+  orderSubtotal: number;
+  orderShippingFree: number;
+  orderTotal: number;
+  orderStatus: OrderStatus;
+  orderPaymentStatus: PaymentStatus;
+  orderDeliveryStatus: DeliveryStatus;
+  orderPaymentMethod: PaymentMethod;
+  orderTrackingNumber: string;
+  orderEstimatedDelivery: Date;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 export interface OrderItem {
-    _id: Types.ObjectId;
-    buyerId: Types.ObjectId;
-    productId: Types.ObjectId;
-    memberId: Types.ObjectId;
-    orderItems: Array<T>;
-    orderSubtotal: number;
-    orderShippingFree: number;
-    orderTotal: number;
-    updatedAt: Date;
-    createdAt: Date;
+  _id: Types.ObjectId;
+  buyerId: Types.ObjectId;
+  productId: Types.ObjectId;
+  memberId: Types.ObjectId;
+  orderItems: Array<T>;
+  orderSubtotal: number;
+  orderShippingFree: number;
+  orderTotal: number;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 export interface OrderItemInput {
-    orderSubtotal: number;
-    orderShippingFree: number;
-    orderTotal: number;
-    buyerId: Types.ObjectId;
-    productId: Types.ObjectId;
-    memberId: Types.ObjectId;
+  itemSubtotal: number;
+  orderShippingFee: number;
+  itemPrice: number;
+  buyerId: Types.ObjectId;
+  productId: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 export interface OrderInquiry {
-    page: number;
-    limit: number;
-    orderStatus: OrderStatus;
+  page: number;
+  limit: number;
+  orderStatus: OrderStatus;
 }
 
 export interface OrderUpdateInput {
-    orderId: string;
-    orderStatus: OrderStatus;
-    orderPaymentStatus: PaymentStatus;
-    orderDeliveryStatus: DeliveryStatus;
-    orderPaymentMethod: PaymentMethod;
-    orderTrackingNumber: string;
+  orderId: string;
+  orderStatus: OrderStatus;
+  orderPaymentStatus: PaymentStatus;
+  orderDeliveryStatus: DeliveryStatus;
+  orderPaymentMethod: PaymentMethod;
+  orderTrackingNumber: string;
 }
