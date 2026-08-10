@@ -8,15 +8,70 @@
       <table class="admin-table" data-search-target>
         <thead><tr><th>Order</th><th>Buyer</th><th>Seller</th><th>Date</th><th>Total</th><th>Tracking</th><th>Status</th><th>Update</th></tr></thead>
         <tbody>
-          <% [
-            ["MN-24001", "Madina Sobirova", "Seoul Seller", "2026-05-22", "928,000 UZS", "KR-UZ-8841", "processing"],
-            ["MN-24002", "Azizbek Karimov", "Busan Studio", "2026-05-23", "346,000 UZS", "Not shipped", "pending"],
-            ["MN-24003", "Sevara Aliyeva", "Daegu Caps", "2026-05-21", "1,260,000 UZS", "KR-UZ-7730", "shipped"],
-            ["MN-23988", "Nodir Yunusov", "Seoul Seller", "2026-05-18", "784,000 UZS", "KR-UZ-5021", "delivered"]
-          ].forEach(function(order) { %>
-            <tr data-status="<%= order[6] %>"><td><strong><%= order[0] %></strong></td><td><%= order[1] %></td><td><%= order[2] %></td><td><%= order[3] %></td><td><%= order[4] %></td><td><%= order[5] %></td><td><span class="status-pill <%= order[6] %>"><%= order[6] %></span></td><td><select class="status-change"><% ["pending", "processing", "shipped", "delivered", "cancelled"].forEach(function(status) { %><option value="<%= status %>" <%= order[6] === status ? "selected" : "" %>><%= status %></option><% }) %></select></td></tr>
-          <% }) %>
-        </tbody>
+  <% orders.forEach(function(order, key) { %>
+    <tr>
+      <td>#<%= order._id.toString().slice(-6).toUpperCase() %></td>
+
+      <td><%= order.buyerId ?? "—" %></td>
+
+      <td>
+        <%= order.productData?.[0]?.userId ?? "—" %>
+      </td>
+
+      <td>
+        <%= order.createdAt
+          ? new Date(order.createdAt).toLocaleDateString()
+          : "—"
+        %>
+      </td>
+
+      <td>$<%= Number(order.orderTotal ?? 0).toFixed(2) %></td>
+
+      <td><%= order.orderTrackingNumber ?? "—" %></td>
+
+      <td>
+        <span class="status-badge">
+          <%= order.orderStatus ?? "PENDING" %>
+        </span>
+      </td>
+
+      <td>
+        <select
+          class="spec-select new-order-status"
+          data-id="<%= order._id %>"
+        >
+          <option
+            value="PENDING"
+            <%= order.orderStatus === "PENDING" ? "selected" : "" %>
+          >
+            PENDING
+          </option>
+
+          <option
+            value="PROCESS"
+            <%= order.orderStatus === "PROCESS" ? "selected" : "" %>
+          >
+            PROCESS
+          </option>
+
+          <option
+            value="FINISHED"
+            <%= order.orderStatus === "FINISHED" ? "selected" : "" %>
+          >
+            FINISHED
+          </option>
+
+          <option
+            value="CANCELLED"
+            <%= order.orderStatus === "CANCELLED" ? "selected" : "" %>
+          >
+            CANCELLED
+          </option>
+        </select>
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
       </table>
     </div>
   </section>
