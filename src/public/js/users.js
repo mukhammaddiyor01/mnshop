@@ -1,23 +1,35 @@
 (function () {
-  document.querySelectorAll("[data-user-toggle]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const row = button.closest("tr");
-      const pill = row && row.querySelector(".status-pill");
-      if (!row || !pill) return;
-      const blocked = row.getAttribute("data-status") === "blocked";
-      row.setAttribute("data-status", blocked ? "active" : "blocked");
-      pill.className = `status-pill ${blocked ? "active" : "blocked"}`;
-      pill.textContent = blocked ? "active" : "blocked";
-      button.textContent = blocked ? "Block" : "Activate";
-      window.showAdminToast && window.showAdminToast(`User ${blocked ? "active" : "blocked"}`);
+  document.querySelectorAll(".user-status").forEach(function (select) {
+    select.addEventListener("focus", function () {
+      select.dataset.previousStatus = select.value;
     });
-  });
 
-  document.querySelectorAll("[data-row-delete]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const row = button.closest("tr");
-      if (row) row.remove();
-      window.showAdminToast && window.showAdminToast("User soft-deleted");
+    select.addEventListener("change", async function () {
+      const previousStatus = select.dataset.previousStatus || "ACTIVE";
+      select.disabled = true;
+
+      try {
+        const response = await fetch("/admin/user/edit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            _id: select.dataset.userId,
+            userStatus: select.value,
+          }),
+        });
+
+        if (!response.ok) throw new Error("User status update failed");
+
+        const row = select.closest("tr");
+        if (row) row.dataset.status = select.value.toLowerCase();
+        select.dataset.previousStatus = select.value;
+        window.showAdminToast && window.showAdminToast("User status updated");
+      } catch (error) {
+        select.value = previousStatus;
+        window.showAdminToast && window.showAdminToast(error.message);
+      } finally {
+        select.disabled = false;
+      }
     });
   });
 })();

@@ -4,28 +4,80 @@
 
   <section class="glass-panel management-panel">
     <div class="panel-head">
-      <div><h3>Users Management</h3><p><span data-visible-count>4</span> users visible</p></div>
+      <div><h3>Users Management</h3><p><span data-visible-count>
+        <%= users.length %>
+      </span> users visible</p></div>
       <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
     </div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
-        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Orders</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Joined</th>
+            <th>Orders</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody>
-          <%
-            const buyerRows = typeof users !== "undefined" && users && users.length ? users : [
-              { userNick: "Azizbek Karimov", userEmail: "azizbek@mail.uz", userPhone: "+998 90 000 200", myOrders: 3, userPoints: 1840000, userStatus: "ACTIVE", createdAt: "2026-05-01" },
-              { userNick: "Madina Sobirova", userEmail: "madina@mail.uz", userPhone: "+998 90 000 201", myOrders: 7, userPoints: 4920000, userStatus: "ACTIVE", createdAt: "2026-04-18" },
-              { userNick: "Nodir Yunusov", userEmail: "nodir@mail.uz", userPhone: "+998 90 000 202", myOrders: 1, userPoints: 766000, userStatus: "BLOCKED", createdAt: "2026-04-03" },
-              { userNick: "Sevara Aliyeva", userEmail: "sevara@mail.uz", userPhone: "+998 91 800 202", myOrders: 4, userPoints: 2210000, userStatus: "ACTIVE", createdAt: "2026-03-28" }
-            ];
-            buyerRows.forEach(function(buyer) {
-              const status = String(buyer.userStatus || "ACTIVE").toLowerCase();
-          %>
-            <tr data-status="<%= status %>">
-              <td><strong><%= buyer.userNick %></strong></td><td><%= buyer.userEmail %></td><td><%= buyer.userPhone || "-" %></td>
-              <td><%= buyer.createdAt ? String(buyer.createdAt).slice(0, 10) : "-" %></td><td><%= buyer.myOrders || 0 %></td>
-              <td><%= Number(buyer.userPoints || 0).toLocaleString() %> UZS</td><td><span class="status-pill <%= status %>"><%= status %></span></td>
-              <td><div class="table-actions"><button class="view-action" type="button"><i data-lucide="eye"></i> View</button><button class="block-action" type="button" data-user-toggle><%= status === "blocked" ? "Activate" : "Block" %></button><button class="delete-action" type="button" data-row-delete><i data-lucide="trash-2"></i> Delete</button></div></td>
+          <% users.map(function(value, index) { %>
+            <tr data-status="<%= String(value.userStatus || 'ACTIVE').toLowerCase() %>">
+              <td>
+                <strong><%= value.userNick %></strong>
+              </td>
+
+              <td><%= value.userEmail %></td>
+
+              <td><%= value.userPhone || "-" %></td>
+
+              <td>
+                <%= value.createdAt ? String(value.createdAt).slice(0, 10) : "-" %>
+              </td>
+
+              <td><%= value.myOrders || 0 %></td>
+
+              <td>
+                <%= Number(value.userPoints || 0).toLocaleString() %> UZS
+              </td>
+
+              <td>
+                <select
+                  class="spec-select user-status"
+                  data-user-id="<%= value._id %>"
+                >
+                  <option
+                    value="ACTIVE"
+                    <%= value.userStatus === "ACTIVE" ? "selected" : "" %>
+                  >
+                    ACTIVE
+                  </option>
+                  <option
+                    value="BLOCKED"
+                    <%= value.userStatus === "BLOCKED" ? "selected" : "" %>
+                  >
+                    BLOCKED
+                  </option>
+                  <option
+                    value="DELETED"
+                    <%= value.userStatus === "DELETED" ? "selected" : "" %>
+                  >
+                    DELETED
+                  </option>
+                </select>
+              </td>
+
+              <td>
+                <div class="table-actions">
+                  <button class="view-action" type="button">
+                    <i data-lucide="eye"></i>
+                    View
+                  </button>
+                </div>
+              </td>
             </tr>
           <% }) %>
         </tbody>
