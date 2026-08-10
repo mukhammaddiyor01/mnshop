@@ -24,21 +24,50 @@ orderController.craeteOrder = async (req: ExtendedRequest, res: Response) => {
 
 orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
   try {
-    console.log("getMyOrders");
-    const { page, limit, orderStatus } = req.query;
+    const { page = 1, limit = 10, orderStatus } = req.query;
+
     const inquiry: OrderInquiry = {
       page: Number(page),
       limit: Number(limit),
       orderStatus: orderStatus as OrderStatus,
     };
-    console.log("inquiry:", inquiry);
+
     const result = await orderService.getMyOrders(req.user, inquiry);
 
-    res.status(HttpCode.CREATED).json(result);
-  } catch (err) {
-    console.log("ERROR, getMyOrders :", err);
-    if (err instanceof Errors) res.status(err.code).json(err);
-    else res.status(Errors.standard.code).json(Errors.standard);
+    // app.use("/admin", routerAdmin) sababli baseUrl === "/admin"
+    if (req.baseUrl === "/admin") {
+      return res.render("orders", { orders: result });
+    }
+
+    if (req.path.startsWith("/seller")) {
+      return res.status(HttpCode.OK).json({
+        source: "seller",
+        data: result,
+      });
+    }
+
+    return res.status(HttpCode.OK).json({
+      source: "buyer",
+      data: result,
+    });
+  } catch (error) {
+    // Buyer va seller API uchun JSON
+    console.log("Error, getMyOrders:", error);
+
+    const message =
+      error instanceof Error ? error.message : Message.SOMETHING_WENT_WRONG;
+
+    // Admin sahifasida xatoni HTML ko‘rinishda chiqarish
+    if (req.baseUrl === "/admin") {
+      return res.status(HttpCode.INTERNAL_SERVER_ERROR).render("orders", {
+        orders: [],
+        error: message,
+      });
+    }
+
+    return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({
+      message,
+    });
   }
 };
 

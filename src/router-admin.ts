@@ -60,8 +60,8 @@ routerAdmin.post(
 /** ORDER MANAGEMENT */
 routerAdmin.get(
   "/orders",
-  adminController.verifyAdmin,
-  adminController.getOrders,
+  adminController.verifyAdmin, // req.user ni sessiondan oladi
+  orderController.getMyOrders,
 );
 
 // routerAdmin.post("/order/:id",
