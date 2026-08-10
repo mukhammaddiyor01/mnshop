@@ -6,17 +6,69 @@
     <div class="panel-head"><div><h3>Sellers Management</h3><p>Approve, reject, block, and set commission</p></div><i data-lucide="sliders-horizontal"></i></div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
-        <thead><tr><th>Seller</th><th>Email</th><th>Products</th><th>Sales</th><th>Revenue</th><th>Commission</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Seller</th>
+            <th>Email</th>
+            <th>Products</th>
+            <th>Sales</th>
+            <th>Revenue</th>
+            <th>Commission</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody>
-          <% [
-            ["Seoul Seller", "seller@mnshop_blueprint.uz", "+82 10 2400 1001", 18, 624, "84.2M UZS", 12, "active"],
-            ["Busan Studio", "busan@mnshop_blueprint.uz", "+82 10 2400 1002", 12, 218, "29.1M UZS", 10, "pending"],
-            ["Daegu Caps", "daegu@mnshop_blueprint.uz", "+82 10 2400 1003", 7, 98, "14.8M UZS", 15, "blocked"]
-          ].forEach(function(seller) { %>
-            <tr data-status="<%= seller[7] %>">
-              <td><strong><%= seller[0] %></strong><small><%= seller[2] %></small></td><td><%= seller[1] %></td><td><%= seller[3] %></td><td><%= seller[4] %></td><td><%= seller[5] %></td>
-              <td><label class="commission-input"><input type="number" value="<%= seller[6] %>" /> %</label></td><td><span class="status-pill <%= seller[7] %>"><%= seller[7] %></span></td>
-              <td><div class="table-actions"><button class="approve-action" type="button" data-seller-status="active">Approve</button><button class="reject-action" type="button" data-seller-status="rejected">Reject</button><button class="delete-action" type="button" data-seller-status="blocked"><%= seller[7] === "blocked" ? "Unblock" : "Block" %></button></div></td>
+          <% sellers.map(function(value, index) { %>
+            <tr data-status="<%= String(value.sellerStatus || 'ACTIVE').toLowerCase() %>">
+              <td>
+                <strong><%= value.sellerNick %></strong>
+                <small><%= value.sellerPhone || "-" %></small>
+              </td>
+
+              <td><%= value.sellerEmail %></td>
+
+              <td><%= value.sellerLeftCount || 0 %></td>
+
+              <td><%= value.sellerTotalSales || 0 %></td>
+
+              <td>0 KRW</td>
+
+              <td>
+                <label class="commission-input">
+                  <input
+                    class="seller-commission"
+                    type="number"
+                    value="<%= value.sellerCommisionPercentage || 0 %>"
+                    data-seller-id="<%= value._id %>"
+                    min="0"
+                    max="100"
+                  />
+                  %
+                </label>
+              </td>
+
+              <td>
+                <select
+                  class="spec-select seller-status"
+                  data-seller-id="<%= value._id %>"
+                >
+                  <option value="ACTIVE" <%= value.sellerStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                  <option value="PENDING" <%= value.sellerStatus === "PENDING" ? "selected" : "" %>>PENDING</option>
+                  <option value="DRAFT" <%= value.sellerStatus === "DRAFT" ? "selected" : "" %>>DRAFT</option>
+                  <option value="BLOCKED" <%= value.sellerStatus === "BLOCKED" ? "selected" : "" %>>BLOCKED</option>
+                  <option value="DELETED" <%= value.sellerStatus === "DELETED" ? "selected" : "" %>>DELETED</option>
+                </select>
+              </td>
+
+              <td>
+                <div class="table-actions">
+                  <button class="view-action" type="button">
+                    <i data-lucide="eye"></i>
+                    View
+                  </button>
+                </div>
+              </td>
             </tr>
           <% }) %>
         </tbody>

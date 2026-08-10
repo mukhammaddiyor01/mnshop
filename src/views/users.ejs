@@ -41,7 +41,7 @@
               <td><%= value.myOrders || 0 %></td>
 
               <td>
-                <%= Number(value.userPoints || 0).toLocaleString() %> UZS
+                <%= Number(value.userPoints || 0).toLocaleString() %> KRW
               </td>
 
               <td>
@@ -62,10 +62,22 @@
                     BLOCKED
                   </option>
                   <option
-                    value="DELETED"
-                    <%= value.userStatus === "DELETED" ? "selected" : "" %>
+                    value="REJECTED"
+                    <%= value.userStatus === "REJECTED" ? "selected" : "" %>
                   >
-                    DELETED
+                    REJECTED
+                  </option>
+                  <option
+                    value="PENDING"
+                    <%= value.userStatus === "PENDING" ? "selected" : "" %>
+                  >
+                    PENDING
+                  </option>
+                  <option
+                    value="DRAFT"
+                    <%= value.userStatus === "DRAFT" ? "selected" : "" %>
+                  >
+                    DRAFT
                   </option>
                 </select>
               </td>
