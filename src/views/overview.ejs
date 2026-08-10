@@ -2,18 +2,44 @@
 <body class="admin-body" data-page="overview">
   <%- include('includes/admin-shell-start', { page: 'overview' }) %>
 
+  <%
+    const overviewItems = [
+      {
+        icon: "users",
+        title: "Total Users",
+        value: overview.totalUsers,
+      },
+      {
+        icon: "badge-check",
+        title: "Active Sellers",
+        value: overview.activeSellers,
+      },
+      {
+        icon: "boxes",
+        title: "Products",
+        value: overview.totalProducts,
+      },
+      {
+        icon: "dollar-sign",
+        title: "Revenue Today",
+        value: Number(overview.revenueToday || 0).toLocaleString() + " UZS",
+      },
+      {
+        icon: "bell",
+        title: "Pending Orders",
+        value: overview.pendingOrders,
+      },
+    ];
+
+    const activityItems = overview.activities || [];
+  %>
+
   <div class="kpi-grid">
-    <% [
-      ["users", "Total Users", "4"],
-      ["badge-check", "Active Sellers", "1"],
-      ["boxes", "Products", "16"],
-      ["dollar-sign", "Revenue Today", "3,318,000 UZS"],
-      ["bell", "Pending Orders", "1"]
-    ].forEach(function(kpi) { %>
+    <% overviewItems.map(function(value, index) { %>
       <article class="kpi-card">
-        <i data-lucide="<%= kpi[0] %>" aria-hidden="true"></i>
-        <p><%= kpi[1] %></p>
-        <strong><%= kpi[2] %></strong>
+        <i data-lucide="<%= value.icon %>" aria-hidden="true"></i>
+        <p><%= value.title %></p>
+        <strong><%= value.value %></strong>
       </article>
     <% }) %>
   </div>
@@ -22,8 +48,13 @@
     <section class="glass-panel activity-panel">
       <h3>Real-time Activity</h3>
       <div class="activity-list">
-        <% ["New order MN-24002 placed", "Busan Studio waiting approval", "Seoul Fog Hoodie marked featured", "Nodir Yunusov was blocked"].forEach(function(item) { %>
-          <article><span><%= item %></span><small>now</small></article>
+        <% activityItems.map(function(value, index) { %>
+          <article>
+            <span><%= value.title %></span>
+            <small>
+              <%= value.time ? new Date(value.time).toLocaleString() : "-" %>
+            </small>
+          </article>
         <% }) %>
       </div>
     </section>

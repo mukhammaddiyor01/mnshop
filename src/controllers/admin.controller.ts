@@ -6,9 +6,16 @@ import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors"
 import SellerService from "../models/Seller.service";
+import ProductService from "../models/Product.service";
+import OrderService from "../models/Order.service";
+import { SellerStatus } from "../libs/enums/seller.enum";
+import { ProductStatus } from "../libs/enums/product.enum";
+import { OrderStatus } from "../libs/enums/order.enum";
 
 const userService = new UserService();
 const sellerService = new SellerService();
+const productService = new ProductService();
+const orderService = new OrderService();
 
 const adminController: T = {};
 
@@ -25,8 +32,78 @@ adminController.goHome = (req: Request, res: Response) => {
     }
 };
 
-adminController.getOverview = (req: Request, res: Response) => {
-    renderAdminPage(res, "overview");
+adminController.getOverview = async (req: Request, res: Response) => {
+    try {
+        const [users, sellers, products, orders] = await Promise.all([
+            userService.getUsers(),
+            sellerService.getSellers(),
+            productService.getAllProducts(),
+            orderService.getAllOrders(),
+        ]);
+
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const activeSellers = sellers.filter(
+            (seller) => seller.sellerStatus === SellerStatus.ACTIVE,
+        );
+        const activeProducts = products.filter(
+            (product) => product.productStatus !== ProductStatus.DELETE,
+        );
+        const pendingOrders = orders.filter(
+            (order) => order.orderStatus === OrderStatus.PENDING,
+        );
+        const revenueToday = orders
+            .filter(
+                (order) =>
+                    new Date(order.createdAt) >= startOfToday &&
+                    order.orderStatus !== OrderStatus.CANCELLED,
+            )
+            .reduce((total, order) => total + Number(order.orderTotal || 0), 0);
+
+        const activities = [
+            ...users.map((user) => ({
+                title: `${user.userNick} joined as a buyer`,
+                time: user.createdAt,
+            })),
+            ...sellers.map((seller) => ({
+                title: `${seller.sellerNick} seller is ${String(seller.sellerStatus).toLowerCase()}`,
+                time: seller.createdAt,
+            })),
+            ...orders.map((order) => ({
+                title: `Order ${order.orderTrackingNumber || String(order._id).slice(-6)} placed`,
+                time: order.createdAt,
+            })),
+        ]
+            .sort(
+                (first, second) =>
+                    new Date(second.time).getTime() - new Date(first.time).getTime(),
+            )
+            .slice(0, 4);
+
+        renderAdminPage(res, "overview", {
+            overview: {
+                totalUsers: users.length,
+                activeSellers: activeSellers.length,
+                totalProducts: activeProducts.length,
+                revenueToday,
+                pendingOrders: pendingOrders.length,
+                activities,
+            },
+        });
+    } catch (err) {
+        console.log("Error, getOverview:", err);
+        renderAdminPage(res, "overview", {
+            overview: {
+                totalUsers: 0,
+                activeSellers: 0,
+                totalProducts: 0,
+                revenueToday: 0,
+                pendingOrders: 0,
+                activities: [],
+            },
+        });
+    }
 };
 
 
