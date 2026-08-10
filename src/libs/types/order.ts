@@ -39,6 +39,7 @@ export interface OrderItem {
 }
 
 export interface OrderItemInput {
+  orderId: Object;
   itemSubtotal: number;
   orderShippingFee: number;
   itemPrice: number;
