@@ -19,6 +19,7 @@ const store = new MongoDBStore({
 const app = express();
 console.log("__dirname:", __dirname);
 app.use(express.static(path.join(__dirname, "public"))); // Public folderni ochiqlayapmiz
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use(express.urlencoded({extended: true})); // Traditional API
 app.use(express.json()); //Rest API
 app.use(morgan(MORGAN_FORMAT));

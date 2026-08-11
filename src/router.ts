@@ -1,10 +1,9 @@
-import express, {Request, Response} from "express";
+import express, { Request, Response } from "express";
 const router = express.Router();
 import userController from "./controllers/user.controller";
 import sellerController from "./controllers/seller.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
-
 
 /* BUYER */
 
@@ -31,33 +30,30 @@ router.post("/order ", usercontroller.order)
 
  */
 
-
 /** Seller */
- router
-    .post("/seller/login", sellerController.login)
-router
-    .post("/seller/signup", sellerController.signup);
+router.post("/seller/login", sellerController.login);
+router.post("/seller/signup", sellerController.signup);
 
 router.post(
-    "/seller/product/create",
-    sellerController.verifySeller,
-    makeUploader("products").array("productImages", 5),
-    productController.createNewProduct
+  "/seller/product/create",
+  sellerController.verifySeller,
+  makeUploader("products").array("productImages", 5),
+  productController.createNewProduct,
 );
 
 router.get(
-    "/product/all",
-    sellerController.verifySeller,
-    productController.getAllProducts
+  "/product/all",
+  sellerController.verifySeller,
+  productController.getAllProducts,
 );
 
 router.post(
-    "/seller/product/:id",
-    // sellerController.verifySeller,
-    productController.updateChosenProduct
+  "/seller/product/:id",
+  // sellerController.verifySeller,
+  productController.updateChosenProduct,
 );
 
-    /** 
+/**
  
 
 

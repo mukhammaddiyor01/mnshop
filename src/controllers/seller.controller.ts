@@ -81,9 +81,7 @@ sellerController.verifySeller = (
         next();
     } else {
         const message = Message.NOT_AUTHENTICATED;
-        res.send(
-            `<script> alert("${message}"); window.location.replace('/seller/login'); </script>`
-        )
+        res.status(HttpCode.UNAUTHORIZED).json({ message });
     }
 };
 

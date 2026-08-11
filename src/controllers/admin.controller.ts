@@ -115,8 +115,29 @@ adminController.getMessages = (req: Request, res: Response) => {
     renderAdminPage(res, "messages");
 };
 
-adminController.getAnalytics = (req: Request, res: Response) => {
-    renderAdminPage(res, "analytics");
+adminController.getAnalytics = async (req: Request, res: Response) => {
+    try {
+        const orders = await orderService.getAllOrders();
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const revenueToday = orders
+            .filter(
+                (order) =>
+                    new Date(order.createdAt) >= startOfToday &&
+                    order.orderStatus !== OrderStatus.CANCELLED,
+            )
+            .reduce((total, order) => total + Number(order.orderTotal || 0), 0);
+
+        renderAdminPage(res, "analytics", {
+            overview: { revenueToday },
+        });
+    } catch (err) {
+        console.log("Error, getAnalytics:", err);
+        renderAdminPage(res, "analytics", {
+            overview: { revenueToday: 0 },
+        });
+    }
 };
 
 adminController.getSettings = (req: Request, res: Response) => {

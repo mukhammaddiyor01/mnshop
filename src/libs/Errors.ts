@@ -13,6 +13,9 @@ export enum Message {
     SOMETHING_WENT_WRONG = "Something went wrong!",
     NO_DATA_FOUND = "No data is found!",
     CREATE_FAILED = "Create is failed!",
+    INVALID_PRODUCT_DATA = "Product data is invalid!",
+    PRODUCT_ALREADY_EXISTS = "This product already exists!",
+    PRODUCT_IMAGE_REQUIRED = "At least one product image is required!",
     UPDATE_FAILED = "Update is failed!",
 
 

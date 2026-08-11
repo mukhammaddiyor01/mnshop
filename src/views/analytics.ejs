@@ -4,14 +4,14 @@
 
   <div class="analytics-grid">
     <section class="glass-panel revenue-panel">
-      <h3>Revenue Trend</h3><p>Current visible orders: 3,318,000 UZS</p>
-      <div class="bar-chart"><% [42, 58, 36, 78, 62, 91, 74].forEach(function(value, index) { %><div class="bar-item"><span style="height:<%= value %>%"></span><small><%= index + 1 %></small></div><% }) %></div>
+      <h3>Revenue Trend</h3><p>Current visible orders: <%= overview.revenueToday %> KRW</p>
+      <div class="bar-chart"><% [42, 58, 36, 78, 62, 91, 74].forEach(function(value, index) { %><div class="bar-item"><span data-bar-height="<%= value %>"></span><small><%= index + 1 %></small></div><% }) %></div>
     </section>
     <section class="glass-panel category-panel">
       <h3>Category Performance</h3>
       <div class="category-progress">
         <% [["TSHIRTS", 84, 512], ["HOODIES", 100, 608], ["CAPS", 46, 278], ["CUPS", 30, 184]].forEach(function(item) { %>
-          <article><div><strong><%= item[0] %></strong><small><%= item[2] %> sold</small></div><div class="progress-track"><span style="width:<%= item[1] %>%"></span></div></article>
+          <article><div><strong><%= item[0] %></strong><small><%= item[2] %> sold</small></div><div class="progress-track"><span data-progress-width="<%= item[1] %>"></span></div></article>
         <% }) %>
       </div>
     </section>

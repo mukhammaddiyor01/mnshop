@@ -13,7 +13,7 @@
           <tr>
             <th><input type="checkbox" data-select-all /></th>
             <th>Product</th>
-            <th>Type / Size</th>
+            <th>Type / Size / Color</th>
             <th>Price</th>
             <th>Stock</th>
             <th>Sold</th>
@@ -34,11 +34,13 @@
               </td>
 
               <td>
-                <%= value.productType || "TSHIRT" %> · <%= value.productSizes || "M" %>
+                <%= value.productType || "TSHIRT" %> ·
+                <%= Array.isArray(value.productSizes) ? value.productSizes.join(", ") : (value.productSizes || "M") %> ·
+                <%= Array.isArray(value.productColors) ? value.productColors.join(", ") : (value.productColors || "-") %>
               </td>
 
               <td>
-                <%= Number(value.productDiscountPrice || value.productPrice || 0).toLocaleString() %> UZS
+                <%= Number(value.productDiscountPrice || value.productPrice || 0).toLocaleString() %> KRW
               </td>
 
               <td><%= value.productLeftCount || 0 %></td>
