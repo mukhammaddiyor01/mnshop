@@ -4,23 +4,77 @@
 
   <section class="glass-panel management-panel product-panel">
     <div class="panel-head product-panel-head">
-      <div><h3>Products Management</h3><p><span data-selected-count>0</span> selected · <span data-visible-count>4</span> visible</p></div>
-      <div class="bulk-actions"><button type="button" data-bulk-action="active">Activate</button><button type="button" data-bulk-action="pause">Deactivate</button><button class="danger" type="button" data-bulk-action="delete">Delete Selected</button></div>
+      <div><h3>Products Management</h3><p><span data-selected-count>0</span> selected · <span data-visible-count><%= products.length %></span> visible</p></div>
+      <div class="bulk-actions"><button type="button" data-bulk-action="ACTIVE">Activate</button><button type="button" data-bulk-action="PAUSE">Deactivate</button><button class="danger" type="button" data-bulk-action="DELETE">Delete Selected</button></div>
     </div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
-        <thead><tr><th><input type="checkbox" data-select-all /></th><th>Product</th><th>Type / Size</th><th>Price</th><th>Stock</th><th>Sold</th><th>Featured</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th><input type="checkbox" data-select-all /></th>
+            <th>Product</th>
+            <th>Type / Size</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Sold</th>
+            <th>Featured</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody>
-          <%
-            const productRows = typeof products !== "undefined" && products ? products : [];
-            productRows.forEach(function(product) {
-              const status = String(product.productStatus || "ACTIVE").toLowerCase() === "process" ? "active" : String(product.productStatus || "ACTIVE").toLowerCase();
-          %>
-            <tr data-status="<%= status %>">
-              <td><input type="checkbox" data-product-select /></td><td><strong><%= product.productName %></strong></td><td><%= product.productType || product.productCollection || "TSHIRT" %> · <%= product.productSizes || product.productSize || "M" %></td>
-              <td><%= Number(product.productDiscountPrice || product.productPrice || 0).toLocaleString() %> UZS</td><td><%= product.productLeftCount || 0 %></td><td><%= product.productSold || 0 %></td>
-              <td><button class="feature-toggle <%= product.productFeatured ? "active" : "" %>" type="button" data-feature-toggle><%= product.productFeatured ? "Featured" : "Normal" %></button></td>
-              <td><span class="status-pill <%= status %>"><%= status %></span></td><td><div class="table-actions"><button class="view-action" type="button" data-product-edit>Edit</button><button class="reject-action" type="button" data-product-status><%= status === "active" ? "Deactivate" : "Activate" %></button></div></td>
+          <% products.map(function(value, index) { %>
+            <tr data-status="<%= String(value.productStatus || 'PAUSE').toLowerCase() %>">
+              <td>
+                <input type="checkbox" data-product-select />
+              </td>
+
+              <td>
+                <strong><%= value.productName %></strong>
+              </td>
+
+              <td>
+                <%= value.productType || "TSHIRT" %> · <%= value.productSizes || "M" %>
+              </td>
+
+              <td>
+                <%= Number(value.productDiscountPrice || value.productPrice || 0).toLocaleString() %> UZS
+              </td>
+
+              <td><%= value.productLeftCount || 0 %></td>
+
+              <td><%= value.productSold || 0 %></td>
+
+              <td>
+                <button
+                  class="feature-toggle <%= value.productFeatured ? 'active' : '' %>"
+                  type="button"
+                  data-feature-toggle
+                  data-product-id="<%= value._id %>"
+                >
+                  <%= value.productFeatured ? "Featured" : "Normal" %>
+                </button>
+              </td>
+
+              <td>
+                <select
+                  class="spec-select product-status"
+                  data-product-id="<%= value._id %>"
+                >
+                  <option value="ACTIVE" <%= value.productStatus === "ACTIVE" ? "selected" : "" %>>ACTIVE</option>
+                  <option value="PAUSE" <%= value.productStatus === "PAUSE" ? "selected" : "" %>>PAUSE</option>
+                  <option value="BLOCK" <%= value.productStatus === "BLOCK" ? "selected" : "" %>>BLOCK</option>
+                  <option value="DELETE" <%= value.productStatus === "DELETE" ? "selected" : "" %>>DELETE</option>
+                </select>
+              </td>
+
+              <td>
+                <div class="table-actions">
+                  <button class="view-action" type="button" data-product-edit>
+                    Edit
+                  </button>
+                </div>
+              </td>
             </tr>
           <% }) %>
         </tbody>
