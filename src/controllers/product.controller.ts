@@ -4,34 +4,11 @@ import { T } from "../libs/types/common";
 import ProductService from "../models/Product.service";
 import { ProductInput } from "../libs/types/product";
 import { AdminRequest } from "../libs/types/user";
-import {
-  ProductColors,
-  ProductSizes,
-  ProductStatus,
-  ProductType,
-} from "../libs/enums/product.enum";
 import { promises as fs } from "fs";
 
 const productService = new ProductService();
 
 const productController: T = {};
-
-const enumIncludes = <T extends string>(values: T[], value: string): value is T =>
-  values.includes(value as T);
-
-const parseEnumList = <T extends string>(value: unknown): string[] => {
-  const rawValues = Array.isArray(value) ? value : [value];
-
-  return [...new Set(
-    rawValues
-      .flatMap((item) => String(item ?? "").split(/[\s,]+/))
-      .map((item) => item.trim().toUpperCase())
-      .filter(Boolean),
-  )];
-};
-
-const parseBoolean = (value: unknown): boolean =>
-  value === true || value === "true" || value === "on" || value === "1";
 
 const removeUploadedFiles = async (files: Express.Multer.File[] = []) => {
   await Promise.all(
@@ -66,65 +43,12 @@ productController.createNewProduct = async (
     if (!req.files?.length)
       throw new Errors(HttpCode.BAD_REQUEST, Message.PRODUCT_IMAGE_REQUIRED);
 
-    const productName = String(req.body.productName || "").trim();
-    const productType = String(req.body.productType || ProductType.TSHIRT)
-      .trim()
-      .toUpperCase();
-    const productStatus = String(req.body.productStatus || ProductStatus.PAUSE)
-      .trim()
-      .toUpperCase();
-    const productColors = parseEnumList<ProductColors>(req.body.productColors);
-    const productSizes = parseEnumList<ProductSizes>(
-      req.body.productSizes || ProductSizes.M,
-    );
-    const productPrice = Number(req.body.productPrice);
-    const productLeftCount = Number(req.body.productLeftCount);
-    const productDiscountPrice =
-      req.body.productDiscountPrice === "" ||
-      req.body.productDiscountPrice === undefined
-        ? undefined
-        : Number(req.body.productDiscountPrice);
-
-    const validProduct =
-      productName.length > 0 &&
-      enumIncludes(Object.values(ProductType), productType) &&
-      enumIncludes(Object.values(ProductStatus), productStatus) &&
-      productColors.length > 0 &&
-      productColors.every((color) =>
-        enumIncludes(Object.values(ProductColors), color),
-      ) &&
-      productSizes.length > 0 &&
-      productSizes.every((size) =>
-        enumIncludes(Object.values(ProductSizes), size),
-      ) &&
-      Number.isFinite(productPrice) &&
-      productPrice > 0 &&
-      Number.isInteger(productLeftCount) &&
-      productLeftCount >= 0 &&
-      (productDiscountPrice === undefined ||
-        (Number.isFinite(productDiscountPrice) &&
-          productDiscountPrice >= 0 &&
-          productDiscountPrice <= productPrice));
-
-    if (!validProduct)
-      throw new Errors(HttpCode.BAD_REQUEST, Message.INVALID_PRODUCT_DATA);
-
     const data: ProductInput = {
       ...req.body,
-      productName,
-      productType,
-      productStatus,
-      productColors: productColors as ProductColors[],
-      productSizes: productSizes as ProductSizes[],
-      productPrice,
-      productLeftCount,
-      productDiscountPrice,
-      productFeatured: parseBoolean(req.body.productFeatured),
-      productSale: parseBoolean(req.body.productSale),
+      productImages: req.files.map((file) =>
+        `/${file.path.replace(/\\/g, "/").replace(/^\.?\//, "")}`,
+      ),
     };
-    data.productImages = req.files.map((file) => {
-      return `/${file.path.replace(/\\/g, "/").replace(/^\.?\//, "")}`;
-    });
 
     await productService.createNewProduct(data);
 

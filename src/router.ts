@@ -4,6 +4,7 @@ import userController from "./controllers/user.controller";
 import sellerController from "./controllers/seller.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
+import orderController from "./controllers/order.controller";
 
 /* BUYER */
 
@@ -13,6 +14,11 @@ router.post("/login", userController.login);
 
 router.post("/signup", userController.signup);
 
+router.post(
+  "/order/create",
+  userController.verifyAuth,
+  orderController.createOrder,
+);
 /**
 router.get("/products ", usercontroller.products) 
 router.get("/products/product ", usercontroller.product) 
@@ -49,7 +55,7 @@ router.get(
 
 router.post(
   "/seller/product/:id",
-  // sellerController.verifySeller,
+  sellerController.verifySeller,
   productController.updateChosenProduct,
 );
 

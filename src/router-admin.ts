@@ -64,9 +64,11 @@ routerAdmin.get(
   orderController.getMyOrders,
 );
 
-// routerAdmin.post("/order/:id",
-//     adminController.verifyAdmin,
-//     orderController.updateChosenOrder);
+routerAdmin.post(
+  "/order/:id",
+  adminController.verifyAdmin,
+  orderController.updateOrder,
+);
 
 /** CHAT MANAGEMENT */
 routerAdmin.get(

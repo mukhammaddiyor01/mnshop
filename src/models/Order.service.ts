@@ -1,16 +1,16 @@
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import {
-  Product,
-  ProductInput,
-  ProductUpdateInput,
-} from "../libs/types/product";
-import ProductModel from "../schema/Product.model";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { User } from "../libs/types/user";
 import OrderModel from "../schema/Order.model";
 import UserService from "./User.service";
 import OrderItemModel from "../schema/OrderItem.model";
-import { Order, OrderInquiry, OrderItemInput } from "../libs/types/order";
+import {
+  Order,
+  OrderInquiry,
+  OrderItemInput,
+  OrderUpdateInput,
+} from "../libs/types/order";
+import { UserType } from "../libs/enums/user.enum";
 
 class OrderService {
   private readonly orderModel;
@@ -27,28 +27,32 @@ class OrderService {
     user: User,
     input: OrderItemInput[],
   ): Promise<Order> {
-    const userId = shapeIntoMongooseObjectId(user._id);
-    console.log("input:", input);
-    const amount = input.reduce((accumlator: number, item: OrderItemInput) => {
-      return accumlator + item.itemPrice * item.itemSubtotal;
+    const buyerId = shapeIntoMongooseObjectId(user._id);
+
+    const amount = input.reduce((total: number, item: OrderItemInput) => {
+      return total + item.itemPrice * item.itemSubtotal;
     }, 0);
-    const delivery = amount < 100 ? 5 : 0;
+
+    const delivery = amount < 100000 ? 5000 : 0;
+
+    console.log("input:", input);
     console.log("values:", amount, delivery);
+
     try {
-      const newOrder: Order = await this.orderModel.create({
+      const newOrder = await this.orderModel.create({
+        buyerId,
+        orderItems: input,
+        orderAddress: user.userAddress || "Address not provided",
         orderTotal: amount + delivery,
-        orderDelivery: delivery,
-        userId: userId,
+        orderTrackingNumber: `MN-${Date.now()}`,
       });
 
-      const orderId = newOrder._id;
-      console.log("OrderId:", newOrder._id);
+      await this.recordOrderItem(newOrder._id, input);
 
-      // TODO: create order items
-      await this.recordOrderItem(orderId, input);
-      return newOrder;
+      return newOrder as unknown as Order;
     } catch (err) {
-      console.log("Error, model: create Order:", err);
+      console.log("Error, model: createOrder:", err);
+
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }
@@ -57,24 +61,32 @@ class OrderService {
     orderId: Object,
     input: OrderItemInput[],
   ): Promise<void> {
-    const promisedList = input.map(async (item: OrderItemInput) => {
-      item.orderId = orderId;
-      item.productId = shapeIntoMongooseObjectId(item.productId);
-      await this.orderItemModel.create(item);
-      return "INSERTED";
-    });
-    // await Promise.all(promisedList);
-    // console.log("promisedList:", promisedList);
-    const orderItemSatate = await Promise.all(promisedList);
-    console.log("OrderItemState:", orderItemSatate);
+    await Promise.all(
+      input.map(async (item) => {
+        await this.orderItemModel.create({
+          orderId,
+          productId: shapeIntoMongooseObjectId(item.productId),
+          itemPrice: item.itemPrice,
+          itemQuantity: item.itemSubtotal,
+        });
+      }),
+    );
   }
 
   public async getMyOrders(
     user: User,
     inquiry: OrderInquiry,
   ): Promise<Order[]> {
-    const userId = shapeIntoMongooseObjectId(user._id);
-    const matches = { userId: userId, orderStatus: inquiry.orderStatus };
+    if (user.userType === UserType.ADMIN) {
+      return this.getAllOrders();
+    }
+
+    const buyerId = shapeIntoMongooseObjectId(user._id);
+    const matches: Record<string, unknown> = { buyerId };
+
+    if (inquiry.orderStatus) {
+      matches.orderStatus = inquiry.orderStatus;
+    }
 
     const result = await this.orderModel
       .aggregate([
@@ -100,22 +112,55 @@ class OrderService {
         },
       ])
       .exec();
-    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
-    return result;
+    return result as Order[];
   }
 
   public async getAllOrders(): Promise<Order[]> {
+    const result = await this.orderModel.find().sort({ createdAt: -1 }).exec();
+
+    return result as unknown as Order[];
+  }
+
+  public async updateOrder(
+    user: User,
+    input: OrderUpdateInput,
+  ): Promise<Order> {
+    const orderId = shapeIntoMongooseObjectId(input.orderId);
+
+    let filter: Record<string, unknown>;
+
+    if (user.userType === UserType.ADMIN) {
+      filter = { _id: orderId };
+    } else if (user.userType === UserType.SELLER) {
+      filter = {
+        _id: orderId,
+        sellerId: shapeIntoMongooseObjectId(user._id),
+      };
+    } else {
+      throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
+    }
+
     const result = await this.orderModel
-      .find()
-      .sort({ createdAt: -1 })
+      .findOneAndUpdate(
+        filter,
+        {
+          $set: {
+            orderStatus: input.orderStatus,
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      )
       .exec();
 
     if (!result) {
-      throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
     }
 
-    return result as unknown as Order[];
+    return result as unknown as Order;
   }
 }
 

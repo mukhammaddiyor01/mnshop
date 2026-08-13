@@ -52,9 +52,9 @@ const orderSchema = new Schema(
     },
 
     buyerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
-      ref: "Buyer",
+      ref: "user",
     },
   },
   { timestamps: true, collection: "orders" },

@@ -7,19 +7,23 @@ import { LoginInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import SellerService from "../models/Seller.service";
 import OrderService from "../models/Order.service";
-import { OrderInquiry } from "../libs/types/order";
+import { OrderInquiry, OrderUpdateInput } from "../libs/types/order";
 import { OrderStatus } from "../libs/enums/order.enum";
 
 const orderService = new OrderService();
 
 const orderController: T = {};
-orderController.craeteOrder = async (req: ExtendedRequest, res: Response) => {
+orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("createOrder");
 
     const result = await orderService.createOrder(req.user, req.body);
     res.status(HttpCode.CREATED).json(result);
-  } catch (err) {}
+  } catch (err) {
+    console.log("ERROR, getProduct :", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
 };
 
 orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
@@ -68,6 +72,25 @@ orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
     return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({
       message,
     });
+  }
+};
+
+orderController.updateOrder = async (
+  req: ExtendedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    console.log("updateOrder");
+    const input: OrderUpdateInput = req.body;
+    const result = await orderService.updateOrder(req.user, {
+      ...req.body,
+      orderId: req.params.id,
+    });
+
+    res.status(HttpCode.CREATED).json(result);
+  } catch (err) {
+    console.log("Error, updateOrder:", err);
   }
 };
 
