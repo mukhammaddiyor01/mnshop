@@ -102,6 +102,12 @@ const productSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
+    sellerId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "seller",
+    },
   },
 
   { timestamps: true },

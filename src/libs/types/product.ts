@@ -8,6 +8,7 @@ import {
 
 export interface Product {
   _id: Types.ObjectId;
+  sellerId: Types.ObjectId;
   productStatus?: ProductStatus;
   productType: ProductType;
   productName: string;
@@ -27,6 +28,7 @@ export interface Product {
 }
 
 export interface ProductInput {
+  sellerId?: Types.ObjectId;
   productStatus?: ProductStatus;
   productType: ProductType;
   productName: string;

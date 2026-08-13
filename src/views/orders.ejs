@@ -8,14 +8,19 @@
       <table class="admin-table" data-search-target>
         <thead><tr><th>Order</th><th>Buyer</th><th>Seller</th><th>Date</th><th>Total</th><th>Tracking</th><th>Status</th><th>Update</th></tr></thead>
         <tbody>
-  <% orders.forEach(function(order, key) { %>
+  <% (orders || []).forEach(function(order) { %>
     <tr>
       <td>#<%= order._id.toString().slice(-6).toUpperCase() %></td>
 
-      <td><%= order.buyerId ?? "—" %></td>
+      <td><%= order.buyerData?.[0]?.userNick ?? "—" %></td>
 
       <td>
-        <%= order.productData?.[0]?.userId ?? "—" %>
+        <%= order.sellerData?.length
+          ? order.sellerData.map(function(seller) {
+              return seller.sellerNick;
+            }).join(", ")
+          : "—"
+        %>
       </td>
 
       <td>
@@ -25,7 +30,7 @@
         %>
       </td>
 
-      <td>$<%= Number(order.orderTotal ?? 0).toFixed(2) %></td>
+      <td>KRW<%= Number(order.orderTotal ?? 0).toFixed(2) %></td>
 
       <td><%= order.orderTrackingNumber ?? "—" %></td>
 

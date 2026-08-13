@@ -117,9 +117,45 @@ class OrderService {
   }
 
   public async getAllOrders(): Promise<Order[]> {
-    const result = await this.orderModel.find().sort({ createdAt: -1 }).exec();
+    const result = await this.orderModel
+      .aggregate([
+        { $sort: { createdAt: -1 } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "buyerId",
+            foreignField: "_id",
+            as: "buyerData",
+          },
+        },
+        {
+          $lookup: {
+            from: "orderItems",
+            localField: "_id",
+            foreignField: "orderId",
+            as: "orderItems",
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "orderItems.productId",
+            foreignField: "_id",
+            as: "productData",
+          },
+        },
+        {
+          $lookup: {
+            from: "sellers",
+            localField: "productData.sellerId",
+            foreignField: "_id",
+            as: "sellerData",
+          },
+        },
+      ])
+      .exec();
 
-    return result as unknown as Order[];
+    return result as Order[];
   }
 
   public async updateOrder(

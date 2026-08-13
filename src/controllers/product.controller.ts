@@ -5,6 +5,7 @@ import ProductService from "../models/Product.service";
 import { ProductInput } from "../libs/types/product";
 import { AdminRequest } from "../libs/types/user";
 import { promises as fs } from "fs";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 
 const productService = new ProductService();
 
@@ -45,6 +46,7 @@ productController.createNewProduct = async (
 
     const data: ProductInput = {
       ...req.body,
+      sellerId: shapeIntoMongooseObjectId(req.user._id),
       productImages: req.files.map((file) =>
         `/${file.path.replace(/\\/g, "/").replace(/^\.?\//, "")}`,
       ),
