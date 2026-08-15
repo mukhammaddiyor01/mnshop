@@ -18,11 +18,11 @@ orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
     console.log("createOrder");
 
     const result = await orderService.createOrder(req.user, req.body);
-    res.status(HttpCode.CREATED).json(result);
+    return res.status(HttpCode.CREATED).json({ data: result });
   } catch (err) {
     console.log("ERROR, getProduct :", err);
     if (err instanceof Errors) res.status(err.code).json(err);
-    else res.status(Errors.standard.code).json(Errors.standard);
+    else return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

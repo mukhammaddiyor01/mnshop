@@ -11,6 +11,11 @@ import {
   OrderUpdateInput,
 } from "../libs/types/order";
 import { UserType } from "../libs/enums/user.enum";
+import {
+  DeliveryStatus,
+  OrderStatus,
+  PaymentStatus,
+} from "../libs/enums/order.enum";
 
 class OrderService {
   private readonly orderModel;
@@ -114,6 +119,38 @@ class OrderService {
       .exec();
 
     return result as Order[];
+  }
+
+  private deriveOrderStatus(
+    paymentStatus: PaymentStatus,
+    deliveryStatus: DeliveryStatus,
+  ): OrderStatus {
+    if (paymentStatus === PaymentStatus.REFUNDED) {
+      return OrderStatus.CANCELLED;
+    }
+
+    // FAILED bo‘lsa buyer qayta to‘lashi mumkin.
+    if (paymentStatus !== PaymentStatus.PAID) {
+      return OrderStatus.PENDING;
+    }
+
+    switch (deliveryStatus) {
+      case DeliveryStatus.DELIVERED:
+        return OrderStatus.DELIVERED;
+
+      case DeliveryStatus.SHIPPED:
+        return OrderStatus.SHIPPED;
+
+      case DeliveryStatus.PROCESSING:
+      case DeliveryStatus.PENDING:
+        return OrderStatus.PROCESSING;
+
+      case DeliveryStatus.FAILED:
+        return OrderStatus.PROCESSING;
+
+      default:
+        return OrderStatus.PROCESSING;
+    }
   }
 
   public async getAllOrders(): Promise<Order[]> {

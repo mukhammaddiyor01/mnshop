@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import {
   DeliveryStatus,
   OrderStatus,
+  PaymentMethod,
   PaymentStatus,
 } from "../libs/enums/order.enum";
 
@@ -31,7 +32,7 @@ const orderSchema = new Schema(
     orderPaymentStatus: {
       type: String,
       enum: PaymentStatus,
-      defult: PaymentStatus.PENDING,
+      default: PaymentStatus.PENDING,
     },
 
     orderDeliveryStatus: {
@@ -42,7 +43,7 @@ const orderSchema = new Schema(
 
     orderPaymentMethod: {
       type: String,
-      enum: PaymentStatus,
+      enum: PaymentMethod,
       default: PaymentStatus.PENDING,
     },
 
