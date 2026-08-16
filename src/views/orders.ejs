@@ -3,10 +3,10 @@
   <%- include('includes/admin-shell-start', { page: 'orders' }) %>
 
   <section class="glass-panel management-panel">
-    <div class="panel-head"><div><h3>Orders Management</h3><p>Filter and update every order status</p></div><i data-lucide="sliders-horizontal"></i></div>
+    <div class="panel-head"><div><h3>Orders Monitoring</h3><p>Track payment, delivery, and overall order status</p></div><i data-lucide="list-checks"></i></div>
     <div class="table-wrap">
       <table class="admin-table" data-search-target>
-        <thead><tr><th>Order</th><th>Buyer</th><th>Seller</th><th>Date</th><th>Total</th><th>Tracking</th><th>Status</th><th>Update</th></tr></thead>
+        <thead><tr><th>Order</th><th>Buyer</th><th>Seller</th><th>Date</th><th>Total</th><th>Payment</th><th>Delivery</th><th>Order status</th><th>Tracking</th></tr></thead>
         <tbody>
   <% (orders || []).forEach(function(order) { %>
     <tr>
@@ -32,7 +32,17 @@
 
       <td>KRW<%= Number(order.orderTotal ?? 0).toFixed(2) %></td>
 
-      <td><%= order.orderTrackingNumber ?? "—" %></td>
+      <td>
+        <span class="status-badge">
+          <%= order.orderPaymentStatus ?? "PENDING" %>
+        </span>
+      </td>
+
+      <td>
+        <span class="status-badge">
+          <%= order.orderDeliveryStatus ?? "PENDING" %>
+        </span>
+      </td>
 
       <td>
         <span class="status-badge">
@@ -40,40 +50,7 @@
         </span>
       </td>
 
-      <td>
-        <select
-          class="spec-select new-order-status"
-          data-id="<%= order._id %>"
-        >
-          <option
-            value="PENDING"
-            <%= order.orderStatus === "PENDING" ? "selected" : "" %>
-          >
-            PENDING
-          </option>
-
-          <option
-            value="PROCESS"
-            <%= order.orderStatus === "PROCESS" ? "selected" : "" %>
-          >
-            PROCESS
-          </option>
-
-          <option
-            value="FINISHED"
-            <%= order.orderStatus === "FINISHED" ? "selected" : "" %>
-          >
-            FINISHED
-          </option>
-
-          <option
-            value="CANCELLED"
-            <%= order.orderStatus === "CANCELLED" ? "selected" : "" %>
-          >
-            CANCELLED
-          </option>
-        </select>
-      </td>
+      <td><%= order.orderTrackingNumber ?? "—" %></td>
     </tr>
   <% }) %>
 </tbody>

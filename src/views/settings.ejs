@@ -5,19 +5,22 @@
   <div class="settings-grid">
     <section class="glass-panel settings-form-panel">
       <h3>Site Settings</h3>
-      <form class="admin-form" data-settings-form>
-        <label>Site name<input name="siteName" value="mnshop" /></label>
-        <label>Contact email<input name="contact" value="hello@mnshop.uz" /></label>
-        <label>Default commission %<input name="commission" type="number" value="12" /></label>
-        <label>Order SMS template<textarea name="orderSms">Buyurtmangiz holati yangilandi: {{status}}</textarea></label>
+      <form class="admin-form" action="/admin/settings" method="POST">
+        <label>Site name<input name="siteName" value="<%= settings.siteName %>" required /></label>
+        <label>Contact email<input name="contactEmail" type="email" value="<%= settings.contactEmail %>" required /></label>
+        <label>Default commission %<input name="defaultCommission" type="number" min="0" max="100" value="<%= settings.defaultCommission %>" required /></label>
+        <label>Order SMS template<textarea name="orderSmsTemplate" required><%= settings.orderSmsTemplate %></textarea></label>
+        <label class="control-row">
+          <span><strong>Maintenance mode</strong><small>Temporarily pause storefront purchases</small></span>
+          <input name="maintenanceMode" type="checkbox" <%= settings.maintenanceMode ? "checked" : "" %> />
+        </label>
         <button class="primary-button" type="submit">Save Settings</button>
       </form>
     </section>
     <section class="glass-panel controls-panel">
-      <i data-lucide="settings" aria-hidden="true"></i><h3>Controls</h3>
-      <label class="control-row"><span><strong>Maintenance mode</strong><small>Temporarily pause storefront purchases</small></span><input type="checkbox" data-maintenance-checkbox /></label>
-      <button type="button" data-toast="Banner draft saved">Save Banner Draft</button>
-      <button type="button" data-toast="Notification template tested">Send Test Notification</button>
+      <i data-lucide="settings" aria-hidden="true"></i>
+      <h3>Settings Info</h3>
+      <p>Changes apply to new orders and storefront controls.</p>
     </section>
   </div>
 

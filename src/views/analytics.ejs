@@ -2,23 +2,53 @@
 <body class="admin-body" data-page="analytics">
   <%- include('includes/admin-shell-start', { page: 'analytics' }) %>
 
+  <%
+    const revenueDays = analytics?.revenueLast7Days || [];
+    const categories = analytics?.categoryPerformance || [];
+    const topProducts = analytics?.topProducts || [];
+    const maxRevenue = Math.max(...revenueDays.map(function(day) { return day.revenue; }), 1);
+  %>
+
   <div class="analytics-grid">
     <section class="glass-panel revenue-panel">
-      <h3>Revenue Trend</h3><p>Current visible orders: <%= overview.revenueToday %> KRW</p>
-      <div class="bar-chart"><% [42, 58, 36, 78, 62, 91, 74].forEach(function(value, index) { %><div class="bar-item"><span data-bar-height="<%= value %>"></span><small><%= index + 1 %></small></div><% }) %></div>
-    </section>
-    <section class="glass-panel category-panel">
-      <h3>Category Performance</h3>
-      <div class="category-progress">
-        <% [["TSHIRTS", 84, 512], ["HOODIES", 100, 608], ["CAPS", 46, 278], ["CUPS", 30, 184]].forEach(function(item) { %>
-          <article><div><strong><%= item[0] %></strong><small><%= item[2] %> sold</small></div><div class="progress-track"><span data-progress-width="<%= item[1] %>"></span></div></article>
+      <h3>Revenue Trend</h3>
+      <p>Today: <%= Number(analytics?.revenueToday || 0).toLocaleString() %> KRW</p>
+      <div class="bar-chart">
+        <% revenueDays.forEach(function(day) { %>
+          <div class="bar-item">
+            <span data-bar-height="<%= Math.round((day.revenue / maxRevenue) * 100) %>"></span>
+            <small><%= day.date.slice(5) %></small>
+          </div>
         <% }) %>
       </div>
     </section>
+
+    <section class="glass-panel category-panel">
+      <h3>Category Performance</h3>
+      <div class="category-progress">
+        <% categories.forEach(function(item) { %>
+          <article>
+            <div>
+              <strong><%= item.category %></strong>
+              <small><%= item.sold %> sold</small>
+            </div>
+            <div class="progress-track">
+              <span data-progress-width="<%= item.percentage %>"></span>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+
     <section class="glass-panel top-products-panel">
       <h3>Top Products by Revenue</h3>
       <div class="top-products-list">
-        <% [["Oversized Han Hoodie", "202.2M UZS"], ["MN Signature T-Shirt", "82.4M UZS"], ["MN Classic Cap", "31.6M UZS"], ["Morning Seoul Cup", "14.7M UZS"]].forEach(function(product) { %><article><strong><%= product[0] %></strong><span><%= product[1] %></span></article><% }) %>
+        <% topProducts.forEach(function(product) { %>
+          <article>
+            <strong><%= product.productName %></strong>
+            <span><%= Number(product.revenue || 0).toLocaleString() %> KRW</span>
+          </article>
+        <% }) %>
       </div>
     </section>
   </div>

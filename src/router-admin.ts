@@ -23,12 +23,14 @@ routerAdmin
 routerAdmin.get("/logout", adminController.logout);
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
-/** ADMIN BSSR FRONTEND */
+/** ADMIN BSSR FRONTEND: OVERVIEW */
 routerAdmin.get(
   "/overview",
   adminController.verifyAdmin,
   adminController.getOverview,
 );
+
+/** ANALYTICS */
 
 routerAdmin.get(
   "/analytics",
@@ -36,10 +38,18 @@ routerAdmin.get(
   adminController.getAnalytics,
 );
 
+/** SETTINGS */
+
 routerAdmin.get(
   "/settings",
   adminController.verifyAdmin,
   adminController.getSettings,
+);
+
+routerAdmin.post(
+  "/settings",
+  adminController.verifyAdmin,
+  adminController.updateSettings,
 );
 
 /** PRODUCT MANAGEMENT */

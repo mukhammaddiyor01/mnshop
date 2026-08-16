@@ -5,6 +5,7 @@ import sellerController from "./controllers/seller.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
+import { blockPurchasesDuringMaintenance } from "./libs/middleware/mainteance";
 
 /* BUYER */
 
@@ -17,6 +18,7 @@ router.post("/signup", userController.signup);
 router.post(
   "/order/create",
   userController.verifyAuth,
+  blockPurchasesDuringMaintenance,
   orderController.createOrder,
 );
 /**
