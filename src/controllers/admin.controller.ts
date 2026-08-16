@@ -10,7 +10,7 @@ import ProductService from "../models/Product.service";
 import OrderService from "../models/Order.service";
 import { SellerStatus } from "../libs/enums/seller.enum";
 import { ProductStatus } from "../libs/enums/product.enum";
-import { OrderStatus } from "../libs/enums/order.enum";
+import { OrderStatus, PaymentStatus } from "../libs/enums/order.enum";
 import AnalyticsService from "../models/Analytics.service";
 import SettingsService from "../models/Settings.service";
 
@@ -68,7 +68,7 @@ adminController.getOverview = async (req: Request, res: Response) => {
       .filter(
         (order) =>
           new Date(order.createdAt) >= startOfToday &&
-          order.orderStatus !== OrderStatus.CANCELLED,
+          order.orderPaymentStatus === PaymentStatus.PAID,
       )
       .reduce((total, order) => total + Number(order.orderTotal || 0), 0);
 
