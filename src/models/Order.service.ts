@@ -15,9 +15,10 @@ import { UserType } from "../libs/enums/user.enum";
 import {
   DeliveryStatus,
   OrderStatus,
-  PaymentMethod,
   PaymentStatus,
 } from "../libs/enums/order.enum";
+
+import { PaymentMethod, PaymentProvider } from "../libs/enums/payment.enum";
 
 class OrderService {
   private readonly orderModel;
@@ -107,10 +108,14 @@ class OrderService {
         orderAddress: user.userAddress || "Address not provided",
 
         orderTotal: amount + deliveryFee,
+
         orderPaymentStatus: paymentStatus,
+        orderPaymentProvider: PaymentProvider.TOSS_PAYMENTS,
+        orderPaymentMethod: PaymentMethod.CARD,
+
         orderDeliveryStatus: deliveryStatus,
         orderStatus,
-        orderPaymentMethod: PaymentMethod.STRIPE,
+
         orderTrackingNumber: `MN-${Date.now()}`,
       });
 
@@ -185,6 +190,134 @@ class OrderService {
       .exec();
 
     return result as Order[];
+  }
+
+  public async getPayableOrder(user: User, orderId: string): Promise<Order> {
+    try {
+      if (user.userType !== UserType.BUYER) {
+        throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
+      }
+
+      const orderObjectId = shapeIntoMongooseObjectId(orderId);
+
+      const buyerId = shapeIntoMongooseObjectId(user._id);
+
+      const order = await this.orderModel
+        .findOne({
+          _id: orderObjectId,
+          buyerId,
+        })
+        .exec();
+
+      if (!order) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      if (
+        order.orderPaymentStatus === PaymentStatus.PAID ||
+        order.orderPaymentStatus === PaymentStatus.REFUNDED
+      ) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_ALLOWED);
+      }
+
+      return order as unknown as Order;
+    } catch (err) {
+      console.log("Error, OrderService.getPayableOrder:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_DATA_FOUND);
+    }
+  }
+
+  private validatePaymentTransition(
+    currentStatus: PaymentStatus,
+    nextStatus: PaymentStatus,
+  ): void {
+    if (!Object.values(PaymentStatus).includes(nextStatus)) {
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
+
+    const transitions: Record<PaymentStatus, PaymentStatus[]> = {
+      [PaymentStatus.PENDING]: [PaymentStatus.PAID, PaymentStatus.FAILED],
+
+      [PaymentStatus.FAILED]: [PaymentStatus.PENDING, PaymentStatus.PAID],
+
+      [PaymentStatus.PAID]: [PaymentStatus.REFUNDED],
+
+      [PaymentStatus.REFUNDED]: [],
+    };
+
+    if (
+      currentStatus !== nextStatus &&
+      !transitions[currentStatus].includes(nextStatus)
+    ) {
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
+  }
+
+  public async updatePaymentStatus(
+    orderId: string,
+    nextPaymentStatus: PaymentStatus,
+  ): Promise<Order> {
+    try {
+      const orderObjectId = shapeIntoMongooseObjectId(orderId);
+
+      const order = await this.orderModel.findById(orderObjectId).exec();
+
+      if (!order) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      const currentPaymentStatus = order.orderPaymentStatus as PaymentStatus;
+
+      // Bir xil webhook qayta kelsa xato bermaymiz.
+      if (currentPaymentStatus === nextPaymentStatus) {
+        return order as unknown as Order;
+      }
+
+      this.validatePaymentTransition(currentPaymentStatus, nextPaymentStatus);
+
+      const orderStatus = this.deriveOrderStatus(
+        nextPaymentStatus,
+        order.orderDeliveryStatus as DeliveryStatus,
+      );
+
+      const result = await this.orderModel
+        .findOneAndUpdate(
+          {
+            _id: orderObjectId,
+            orderPaymentStatus: currentPaymentStatus,
+          },
+          {
+            $set: {
+              orderPaymentStatus: nextPaymentStatus,
+              orderStatus,
+            },
+          },
+          {
+            new: true,
+            runValidators: true,
+          },
+        )
+        .exec();
+
+      if (!result) {
+        throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+      }
+
+      return result as unknown as Order;
+    } catch (err) {
+      console.log("Error, OrderService.updatePaymentStatus:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
   }
 
   private deriveOrderStatus(

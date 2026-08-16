@@ -11,7 +11,6 @@ export enum PaymentStatus {
   PAID = "PAID",
   FAILED = "FAILED",
   REFUNDED = "REFUNDED",
-  STRIPE = "STRIPE",
 }
 
 export enum DeliveryStatus {
@@ -20,10 +19,4 @@ export enum DeliveryStatus {
   SHIPPED = "SHIPPED",
   DELIVERED = "DELIVERED",
   FAILED = "FAILED",
-}
-
-export enum PaymentMethod {
-  STRIPE = "STRIPE",
-  PAYME = "PAYME",
-  CLICK = "CLICK",
 }

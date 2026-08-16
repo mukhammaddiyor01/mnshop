@@ -4,24 +4,31 @@ import {
   OrderStatus,
   PaymentStatus,
   DeliveryStatus,
-  PaymentMethod,
 } from "../enums/order.enum";
+
+import { PaymentMethod, PaymentProvider } from "../enums/payment.enum";
 
 export interface Order {
   _id: Types.ObjectId;
   buyerId: Types.ObjectId;
   sellerId: Types.ObjectId;
+
   orderItems: Array<T>;
   orderAddress: string;
   orderSubtotal: number;
   orderShippingFree: number;
   orderTotal: number;
+
   orderStatus: OrderStatus;
   orderPaymentStatus: PaymentStatus;
   orderDeliveryStatus: DeliveryStatus;
+
+  orderPaymentProvider: PaymentProvider;
   orderPaymentMethod: PaymentMethod;
+
   orderTrackingNumber: string;
   orderEstimatedDelivery: Date;
+
   updatedAt: Date;
   createdAt: Date;
 }
@@ -58,8 +65,4 @@ export interface OrderInquiry {
 export interface OrderUpdateInput {
   orderId: string;
   orderStatus: OrderStatus;
-  orderPaymentStatus: PaymentStatus;
-  orderDeliveryStatus: DeliveryStatus;
-  orderPaymentMethod: PaymentMethod;
-  orderTrackingNumber: string;
 }

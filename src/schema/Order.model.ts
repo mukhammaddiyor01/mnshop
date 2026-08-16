@@ -2,9 +2,10 @@ import mongoose, { Schema } from "mongoose";
 import {
   DeliveryStatus,
   OrderStatus,
-  PaymentMethod,
   PaymentStatus,
 } from "../libs/enums/order.enum";
+
+import { PaymentMethod, PaymentProvider } from "../libs/enums/payment.enum";
 
 const orderSchema = new Schema(
   {
@@ -29,22 +30,28 @@ const orderSchema = new Schema(
       default: OrderStatus.PENDING,
     },
 
-    orderPaymentStatus: {
-      type: String,
-      enum: PaymentStatus,
-      default: PaymentStatus.PENDING,
-    },
-
     orderDeliveryStatus: {
       type: String,
       enum: DeliveryStatus,
       default: DeliveryStatus.PENDING,
     },
 
+    orderPaymentStatus: {
+      type: String,
+      enum: PaymentStatus,
+      default: PaymentStatus.PENDING,
+    },
+
+    orderPaymentProvider: {
+      type: String,
+      enum: PaymentProvider,
+      default: PaymentProvider.TOSS_PAYMENTS,
+    },
+
     orderPaymentMethod: {
       type: String,
       enum: PaymentMethod,
-      default: PaymentMethod.STRIPE,
+      default: PaymentMethod.CARD,
     },
 
     orderTrackingNumber: {

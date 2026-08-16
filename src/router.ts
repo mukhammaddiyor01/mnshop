@@ -6,6 +6,7 @@ import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
 import { blockPurchasesDuringMaintenance } from "./libs/middleware/mainteance";
+import paymentController from "./controllers/payment.controller";
 
 /* BUYER */
 
@@ -21,6 +22,21 @@ router.post(
   blockPurchasesDuringMaintenance,
   orderController.createOrder,
 );
+
+// PAYMENT
+
+router.post(
+  "/payment/prepare",
+  userController.verifyAuth,
+  paymentController.preparePayment,
+);
+
+router.post(
+  "/payment/confirm",
+  userController.verifyAuth,
+  paymentController.confirmPayment,
+);
+
 /**
 router.get("/products ", usercontroller.products) 
 router.get("/products/product ", usercontroller.product) 

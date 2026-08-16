@@ -1,36 +1,76 @@
 import { Types } from "mongoose";
-import { Seller } from "./seller";
-import { Session } from "express-session";
-
+import {
+  PaymentMethod,
+  PaymentProvider,
+  TossPaymentStatus,
+} from "../enums/payment.enum";
+import { PaymentStatus } from "../enums/order.enum";
 
 export interface Payment {
-    _id: Types.ObjectId;
-    buyerId: Types.ObjectId;
-    productId: Types.ObjectId;
-    cartColor: string;
-    cartSize: string;
-    cartQuantity: number;
-    createdAt: Date;
-    updatedAt: Date;
+  _id: Types.ObjectId;
+
+  orderId: Types.ObjectId;
+  buyerId: Types.ObjectId;
+
+  customerKey: string;
+
+  provider: PaymentProvider;
+  method: PaymentMethod;
+
+  amount: number;
+  currency: string;
+
+  paymentStatus: PaymentStatus;
+  providerStatus?: TossPaymentStatus;
+
+  paymentKey?: string;
+  providerOrderId: string;
+
+  failureCode?: string;
+  failureMessage?: string;
+
+  approvedAt?: Date;
+  cancelledAt?: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface PaymentInput {
-    cartColor: string;
-    cartSize: string;
-    cartQuantity: number;
-    createdAt: Date;
-    updatedAt: Date;
+export interface PreparePaymentInput {
+  orderId: string;
+  method?: PaymentMethod;
 }
 
-export interface PaymentInput {
-    cartColor: string;
-    cartSize: string;
-    cartQuantity: number;
+export interface ConfirmPaymentInput {
+  paymentKey: string;
+  orderId: string;
+  amount: number;
 }
 
-export interface AdminRequest extends Request {
-    user: Seller;
-    session: Session & {seller: Seller};
-    file: Express.Multer.File;
-    files: Express.Multer.File[];
+export interface TossPaymentResult {
+  paymentKey: string;
+  orderId: string;
+  status: TossPaymentStatus;
+  method?: string;
+  totalAmount: number;
+  balanceAmount?: number;
+  currency: string;
+  approvedAt?: string;
+  requestedAt?: string;
+
+  failure?: {
+    code: string;
+    message: string;
+  };
+}
+
+export interface PreparedPayment {
+  orderId: string;
+  amount: number;
+  currency: string;
+  clientKey: string;
+  customerKey: string;
+  orderName: string;
+  successUrl: string;
+  failUrl: string;
 }
