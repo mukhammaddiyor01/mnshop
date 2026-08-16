@@ -1,6 +1,7 @@
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import {
   Product,
+  ProductBulkStatusInput,
   ProductInput,
   ProductUpdateInput,
 } from "../libs/types/product";
@@ -45,11 +46,28 @@ class ProductService {
 
   /** SSR */
 
-  public async getAllProducts(): Promise<Product[]> {
-    const result = await this.productModel.find().exec();
-    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+  public async getAllProducts(sellerId?: string): Promise<Product[]> {
+    try {
+      const query = sellerId
+        ? { sellerId: shapeIntoMongooseObjectId(sellerId) }
+        : {};
 
-    return result;
+      const result = await this.productModel
+        .find(query)
+        .sort({
+          createdAt: -1,
+        })
+        .exec();
+
+      return result;
+    } catch (err) {
+      console.log("Error, ProductService.getAllProducts:", err);
+
+      throw new Errors(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        Message.SOMETHING_WENT_WRONG,
+      );
+    }
   }
 
   public async getProductsByIds(productIds: string[]): Promise<Product[]> {
@@ -61,6 +79,8 @@ class ProductService {
       const products = await this.productModel
         .find({
           _id: { $in: ids },
+          productStatus: ProductStatus.ACTIVE,
+          productLeftCount: { $gt: 0 },
         })
         .exec();
 
@@ -149,14 +169,153 @@ class ProductService {
   public async updateChosenProduct(
     id: string,
     input: ProductUpdateInput,
+    sellerId?: string,
   ): Promise<Product> {
-    id = shapeIntoMongooseObjectId(id);
-    const result = await this.productModel
-      .findByIdAndUpdate({ _id: id }, input, { new: true })
-      .exec();
-    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    try {
+      const productId = shapeIntoMongooseObjectId(id);
 
-    return result;
+      const updateData: ProductUpdateInput = {};
+
+      if (input.productStatus !== undefined) {
+        if (!Object.values(ProductStatus).includes(input.productStatus)) {
+          throw new Errors(HttpCode.BAD_REQUEST, Message.INVALID_PRODUCT_DATA);
+        }
+
+        updateData.productStatus = input.productStatus;
+      }
+
+      if (input.productFeatured !== undefined) {
+        updateData.productFeatured = parseBoolean(input.productFeatured);
+      }
+
+      if (input.productName !== undefined) {
+        updateData.productName = String(input.productName).trim();
+      }
+
+      if (input.productPrice !== undefined) {
+        updateData.productPrice = Number(input.productPrice);
+      }
+
+      if (input.productDiscountPrice !== undefined) {
+        updateData.productDiscountPrice = Number(input.productDiscountPrice);
+      }
+
+      if (input.productLeftCount !== undefined) {
+        updateData.productLeftCount = Number(input.productLeftCount);
+      }
+
+      if (input.productDesc !== undefined) {
+        updateData.productDesc = String(input.productDesc).trim();
+      }
+
+      if (input.productType !== undefined) {
+        updateData.productType = input.productType;
+      }
+
+      if (input.productColors !== undefined) {
+        updateData.productColors = input.productColors;
+      }
+
+      if (input.productSizes !== undefined) {
+        updateData.productSizes = input.productSizes;
+      }
+
+      if (input.productSale !== undefined) {
+        updateData.productSale = parseBoolean(input.productSale);
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+      }
+
+      const query = sellerId
+        ? {
+            _id: productId,
+            sellerId: shapeIntoMongooseObjectId(sellerId),
+          }
+        : { _id: productId };
+
+      const result = await this.productModel
+        .findOneAndUpdate(
+          query,
+          {
+            $set: updateData,
+          },
+          {
+            new: true,
+            runValidators: true,
+          },
+        )
+        .exec();
+
+      if (!result) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      return result;
+    } catch (err) {
+      console.log("Error, ProductService.updateChosenProduct:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
+  }
+
+  public async updateBulkProductStatus(
+    input: ProductBulkStatusInput,
+    sellerId?: string,
+  ): Promise<number> {
+    try {
+      if (!Array.isArray(input.productIds) || input.productIds.length === 0) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+      }
+
+      if (!Object.values(ProductStatus).includes(input.productStatus)) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.INVALID_PRODUCT_DATA);
+      }
+
+      const uniqueProductIds = [...new Set(input.productIds)];
+
+      const productIds = uniqueProductIds.map((id) =>
+        shapeIntoMongooseObjectId(id),
+      );
+
+      const query = sellerId
+        ? {
+            _id: { $in: productIds },
+            sellerId: shapeIntoMongooseObjectId(sellerId),
+          }
+        : { _id: { $in: productIds } };
+
+      const result = await this.productModel.updateMany(
+        query,
+        {
+          $set: {
+            productStatus: input.productStatus,
+          },
+        },
+        {
+          runValidators: true,
+        },
+      );
+
+      if (result.matchedCount !== productIds.length) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      return result.modifiedCount;
+    } catch (err) {
+      console.log("Error, ProductService.updateBulkProductStatus:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
   }
 }
 

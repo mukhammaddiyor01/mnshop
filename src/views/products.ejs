@@ -24,9 +24,9 @@
         </thead>
         <tbody>
           <% products.map(function(value, index) { %>
-            <tr data-status="<%= String(value.productStatus || 'PAUSE').toLowerCase() %>">
+            <tr data-product-id="<%= value._id %>" data-status="<%= String(value.productStatus || 'PAUSE').toLowerCase() %>">
               <td>
-                <input type="checkbox" data-product-select />
+                <input type="checkbox" value="<%= value._id %>" data-product-select />
               </td>
 
               <td>

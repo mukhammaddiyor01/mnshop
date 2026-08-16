@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
 import ProductService from "../models/Product.service";
-import { ProductInput } from "../libs/types/product";
+import { ProductBulkStatusInput, ProductInput } from "../libs/types/product";
 import { AdminRequest } from "../libs/types/user";
+import { UserType } from "../libs/enums/user.enum";
 import { promises as fs } from "fs";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 
@@ -21,10 +22,15 @@ const removeUploadedFiles = async (files: Express.Multer.File[] = []) => {
 
 /** SSR */
 
-productController.getAllProducts = async (req: Request, res: Response) => {
+productController.getAllProducts = async (
+  req: AdminRequest,
+  res: Response,
+) => {
   try {
     console.log("getAllProducts");
-    const data = await productService.getAllProducts();
+    const sellerId =
+      req.user?.userType === UserType.SELLER ? String(req.user._id) : undefined;
+    const data = await productService.getAllProducts(sellerId);
 
     res.render("products", { products: data });
   } catch (err) {
@@ -47,40 +53,91 @@ productController.createNewProduct = async (
     const data: ProductInput = {
       ...req.body,
       sellerId: shapeIntoMongooseObjectId(req.user._id),
-      productImages: req.files.map((file) =>
-        `/${file.path.replace(/\\/g, "/").replace(/^\.?\//, "")}`,
+      productImages: req.files.map(
+        (file) => `/${file.path.replace(/\\/g, "/").replace(/^\.?\//, "")}`,
       ),
     };
 
     await productService.createNewProduct(data);
 
-    res.status(HttpCode.CREATED).send(
-      `<script> alert("Successfully created"); window.location.replace("/product/all"); </script>`,
-    );
+    res
+      .status(HttpCode.CREATED)
+      .send(
+        `<script> alert("Successfully created"); window.location.replace("/product/all"); </script>`,
+      );
   } catch (err) {
     console.log("ERROR, createNewProduct:", err);
     await removeUploadedFiles(req.files);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-    const statusCode = err instanceof Errors ? err.code : HttpCode.INTERNAL_SERVER_ERROR;
-    res.status(statusCode).send(
-      `<script> alert("${message}"); window.location.replace("/product/all"); </script>`,
-    );
+    const statusCode =
+      err instanceof Errors ? err.code : HttpCode.INTERNAL_SERVER_ERROR;
+    res
+      .status(statusCode)
+      .send(
+        `<script> alert("${message}"); window.location.replace("/product/all"); </script>`,
+      );
   }
 };
 
-productController.updateChosenProduct = async (req: Request, res: Response) => {
+productController.updateChosenProduct = async (
+  req: AdminRequest,
+  res: Response,
+) => {
   try {
     console.log("updateChosenProduct");
     const id = req.params.id;
 
-    const result = await productService.updateChosenProduct(id, req.body);
+    const sellerId =
+      req.user?.userType === UserType.SELLER ? String(req.user._id) : undefined;
+    const result = await productService.updateChosenProduct(
+      id,
+      req.body,
+      sellerId,
+    );
 
     res.status(HttpCode.OK).json({ data: result });
   } catch (err) {
     console.log("updateChosenProduct", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+productController.updateBulkProductStatus = async (
+  req: AdminRequest,
+  res: Response,
+) => {
+  try {
+    console.log("updateBulkProductStatus");
+
+    const input: ProductBulkStatusInput = {
+      productIds: req.body.productIds,
+      productStatus: req.body.productStatus,
+    };
+
+    const sellerId =
+      req.user?.userType === UserType.SELLER ? String(req.user._id) : undefined;
+    const modifiedCount = await productService.updateBulkProductStatus(
+      input,
+      sellerId,
+    );
+
+    return res.status(HttpCode.OK).json({
+      data: {
+        modifiedCount,
+      },
+    });
+  } catch (err) {
+    console.log("Error, updateBulkProductStatus:", err);
+
+    if (err instanceof Errors) {
+      return res.status(err.code).json({
+        message: err.message,
+      });
+    }
+
+    return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

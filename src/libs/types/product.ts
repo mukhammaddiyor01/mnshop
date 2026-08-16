@@ -49,22 +49,22 @@ export interface ProductInput {
 }
 
 export interface ProductUpdateInput {
-  _id: Types.ObjectId;
   productStatus?: ProductStatus;
-  productType: ProductType;
-  productName: string;
-  productSlug?: string;
+  productType?: ProductType;
+  productName?: string;
   productDesc?: string;
-  productPrice: number;
+  productPrice?: number;
   productDiscountPrice?: number;
   productImages?: string[];
-  productColors: ProductColors[];
+  productColors?: ProductColors[];
   productSizes?: ProductSizes[];
   productVariants?: string[];
-  productLeftCount: number;
-  productSold?: number;
-  productviews?: number;
-  productRating?: number;
+  productLeftCount?: number;
   productFeatured?: boolean;
   productSale?: boolean;
+}
+
+export interface ProductBulkStatusInput {
+  productIds: string[];
+  productStatus: ProductStatus;
 }

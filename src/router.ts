@@ -72,6 +72,12 @@ router.get(
 );
 
 router.post(
+  "/seller/product/bulk-status",
+  sellerController.verifySeller,
+  productController.updateBulkProductStatus,
+);
+
+router.post(
   "/seller/product/:id",
   sellerController.verifySeller,
   productController.updateChosenProduct,

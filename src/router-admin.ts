@@ -67,6 +67,12 @@ routerAdmin.post(
   productController.updateChosenProduct,
 );
 
+routerAdmin.post(
+  "/product/bulk-status",
+  adminController.verifyAdmin,
+  productController.updateBulkProductStatus,
+);
+
 /** ORDER MANAGEMENT */
 routerAdmin.get(
   "/orders",
