@@ -28,18 +28,18 @@
 
               <td><%= value.sellerEmail %></td>
 
-              <td><%= value.sellerLeftCount || 0 %></td>
+              <td><%= value.productCount || 0 %></td>
 
-              <td><%= value.sellerTotalSales || 0 %></td>
+              <td><%= value.salesCount || 0 %></td>
 
-              <td>0 KRW</td>
+              <td><%= Number(value.revenue || 0).toLocaleString() %> KRW</td>
 
               <td>
                 <label class="commission-input">
                   <input
                     class="seller-commission"
                     type="number"
-                    value="<%= value.sellerCommisionPercentage || 0 %>"
+                    value="<%= value.commissionPercentage || 0 %>"
                     data-seller-id="<%= value._id %>"
                     min="0"
                     max="100"

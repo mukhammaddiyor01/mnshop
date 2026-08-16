@@ -38,10 +38,10 @@
                 <%= value.createdAt ? String(value.createdAt).slice(0, 10) : "-" %>
               </td>
 
-              <td><%= value.myOrders || 0 %></td>
+              <td><%= value.orderCount || 0 %></td>
 
               <td>
-                <%= Number(value.userPoints || 0).toLocaleString() %> KRW
+                <%= Number(value.paidTotal || 0).toLocaleString() %> KRW
               </td>
 
               <td>

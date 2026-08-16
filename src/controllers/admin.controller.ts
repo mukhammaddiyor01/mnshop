@@ -52,8 +52,15 @@ adminController.getOverview = async (req: Request, res: Response) => {
       orderService.getAllOrders(),
     ]);
 
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const koreaToday = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(now);
+    const startOfToday = new Date(`${koreaToday}T00:00:00+09:00`);
+    const endOfToday = new Date(`${koreaToday}T23:59:59.999+09:00`);
 
     const activeSellers = sellers.filter(
       (seller) => seller.sellerStatus === SellerStatus.ACTIVE,
@@ -68,6 +75,7 @@ adminController.getOverview = async (req: Request, res: Response) => {
       .filter(
         (order) =>
           new Date(order.createdAt) >= startOfToday &&
+          new Date(order.createdAt) <= endOfToday &&
           order.orderPaymentStatus === PaymentStatus.PAID,
       )
       .reduce((total, order) => total + Number(order.orderTotal || 0), 0);
@@ -221,7 +229,29 @@ adminController.logout = async (req: AdminRequest, res: Response) => {
 adminController.getUsers = async (req: Request, res: Response) => {
   try {
     console.log("getUsers");
-    const result = await userService.getUsers();
+    const [users, orders] = await Promise.all([
+      userService.getUsers(),
+      orderService.getAllOrders(),
+    ]);
+
+    const result = users.map((user) => {
+      const userOrders = orders.filter(
+        (order) => String(order.buyerId) === String(user._id),
+      );
+      const paidTotal = userOrders
+        .filter(
+          (order) => order.orderPaymentStatus === PaymentStatus.PAID,
+        )
+        .reduce((total, order) => total + Number(order.orderTotal || 0), 0);
+
+      return {
+        ...(typeof (user as T).toObject === "function"
+          ? (user as T).toObject()
+          : user),
+        orderCount: userOrders.length,
+        paidTotal,
+      };
+    });
 
     res.render("users", { users: result });
   } catch (err) {
@@ -248,7 +278,57 @@ adminController.updateChosenUser = async (req: Request, res: Response) => {
 adminController.getSellers = async (req: Request, res: Response) => {
   try {
     console.log("getSellers");
-    const result = await sellerService.getSellers();
+    const [sellers, products, orders, settings] = await Promise.all([
+      sellerService.getSellers(),
+      productService.getAllProducts(),
+      orderService.getAllOrders(),
+      settingsService.getSettings(),
+    ]);
+
+    const result = sellers.map((seller) => {
+      const sellerProducts = products.filter(
+        (product) =>
+          String(product.sellerId) === String(seller._id) &&
+          product.productStatus !== ProductStatus.DELETE,
+      );
+      const paidOrders = orders.filter(
+        (order) =>
+          String(order.sellerId) === String(seller._id) &&
+          order.orderPaymentStatus === PaymentStatus.PAID,
+      );
+      const revenue = paidOrders.reduce(
+        (total, order) =>
+          total +
+          order.orderItems.reduce(
+            (orderTotal: number, item: T) =>
+              orderTotal +
+              Number(item.itemPrice || 0) * Number(item.itemQuantity || 0),
+            0,
+          ),
+        0,
+      );
+      const salesCount = paidOrders.reduce(
+        (total, order) =>
+          total +
+          order.orderItems.reduce(
+            (itemTotal: number, item: T) =>
+              itemTotal + Number(item.itemQuantity || 0),
+            0,
+          ),
+        0,
+      );
+
+      return {
+        ...(typeof (seller as T).toObject === "function"
+          ? (seller as T).toObject()
+          : seller),
+        productCount: sellerProducts.length,
+        salesCount,
+        revenue,
+        commissionPercentage:
+          seller.sellerCommisionPercentage ?? settings.defaultCommission,
+      };
+    });
 
     res.render("sellers", { sellers: result });
   } catch (err) {
