@@ -94,4 +94,31 @@ orderController.updateOrder = async (
   }
 };
 
+orderController.updateDeliveryStatus = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    console.log("updateDeliveryStatus");
+
+    const result = await orderService.updateDeliveryStatus(req.user, {
+      orderId: req.params.id,
+      deliveryStatus: req.body.deliveryStatus,
+      trackingNumber: req.body.trackingNumber,
+    });
+
+    return res.status(HttpCode.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    console.log("Error, updateDeliveryStatus:", err);
+
+    if (err instanceof Errors) {
+      return res.status(err.code).json(err);
+    }
+
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 export default orderController;

@@ -11,6 +11,7 @@ export enum PaymentStatus {
   PAID = "PAID",
   FAILED = "FAILED",
   REFUNDED = "REFUNDED",
+  STRIPE = "STRIPE",
 }
 
 export enum DeliveryStatus {

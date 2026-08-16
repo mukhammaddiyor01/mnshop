@@ -10,6 +10,7 @@ import {
 export interface Order {
   _id: Types.ObjectId;
   buyerId: Types.ObjectId;
+  sellerId: Types.ObjectId;
   orderItems: Array<T>;
   orderAddress: string;
   orderSubtotal: number;

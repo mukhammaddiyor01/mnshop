@@ -44,7 +44,7 @@ const orderSchema = new Schema(
     orderPaymentMethod: {
       type: String,
       enum: PaymentMethod,
-      default: PaymentStatus.PENDING,
+      default: PaymentMethod.STRIPE,
     },
 
     orderTrackingNumber: {
@@ -56,6 +56,12 @@ const orderSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "user",
+    },
+
+    sellerId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "seller",
     },
   },
   { timestamps: true, collection: "orders" },

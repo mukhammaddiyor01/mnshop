@@ -52,6 +52,34 @@ class ProductService {
     return result;
   }
 
+  public async getProductsByIds(productIds: string[]): Promise<Product[]> {
+    try {
+      const uniqueProductIds = [...new Set(productIds)];
+
+      const ids = uniqueProductIds.map((id) => shapeIntoMongooseObjectId(id));
+
+      const products = await this.productModel
+        .find({
+          _id: { $in: ids },
+        })
+        .exec();
+
+      if (products.length !== uniqueProductIds.length) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      return products;
+    } catch (err) {
+      console.log("Error, ProductService.getProductsByIds:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_DATA_FOUND);
+    }
+  }
+
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
       const product = this.normalizeProductInput(input);

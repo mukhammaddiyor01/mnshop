@@ -59,6 +59,14 @@ router.post(
   productController.updateChosenProduct,
 );
 
+// DELIVERY
+
+router.post(
+  "/seller/order/:id/delivery",
+  sellerController.verifySeller,
+  orderController.updateDeliveryStatus,
+);
+
 /**
  
 
@@ -114,6 +122,8 @@ routerSeller.get("/orders",
 routerSeller.post("/order/:id", 
     sellerController.verifySeller, 
     sellerController.updateChosenOrder);
+
+
 
 
 //MESSAGES
