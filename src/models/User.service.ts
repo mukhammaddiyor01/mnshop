@@ -1,6 +1,7 @@
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import {
   LoginInput,
+  GoogleProfile,
   User,
   UserInput,
   UserUpdateInput,
@@ -11,6 +12,7 @@ import { UserStatus, UserType } from "../libs/enums/user.enum";
 import * as bcrypt from "bcryptjs";
 import { Product } from "../libs/types/product";
 import { Seller } from "../libs/types/seller";
+import { randomBytes } from "crypto";
 
 class UserService {
   private readonly userModel;
@@ -51,6 +53,64 @@ class UserService {
     }
     // @ts-ignore
     return await this.userModel.findById(user._id).lean().exec();
+  }
+
+  public async signInWithGoogle(
+    profile: GoogleProfile,
+    input: { userNick?: string; userPhone?: string },
+  ): Promise<User> {
+    const existingUser = await this.userModel
+      .findOne({
+        $or: [
+          { userGoogleId: profile.googleId },
+          { userEmail: profile.email },
+        ],
+      })
+      .exec();
+
+    if (existingUser) {
+      if (
+        existingUser.userType !== UserType.BUYER ||
+        existingUser.userStatus !== UserStatus.ACTIVE ||
+        (existingUser.userGoogleId &&
+          existingUser.userGoogleId !== profile.googleId)
+      ) {
+        throw new Errors(
+          HttpCode.FORBIDDED,
+          Message.BUYER_ACCOUNT_REQUIRED,
+        );
+      }
+
+      if (!existingUser.userGoogleId) {
+        existingUser.userGoogleId = profile.googleId;
+      }
+      if (!existingUser.userImage && profile.image) {
+        existingUser.userImage = profile.image;
+      }
+
+      await existingUser.save();
+      return existingUser.toJSON();
+    }
+
+    const userNick = input.userNick?.trim();
+    const userPhone = input.userPhone?.trim();
+
+    if (!userNick || !userPhone) {
+      throw new Errors(
+        HttpCode.BAD_REQUEST,
+        Message.GOOGLE_PROFILE_REQUIRED,
+      );
+    }
+
+    return this.signup({
+      userType: UserType.BUYER,
+      userNick,
+      userEmail: profile.email,
+      userPhone,
+      userPassword: randomBytes(48).toString("hex"),
+      userGoogleId: profile.googleId,
+      userImage: profile.image,
+    });
   }
 
   public async addUserPoint(user: User, point: number): Promise<User> {

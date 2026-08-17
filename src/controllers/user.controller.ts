@@ -5,11 +5,10 @@ import {
   LoginInput,
   User,
   ExtendedRequest,
+  GoogleAuthInput,
 } from "../libs/types/user";
-import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { randomBytes } from "crypto";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
 
@@ -21,12 +20,18 @@ const userService = new UserService();
 
 const authService = new AuthService();
 
-const createUserToken = (): string => randomBytes(48).toString("hex");
+const setAccessTokenCookie = (res: Response, token: string) => {
+  res.cookie("accessToken", token, {
+    maxAge: AUTH_TIMER * 3600 * 1000,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
+};
 
 userController.signup = async (req: Request, res: Response) => {
   try {
     console.log("signup");
-    console.log("body:", req.body);
 
     const input: UserInput = req.body,
       result: User = await userService.signup(input);
@@ -34,10 +39,7 @@ userController.signup = async (req: Request, res: Response) => {
     const token = await authService.createToken(result);
 
     // TODO: TOKEN Cookie ga joylash
-    res.cookie("accessToken", token, {
-      maxAge: AUTH_TIMER * 3600 * 1000,
-      httpOnly: false,
-    });
+    setAccessTokenCookie(res, token);
 
     res.json({ user: result });
   } catch (err) {
@@ -50,22 +52,37 @@ userController.signup = async (req: Request, res: Response) => {
 userController.login = async (req: Request, res: Response) => {
   try {
     console.log("login");
-    console.log("body:", req.body);
     const input: LoginInput = req.body;
     const result = await userService.login(input);
 
     const token = await authService.createToken(result);
 
     // TODO: TOKEN Cookie ga joylash
-    res.cookie("accessToken", token, {
-      maxAge: AUTH_TIMER * 3600 * 1000,
-      httpOnly: false,
-    });
+    setAccessTokenCookie(res, token);
 
     res.json({ member: result });
   } catch (err) {
     console.log("ERROR, login:", err);
-    if (err instanceof Errors) res.send(err.code).json(err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.googleAuth = async (req: Request, res: Response) => {
+  try {
+    const input = req.body as GoogleAuthInput;
+    const profile = await authService.verifyGoogleCredential(input.credential);
+    const result = await userService.signInWithGoogle(profile, {
+      userNick: input.userNick,
+      userPhone: input.userPhone,
+    });
+    const token = await authService.createToken(result);
+
+    setAccessTokenCookie(res, token);
+    res.json({ user: result });
+  } catch (err) {
+    console.log("ERROR, Google auth:", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 };

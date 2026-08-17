@@ -1,10 +1,13 @@
 import { AUTH_TIMER } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { User } from "../libs/types/user";
+import { GoogleProfile, User } from "../libs/types/user";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
 class AuthService {
     private readonly secretToken: string;
+    private readonly googleClientId?: string;
+    private readonly googleClient: OAuth2Client;
 
     constructor() {
         const secretToken =
@@ -15,6 +18,8 @@ class AuthService {
         }
 
         this.secretToken = secretToken;
+        this.googleClientId = process.env.GOOGLE_CLIENT_ID;
+        this.googleClient = new OAuth2Client();
     }
 
     public async createToken(payload: User): Promise<string> {
@@ -41,6 +46,49 @@ class AuthService {
         const result = jwt.verify(token, this.secretToken) as User;
         console.log(`--- [AUTH] userNick: ${result.userNick} ---`);
         return result;
+    }
+
+    public async verifyGoogleCredential(
+        credential: string,
+    ): Promise<GoogleProfile> {
+        if (!credential || !this.googleClientId) {
+            throw new Errors(
+                HttpCode.UNAUTHORIZED,
+                Message.GOOGLE_AUTH_FAILED,
+            );
+        }
+
+        try {
+            const ticket = await this.googleClient.verifyIdToken({
+                idToken: credential,
+                audience: this.googleClientId,
+            });
+            const payload = ticket.getPayload();
+
+            if (
+                !payload?.sub ||
+                !payload.email ||
+                payload.email_verified !== true
+            ) {
+                throw new Errors(
+                    HttpCode.UNAUTHORIZED,
+                    Message.GOOGLE_AUTH_FAILED,
+                );
+            }
+
+            return {
+                googleId: payload.sub,
+                email: payload.email.toLowerCase(),
+                name: payload.name || payload.email.split("@")[0],
+                image: payload.picture,
+            };
+        } catch (error) {
+            if (error instanceof Errors) throw error;
+            throw new Errors(
+                HttpCode.UNAUTHORIZED,
+                Message.GOOGLE_AUTH_FAILED,
+            );
+        }
     }
 }
 

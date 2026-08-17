@@ -18,6 +18,36 @@ const store = new MongoDBStore({
 /** 1-Entrance */
 const app = express();
 console.log("__dirname:", __dirname);
+
+const allowedFrontendOrigins = new Set([
+    process.env.BUYER_FRONTEND_URL || "http://localhost:1214",
+    process.env.SELLER_FRONTEND_URL || "http://localhost:1215",
+]);
+
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+
+    if (origin && allowedFrontendOrigins.has(origin)) {
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header("Vary", "Origin");
+        res.header("Access-Control-Allow-Credentials", "true");
+        res.header(
+            "Access-Control-Allow-Headers",
+            "Content-Type, Authorization",
+        );
+        res.header(
+            "Access-Control-Allow-Methods",
+            "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        );
+    }
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204);
+    }
+
+    return next();
+});
+
 app.use(express.static(path.join(__dirname, "public"))); // Public folderni ochiqlayapmiz
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use(express.urlencoded({extended: true})); // Traditional API

@@ -24,6 +24,9 @@ export enum Message {
   WRONG_PASSWORD = "Wrong password entered, please try again!",
   NOT_AUTHENTICATED = "You are not authenticated, Please login first!",
   TOKEN_CREATION_FAILED = "Token creation failed!",
+  GOOGLE_AUTH_FAILED = "Google authentication failed!",
+  GOOGLE_PROFILE_REQUIRED = "Username and phone are required to create a Google buyer account!",
+  BUYER_ACCOUNT_REQUIRED = "A buyer account is required!",
   NOT_ALLOWED = "NOT_ALLOWED",
 }
 

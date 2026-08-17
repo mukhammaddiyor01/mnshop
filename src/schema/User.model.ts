@@ -40,6 +40,11 @@ const userSchema = new Schema<User>({
         required: true,
     },
 
+    userGoogleId: {
+        type: String,
+        index: { unique: true, sparse: true },
+    },
+
     userAddress: {
         type: String,
     },

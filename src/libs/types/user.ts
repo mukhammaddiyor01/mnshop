@@ -11,6 +11,7 @@ export interface User {
   userEmail: string;
   userPhone: string;
   userPassword: string;
+  userGoogleId?: string;
   userAddress?: string;
   userDesc?: string;
   userImage?: string;
@@ -31,6 +32,7 @@ export interface UserInput {
   userEmail: string;
   userPhone: string;
   userPassword: string;
+  userGoogleId?: string;
   userAddress?: string;
   userDesc?: string;
   userImage?: string;
@@ -45,6 +47,19 @@ export interface UserInput {
 export interface LoginInput {
   userNick: string;
   userPassword: string;
+}
+
+export interface GoogleAuthInput {
+  credential: string;
+  userNick?: string;
+  userPhone?: string;
+}
+
+export interface GoogleProfile {
+  googleId: string;
+  email: string;
+  name: string;
+  image?: string;
 }
 
 export interface UserUpdateInput {
