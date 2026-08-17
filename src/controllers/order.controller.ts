@@ -17,7 +17,14 @@ orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("createOrder");
 
-    const result = await orderService.createOrder(req.user, req.body);
+    const payload = Array.isArray(req.body)
+      ? { items: req.body }
+      : req.body;
+    const result = await orderService.createOrder(
+      req.user,
+      payload.items,
+      payload.deliveryAddress,
+    );
     return res.status(HttpCode.CREATED).json({ data: result });
   } catch (err) {
     console.log("ERROR, getProduct :", err);

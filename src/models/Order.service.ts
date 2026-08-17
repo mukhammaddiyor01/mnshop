@@ -36,6 +36,7 @@ class OrderService {
   public async createOrder(
     user: User,
     input: OrderItemInput[],
+    deliveryAddress?: string,
   ): Promise<Order> {
     try {
       if (!Array.isArray(input) || input.length === 0) {
@@ -105,7 +106,7 @@ class OrderService {
         sellerId,
         orderItems: normalizedItems,
 
-        orderAddress: user.userAddress || "Address not provided",
+        orderAddress: deliveryAddress || user.userAddress || "Address not provided",
 
         orderTotal: amount + deliveryFee,
 

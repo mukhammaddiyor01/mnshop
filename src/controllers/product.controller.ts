@@ -20,6 +20,17 @@ const removeUploadedFiles = async (files: Express.Multer.File[] = []) => {
 
 /** SPA */
 
+productController.getPublicProducts = async (_req: Request, res: Response) => {
+  try {
+    const data = await productService.getPublicProducts();
+    res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    console.log("ERROR, getPublicProducts:", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 /** SSR */
 
 productController.getAllProducts = async (

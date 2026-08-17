@@ -18,6 +18,8 @@ router.post("/signup", userController.signup);
 
 router.post("/auth/google", userController.googleAuth);
 
+router.get("/products", productController.getPublicProducts);
+
 router.post(
   "/order/create",
   userController.verifyAuth,

@@ -70,6 +70,24 @@ class ProductService {
     }
   }
 
+  public async getPublicProducts(): Promise<Product[]> {
+    try {
+      return await this.productModel
+        .find({
+          productStatus: ProductStatus.ACTIVE,
+          productLeftCount: { $gt: 0 },
+        })
+        .sort({ createdAt: -1 })
+        .exec();
+    } catch (err) {
+      console.log("Error, ProductService.getPublicProducts:", err);
+      throw new Errors(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        Message.SOMETHING_WENT_WRONG,
+      );
+    }
+  }
+
   public async getProductsByIds(productIds: string[]): Promise<Product[]> {
     try {
       const uniqueProductIds = [...new Set(productIds)];
