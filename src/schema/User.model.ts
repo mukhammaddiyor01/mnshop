@@ -31,7 +31,10 @@ const userSchema = new Schema<User>({
     userPhone: {
         type: String,
         index: { unique: true, sparse: true },
-        required: true,
+        required: function () {
+            const user = this as unknown as User;
+            return !user.userGoogleId;
+        },
     },
 
     userPassword: {

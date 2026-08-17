@@ -9,7 +9,7 @@ export interface User {
   userStatus: UserStatus;
   userNick: string;
   userEmail: string;
-  userPhone: string;
+  userPhone?: string;
   userPassword: string;
   userGoogleId?: string;
   userAddress?: string;
@@ -30,7 +30,7 @@ export interface UserInput {
   userStatus?: UserStatus;
   userNick: string;
   userEmail: string;
-  userPhone: string;
+  userPhone?: string;
   userPassword: string;
   userGoogleId?: string;
   userAddress?: string;

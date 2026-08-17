@@ -57,7 +57,7 @@ class UserService {
 
   public async signInWithGoogle(
     profile: GoogleProfile,
-    input: { userNick?: string; userPhone?: string },
+    _input: { userNick?: string; userPhone?: string },
   ): Promise<User> {
     const existingUser = await this.userModel
       .findOne({
@@ -92,21 +92,16 @@ class UserService {
       return existingUser.toJSON();
     }
 
-    const userNick = input.userNick?.trim();
-    const userPhone = input.userPhone?.trim();
-
-    if (!userNick || !userPhone) {
-      throw new Errors(
-        HttpCode.BAD_REQUEST,
-        Message.GOOGLE_PROFILE_REQUIRED,
-      );
-    }
+    const nicknameBase = (profile.name || profile.email.split("@")[0])
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "")
+      .slice(0, 20) || "mnshopuser";
+    const userNick = `${nicknameBase}-${profile.googleId.slice(-6)}`;
 
     return this.signup({
       userType: UserType.BUYER,
       userNick,
       userEmail: profile.email,
-      userPhone,
       userPassword: randomBytes(48).toString("hex"),
       userGoogleId: profile.googleId,
       userImage: profile.image,
