@@ -73,4 +73,20 @@ paymentController.confirmPayment = async (
   }
 };
 
+paymentController.getMyPayments = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    const result = await paymentService.getMyPayments(req.user);
+    return res.status(HttpCode.OK).json({ data: result });
+  } catch (err) {
+    if (err instanceof Errors) {
+      return res.status(err.code).json({ message: err.message });
+    }
+
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 export default paymentController;

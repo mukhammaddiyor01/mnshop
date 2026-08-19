@@ -278,6 +278,23 @@ class PaymentService {
     }
   }
 
+  public async getMyPayments(user: User): Promise<Payment[]> {
+    try {
+      if (user.userType !== UserType.BUYER) {
+        throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
+      }
+
+      return await this.paymentModel
+        .find({ buyerId: shapeIntoMongooseObjectId(user._id) })
+        .sort({ updatedAt: -1 })
+        .exec() as unknown as Payment[];
+    } catch (err) {
+      console.log("Error, PaymentService.getMyPayments:", err);
+      if (err instanceof Errors) throw err;
+      throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.SOMETHING_WENT_WRONG);
+    }
+  }
+
   private async requestTossConfirmation(
     input: ConfirmPaymentInput,
   ): Promise<TossPaymentResult> {

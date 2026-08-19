@@ -27,6 +27,12 @@ router.post(
   orderController.createOrder,
 );
 
+router.get(
+  "/order/all",
+  userController.verifyAuth,
+  orderController.getMyOrders,
+);
+
 // PAYMENT
 
 router.post(
@@ -41,31 +47,35 @@ router.post(
   paymentController.confirmPayment,
 );
 
-/**
-router.get("/products ", usercontroller.products) 
-router.get("/products/product ", usercontroller.product) 
-router.get("/categories/category ", usercontroller.category) 
-router.get("/cart ", usercontroller.cart) 
-router.get("/likes ", usercontroller.likes) 
-router.get("/checkout ", usercontroller.checkout) 
-router.get("/orders ", usercontroller.orders) 
-router.get("/chat ", usercontroller.chat) 
-router.get("/about ", usercontroller.about) 
-router.get("/help ", usercontroller.help)
- 
-router.get("/orders ", usercontroller.orders) 
-router.post("/order ", usercontroller.order) 
+router.get(
+  "/payment/all",
+  userController.verifyAuth,
+  paymentController.getMyPayments,
+);
 
- */
+/**   💻💻💻💻 SELLER 💻💻💻💻💻*/
 
-/** Seller */
+/** SELLER AUTH */
+
 router.post("/seller/login", sellerController.login);
-router.post("/seller/signup", sellerController.signup);
+router.post(
+  "/seller/signup",
+  sellerController.signup,
+  makeUploader("sellers").single("sellerImages"),
+);
+
+/** SELLER OVERVIEW */
+
+/** SELLER ANALYTICS */
+
+/** SELLER SETTINGS */
+
+/** SELLER PRODUCT MANAGEMENT */
 
 router.post(
   "/seller/product/create",
   sellerController.verifySeller,
-  makeUploader("products").array("productImages", 5),
+  makeUploader("products").array("productImages", 10),
   productController.createNewProduct,
 );
 
@@ -87,13 +97,19 @@ router.post(
   productController.updateChosenProduct,
 );
 
+/** SELLER ORDER MANAGEMENT */
+
+/** SELLER CHAT MANAGEMENT */
+
+/** SELLER BUYER MANAGEMENT */
+
 // DELIVERY
 
-router.post(
-  "/seller/order/:id/delivery",
-  sellerController.verifySeller,
-  orderController.updateDeliveryStatus,
-);
+// router.post(
+//   "/seller/order/:id/delivery",
+//   sellerController.verifySeller,
+//   orderController.updateDeliveryStatus,
+// );
 
 /**
  
