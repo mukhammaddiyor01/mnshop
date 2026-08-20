@@ -86,5 +86,24 @@ app.set("view engine", "ejs");
 app.use("/admin", routerAdmin); //BSSR: Backend server site rendering : EJS
 app.use("/", router);   //Middleware design pattern - Bu requestni router.ts ga jo'natadi
 
+/** 5-Frontend applications — one public origin: http://localhost:1213 */
+const frontendRoot = path.resolve(__dirname, "..", "..", "mnshop-react");
+const buyerBuildDirectory = path.join(frontendRoot, "build");
+const sellerBuildDirectory = path.join(frontendRoot, "src-seller", "build");
+
+app.use("/seller", express.static(sellerBuildDirectory));
+app.get(["/seller", "/seller/*"], (_req, res) => {
+    res.sendFile(path.join(sellerBuildDirectory, "index.html"));
+});
+
+app.use(express.static(buyerBuildDirectory));
+app.get("*", (req, res) => {
+    if (req.path.startsWith("/admin")) {
+        return res.status(404).send("Admin route was not found.");
+    }
+
+    return res.sendFile(path.join(buyerBuildDirectory, "index.html"));
+});
+
 
 export default app;
