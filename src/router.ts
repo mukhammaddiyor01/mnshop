@@ -7,6 +7,7 @@ import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
 import { blockPurchasesDuringMaintenance } from "./libs/middleware/mainteance";
 import paymentController from "./controllers/payment.controller";
+import likeController from "./controllers/like.controller";
 
 /* BUYER */
 
@@ -38,6 +39,24 @@ router.post(
 );
 
 router.get("/products", productController.getPublicProducts);
+
+router.post(
+  "/product/:id/view",
+  userController.verifyAuth,
+  productController.registerProductView,
+);
+
+router.post(
+  "/product/:id/like",
+  userController.verifyAuth,
+  likeController.toggleLike,
+);
+
+router.get(
+  "/product/likes",
+  userController.verifyAuth,
+  likeController.getMyLikes,
+);
 
 router.post(
   "/order/create",
