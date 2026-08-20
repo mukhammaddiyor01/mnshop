@@ -93,6 +93,28 @@ class OrderService {
         };
       });
 
+      const requestedQuantityByProduct = normalizedItems.reduce(
+        (quantities, item) => {
+          const productId = item.productId.toString();
+          quantities.set(
+            productId,
+            (quantities.get(productId) || 0) + item.itemSubtotal,
+          );
+          return quantities;
+        },
+        new Map<string, number>(),
+      );
+
+      for (const [productId, requestedQuantity] of requestedQuantityByProduct) {
+        const product = products.find(
+          (item) => item._id.toString() === productId,
+        );
+
+        if (!product || requestedQuantity > product.productLeftCount) {
+          throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+        }
+      }
+
       const amount = normalizedItems.reduce(
         (total, item) => total + item.itemPrice * item.itemSubtotal,
         0,
@@ -105,12 +127,10 @@ class OrderService {
 
       const orderStatus = this.deriveOrderStatus(paymentStatus, deliveryStatus);
 
-      stockItems = normalizedItems.map((item) => {
-        return {
-          productId: item.productId.toString(),
-          itemQuantity: item.itemSubtotal,
-        };
-      });
+      stockItems = Array.from(
+        requestedQuantityByProduct,
+        ([productId, itemQuantity]) => ({ productId, itemQuantity }),
+      );
 
       await this.productService.decreaseProductStock(stockItems);
       stockUpdated = true;

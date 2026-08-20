@@ -21,7 +21,8 @@ export interface Product {
   productVariants?: string[];
   productLeftCount: number;
   productSold?: number;
-  productviews?: number;
+  productViews?: number;
+  productLikes?: number;
   productRating?: number;
   productFeatured?: boolean;
   productSale?: boolean;
@@ -42,7 +43,8 @@ export interface ProductInput {
   productVariants?: string[];
   productLeftCount: number;
   productSold?: number;
-  productviews?: number;
+  productViews?: number;
+  productLikes?: number;
   productRating?: number;
   productFeatured?: boolean;
   productSale?: boolean;

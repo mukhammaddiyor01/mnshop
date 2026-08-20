@@ -13,6 +13,10 @@ import {
   ProductStatus,
   ProductType,
 } from "../libs/enums/product.enum";
+import { User } from "../libs/types/user";
+import { UserType } from "../libs/enums/user.enum";
+import { ViewGroup } from "../libs/enums/view.enum";
+import ViewService from "./View.service";
 
 const enumIncludes = <T extends string>(
   values: T[],
@@ -37,9 +41,11 @@ const parseBoolean = (value: unknown): boolean =>
 
 class ProductService {
   private readonly productModel;
+  private readonly viewService;
 
   constructor() {
     this.productModel = ProductModel;
+    this.viewService = new ViewService();
   }
 
   /** SPA */
@@ -85,6 +91,38 @@ class ProductService {
         HttpCode.INTERNAL_SERVER_ERROR,
         Message.SOMETHING_WENT_WRONG,
       );
+    }
+  }
+
+  public async registerProductView(buyer: User, productId: string): Promise<Product> {
+    try {
+      if (buyer.userType !== UserType.BUYER) {
+        throw new Errors(HttpCode.FORBIDDED, Message.BUYER_ACCOUNT_REQUIRED);
+      }
+
+      const targetProductId = shapeIntoMongooseObjectId(productId);
+      const product = await this.productModel.findById(targetProductId).exec();
+
+      if (!product) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+      const isNewView = await this.viewService.createIfMissing({
+        buyerId: shapeIntoMongooseObjectId(buyer._id),
+        viewRefId: targetProductId,
+        viewGroup: ViewGroup.PRODUCT,
+      });
+
+      if (!isNewView) return product as unknown as Product;
+
+      return (await this.productModel
+        .findByIdAndUpdate(
+          targetProductId,
+          { $inc: { productViews: 1 } },
+          { new: true },
+        )
+        .exec()) as unknown as Product;
+    } catch (err) {
+      if (err instanceof Errors) throw err;
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
     }
   }
 

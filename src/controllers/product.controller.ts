@@ -3,7 +3,7 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
 import ProductService from "../models/Product.service";
 import { ProductBulkStatusInput, ProductInput } from "../libs/types/product";
-import { AdminRequest } from "../libs/types/user";
+import { AdminRequest, ExtendedRequest } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import { promises as fs } from "fs";
 import { shapeIntoMongooseObjectId } from "../libs/config";
@@ -28,6 +28,19 @@ productController.getPublicProducts = async (_req: Request, res: Response) => {
     console.log("ERROR, getPublicProducts:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+productController.registerProductView = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    const data = await productService.registerProductView(req.user, req.params.id);
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 
