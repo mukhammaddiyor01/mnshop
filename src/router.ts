@@ -107,6 +107,8 @@ router.post(
   makeUploader("sellers").single("sellerImages"),
   sellerController.signup,
 );
+router.get("/seller/auth/me", sellerController.verifySeller, sellerController.getCurrentSeller);
+router.post("/seller/logout", sellerController.verifySeller, sellerController.logout);
 
 router.get("/seller/profile", sellerController.verifySeller, sellerController.getProfile);
 router.post("/seller/profile/update", sellerController.verifySeller, sellerController.updateProfile);

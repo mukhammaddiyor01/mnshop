@@ -81,7 +81,11 @@ class SellerService {
     }
 
     public async getSellerProfile(sellerId: string): Promise<Seller> {
-        const result = await this.sellerModel.findById(shapeIntoMongooseObjectId(sellerId)).lean().exec();
+        const result = await this.sellerModel
+            .findById(shapeIntoMongooseObjectId(sellerId))
+            .select("-sellerPassword")
+            .lean()
+            .exec();
         if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
         return result as Seller;
     }
@@ -89,7 +93,15 @@ class SellerService {
     public async updateSellerProfile(sellerId: string, input: SellerProfileUpdateInput): Promise<Seller> {
         const update = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined));
         if (!Object.keys(update).length) throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
-        const result = await this.sellerModel.findByIdAndUpdate(shapeIntoMongooseObjectId(sellerId), { $set: update }, { new: true, runValidators: true }).lean().exec();
+        const result = await this.sellerModel
+            .findByIdAndUpdate(
+                shapeIntoMongooseObjectId(sellerId),
+                { $set: update },
+                { new: true, runValidators: true },
+            )
+            .select("-sellerPassword")
+            .lean()
+            .exec();
         if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
         return result as Seller;
     }

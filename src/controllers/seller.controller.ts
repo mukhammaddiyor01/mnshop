@@ -25,6 +25,10 @@ const orderService = new OrderService();
 const sellerController: T = {};
 
 const createUserToken = (): string => randomBytes(48).toString("hex");
+const sanitizeSeller = (seller: T) => {
+  const { sellerPassword: _sellerPassword, ...safeSeller } = seller;
+  return safeSeller;
+};
 
 sellerController.signup = async (req: Request, res: Response) => {
   try {
@@ -49,7 +53,7 @@ sellerController.login = async (req: Request, res: Response) => {
     console.log("seller login");
 
     const input: SellerLoginInput = req.body;
-    const result = await sellerService.login(input);
+    const result = sanitizeSeller(await sellerService.login(input));
 
     const sessionInstance = req.session as T;
     sessionInstance.user = result;
@@ -66,6 +70,18 @@ sellerController.login = async (req: Request, res: Response) => {
       res.status(Errors.standard.code).json(Errors.standard);
     }
   }
+};
+
+sellerController.getCurrentSeller = (req: AdminRequest, res: Response) => {
+  return res.status(HttpCode.OK).json({ seller: sanitizeSeller(req.session.user) });
+};
+
+sellerController.logout = (req: AdminRequest, res: Response) => {
+  req.session.destroy((error) => {
+    if (error) return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ message: Message.SOMETHING_WENT_WRONG });
+    res.clearCookie("connect.sid");
+    return res.status(HttpCode.OK).json({ success: true });
+  });
 };
 
 sellerController.verifySeller = (
