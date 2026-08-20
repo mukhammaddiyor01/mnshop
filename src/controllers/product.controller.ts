@@ -86,7 +86,11 @@ productController.createNewProduct = async (
       ),
     };
 
-    await productService.createNewProduct(data);
+    const result = await productService.createNewProduct(data);
+
+    if (req.path.startsWith("/seller/")) {
+      return res.status(HttpCode.CREATED).json({ data: result });
+    }
 
     res
       .status(HttpCode.CREATED)

@@ -2,7 +2,7 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { UserType } from "../libs/enums/user.enum";
 import { SellerStatus } from "../libs/enums/seller.enum";
-import { Seller, SellerInput, SellerLoginInput, SellerUpdateInput } from "../libs/types/seller";
+import { Seller, SellerInput, SellerLoginInput, SellerProfileUpdateInput, SellerUpdateInput } from "../libs/types/seller";
 import SellerModel from "../schema/Seller.model";
 import * as bcrypt from "bcryptjs";
 
@@ -78,6 +78,20 @@ class SellerService {
             throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
         return result;
+    }
+
+    public async getSellerProfile(sellerId: string): Promise<Seller> {
+        const result = await this.sellerModel.findById(shapeIntoMongooseObjectId(sellerId)).lean().exec();
+        if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+        return result as Seller;
+    }
+
+    public async updateSellerProfile(sellerId: string, input: SellerProfileUpdateInput): Promise<Seller> {
+        const update = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined));
+        if (!Object.keys(update).length) throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+        const result = await this.sellerModel.findByIdAndUpdate(shapeIntoMongooseObjectId(sellerId), { $set: update }, { new: true, runValidators: true }).lean().exec();
+        if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+        return result as Seller;
     }
 
 

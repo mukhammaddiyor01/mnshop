@@ -58,6 +58,14 @@ export interface SellerUpdateInput {
   sellerStatus?: SellerStatus;
 }
 
+export interface SellerProfileUpdateInput {
+  sellerNick?: string;
+  sellerEmail?: string;
+  sellerPhone?: string;
+  sellerDesc?: string;
+  sellerAddress?: string;
+}
+
 export interface AdminRequest extends Request {
   user: Seller;
   session: Session & { seller: Seller };

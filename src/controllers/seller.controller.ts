@@ -6,7 +6,7 @@ import SellerService from "../models/Seller.service";
 import { LoginInput } from "../libs/types/user";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { randomBytes } from "crypto";
-import { SellerInput, SellerLoginInput } from "../libs/types/seller";
+import { SellerInput, SellerLoginInput, SellerProfileUpdateInput } from "../libs/types/seller";
 import { ProductStatus } from "../libs/enums/product.enum";
 import { OrderStatus, PaymentStatus } from "../libs/enums/order.enum";
 import UserService from "../models/User.service";
@@ -79,6 +79,27 @@ sellerController.verifySeller = (
   } else {
     const message = Message.NOT_AUTHENTICATED;
     res.status(HttpCode.UNAUTHORIZED).json({ message });
+  }
+};
+
+sellerController.getProfile = async (req: AdminRequest, res: Response) => {
+  try {
+    const data = await sellerService.getSellerProfile(String(req.user._id));
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+sellerController.updateProfile = async (req: AdminRequest, res: Response) => {
+  try {
+    const data = await sellerService.updateSellerProfile(String(req.user._id), req.body as SellerProfileUpdateInput);
+    req.session.user = data as unknown as typeof req.session.user;
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

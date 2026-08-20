@@ -108,6 +108,9 @@ router.post(
   sellerController.signup,
 );
 
+router.get("/seller/profile", sellerController.verifySeller, sellerController.getProfile);
+router.post("/seller/profile/update", sellerController.verifySeller, sellerController.updateProfile);
+
 /** SELLER OVERVIEW */
 
 /** SELLER ANALYTICS */
