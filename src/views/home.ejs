@@ -28,7 +28,7 @@
       </a>
 
       <nav class="home-actions" aria-label="Home navigation">
-        <% if(!member) { %>
+        <% if(member?.userType !== 'ADMIN') { %>
           <a class="home-button home-button-secondary" href="/admin/login">Login</a>
           <a class="home-button home-button-primary" href="/admin/signup">Sign Up</a>
         <% } else { %>
