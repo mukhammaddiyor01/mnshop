@@ -4,7 +4,19 @@ import { UserType } from "../libs/enums/user.enum";
 import { SellerStatus } from "../libs/enums/seller.enum";
 import { Seller, SellerInput, SellerLoginInput, SellerProfileUpdateInput, SellerUpdateInput } from "../libs/types/seller";
 import SellerModel from "../schema/Seller.model";
+import ProductModel from "../schema/Product.model";
 import * as bcrypt from "bcryptjs";
+import { ProductStatus } from "../libs/enums/product.enum";
+
+export type PublicSellerStudio = {
+    id: string;
+    nick: string;
+    address: string;
+    description: string;
+    image: string;
+    productCount: number;
+    rating: number;
+};
 
 class SellerService {
     private readonly sellerModel;
@@ -66,6 +78,44 @@ class SellerService {
                 throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
             return result;
+    }
+
+    public async getPublicSellers(): Promise<PublicSellerStudio[]> {
+        const sellers = await this.sellerModel
+            .find({ sellerStatus: SellerStatus.ACTIVE })
+            .select("sellerNick sellerAddress sellerDesc sellerImage")
+            .lean()
+            .exec();
+
+        const productStats = await ProductModel.aggregate([
+            { $match: { productStatus: ProductStatus.ACTIVE } },
+            {
+                $group: {
+                    _id: "$sellerId",
+                    productCount: { $sum: 1 },
+                    rating: { $avg: "$productRating" },
+                },
+            },
+        ]).exec();
+
+        const statsBySellerId = new Map(
+            productStats.map((stat) => [String(stat._id), stat]),
+        );
+
+        return sellers
+            .map((seller) => {
+                const stats = statsBySellerId.get(String(seller._id));
+                return {
+                    id: String(seller._id),
+                    nick: seller.sellerNick || "",
+                    address: seller.sellerAddress || "",
+                    description: seller.sellerDesc || "",
+                    image: seller.sellerImage || "",
+                    productCount: stats?.productCount || 0,
+                    rating: Number(stats?.rating || 0),
+                };
+            })
+            .filter((seller) => seller.productCount > 0);
     }
 
     public async updateChosenSeller(input: SellerUpdateInput): Promise<Seller> {

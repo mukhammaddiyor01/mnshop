@@ -62,6 +62,7 @@ export interface SellerProfileUpdateInput {
   sellerNick?: string;
   sellerEmail?: string;
   sellerPhone?: string;
+  sellerImage?: string;
   sellerDesc?: string;
   sellerAddress?: string;
 }

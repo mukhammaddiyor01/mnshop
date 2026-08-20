@@ -39,6 +39,7 @@ router.post(
 );
 
 router.get("/products", productController.getPublicProducts);
+router.get("/sellers", sellerController.getPublicSellers);
 
 router.post(
   "/product/:id/view",
@@ -111,7 +112,12 @@ router.get("/seller/auth/me", sellerController.verifySeller, sellerController.ge
 router.post("/seller/logout", sellerController.verifySeller, sellerController.logout);
 
 router.get("/seller/profile", sellerController.verifySeller, sellerController.getProfile);
-router.post("/seller/profile/update", sellerController.verifySeller, sellerController.updateProfile);
+router.post(
+  "/seller/profile/update",
+  sellerController.verifySeller,
+  makeUploader("sellers").single("sellerImage"),
+  sellerController.updateProfile,
+);
 
 /** SELLER OVERVIEW */
 
@@ -214,9 +220,9 @@ routerSeller.get("/product/all",
     sellerController.verifySeller, 
     sellerController.getAllProducts);
 
-routerSeller.post("/product/create", 
+routerSeller.post("/product/create",
     sellerController.verifySeller,
-    makeUploader("products").array("productImages", 5), 
+    makeUploader("products").array("productImages", 10),
     productController.createNewProduct);
 
 routerSeller.post("/product/:id", 

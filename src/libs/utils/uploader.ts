@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import multer from "multer";
 import { v4 } from "uuid";
@@ -6,7 +7,10 @@ import { v4 } from "uuid";
 function getTargetImageStorage(address: any) {
     return multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, `./uploads/${address}`);
+            const relativeDirectory = path.posix.join("uploads", address);
+            const absoluteDirectory = path.resolve(process.cwd(), relativeDirectory);
+            fs.mkdirSync(absoluteDirectory, { recursive: true });
+            cb(null, relativeDirectory);
         },
         filename: function (req, file, cb) {
             const extension = path.parse(file.originalname).ext;
@@ -39,4 +43,3 @@ const product_storage = multer.diskStorage({
 
 export const uploadProductImage = multer({storage: product_storage});
 */
-

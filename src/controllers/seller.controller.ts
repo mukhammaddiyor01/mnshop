@@ -76,6 +76,16 @@ sellerController.getCurrentSeller = (req: AdminRequest, res: Response) => {
   return res.status(HttpCode.OK).json({ seller: sanitizeSeller(req.session.user) });
 };
 
+sellerController.getPublicSellers = async (_req: Request, res: Response) => {
+  try {
+    const data = await sellerService.getPublicSellers();
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 sellerController.logout = (req: AdminRequest, res: Response) => {
   req.session.destroy((error) => {
     if (error) return res.status(HttpCode.INTERNAL_SERVER_ERROR).json({ message: Message.SOMETHING_WENT_WRONG });
@@ -110,7 +120,9 @@ sellerController.getProfile = async (req: AdminRequest, res: Response) => {
 
 sellerController.updateProfile = async (req: AdminRequest, res: Response) => {
   try {
-    const data = await sellerService.updateSellerProfile(String(req.user._id), req.body as SellerProfileUpdateInput);
+    const input = req.body as SellerProfileUpdateInput;
+    if (req.file) input.sellerImage = req.file.path.replace(/\\/g, "/");
+    const data = await sellerService.updateSellerProfile(String(req.user._id), input);
     req.session.user = data as unknown as typeof req.session.user;
     return res.status(HttpCode.OK).json({ data });
   } catch (err) {
