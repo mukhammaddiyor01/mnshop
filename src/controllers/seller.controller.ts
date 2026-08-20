@@ -31,11 +31,9 @@ sellerController.signup = async (req: Request, res: Response) => {
     console.log("seller signup");
     console.log("body:", req.body);
 
-    if(!req.file)
-      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
-
     const input: SellerInput = req.body;
-    input.sellerImage = req.file.path.replace(/\\/g, "/");
+    if(req.file) input.sellerImage = req.file.path.replace(/\\/g, "/");
+
     const result = await sellerService.signup(input);
 
     res.json({ seller: result });
