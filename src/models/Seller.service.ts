@@ -1,6 +1,7 @@
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { UserType } from "../libs/enums/user.enum";
+import { SellerStatus } from "../libs/enums/seller.enum";
 import { Seller, SellerInput, SellerLoginInput, SellerUpdateInput } from "../libs/types/seller";
 import SellerModel from "../schema/Seller.model";
 import * as bcrypt from "bcryptjs";
@@ -27,14 +28,24 @@ class SellerService {
     }
 
     public async login(input: SellerLoginInput): Promise<Seller> {
-        // TODO: Consider member status later
         const seller = await this.sellerModel
             .findOne(
-                {sellerNick: input.sellerNick},
-                {sellerNick: 1, sellerPassword: 1})
+                {
+                    sellerNick: input.sellerNick,
+                    sellerStatus: {$ne: SellerStatus.DELETED},
+                },
+                {
+                    sellerNick: 1,
+                    sellerPassword: 1,
+                    sellerStatus: 1,
+                })
             .exec();
         if (!seller) {
             throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
+        }
+
+        if(seller.sellerStatus === SellerStatus.BLOCKED) {
+            throw new Errors(HttpCode.FORBIDDED, Message.BLOCKED_USER);
         }
 
         const isMatch = await bcrypt.compare(input.sellerPassword, seller.sellerPassword);

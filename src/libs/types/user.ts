@@ -63,17 +63,12 @@ export interface GoogleProfile {
 }
 
 export interface UserUpdateInput {
-  _id: Types.ObjectId;
-  userStatus?: UserStatus;
-  userNick: string;
-  userEmail: string;
-  userPhone: string;
-  userPassword: string;
+  _id?: Types.ObjectId;
+  userNick?: string;
+  userPhone?: string;
   userAddress?: string;
   userDesc?: string;
   userImage?: string;
-  myProducts?: string;
-  myOrders?: string;
 }
 
 export interface ExtendedRequest extends Request {

@@ -47,6 +47,10 @@ export interface ConfirmPaymentInput {
   amount: number;
 }
 
+export interface MockConfirmPaymentInput {
+  orderId: string;
+}
+
 export interface TossPaymentResult {
   paymentKey: string;
   orderId: string;
@@ -68,9 +72,10 @@ export interface PreparedPayment {
   orderId: string;
   amount: number;
   currency: string;
-  clientKey: string;
+  clientKey?: string;
   customerKey: string;
   orderName: string;
   successUrl: string;
   failUrl: string;
+  mockMode: boolean;
 }

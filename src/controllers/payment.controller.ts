@@ -4,6 +4,7 @@ import { ExtendedRequest } from "../libs/types/user";
 import {
   PreparePaymentInput,
   ConfirmPaymentInput,
+  MockConfirmPaymentInput,
 } from "../libs/types/payment";
 import Errors, { HttpCode } from "../libs/Errors";
 import PaymentService from "../models/Payment.service";
@@ -62,6 +63,35 @@ paymentController.confirmPayment = async (
     });
   } catch (err) {
     console.log("Error, confirmPayment:", err);
+
+    if (err instanceof Errors) {
+      return res.status(err.code).json({
+        message: err.message,
+      });
+    }
+
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+paymentController.mockConfirmPayment = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    console.log("mockConfirmPayment");
+
+    const input: MockConfirmPaymentInput = {
+      orderId: req.body.orderId,
+    };
+
+    const result = await paymentService.mockConfirmPayment(req.user, input);
+
+    return res.status(HttpCode.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    console.log("Error, mockConfirmPayment:", err);
 
     if (err instanceof Errors) {
       return res.status(err.code).json({

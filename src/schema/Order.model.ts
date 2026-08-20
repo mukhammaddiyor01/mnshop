@@ -19,6 +19,17 @@ const orderSchema = new Schema(
       required: true,
     },
 
+    orderSubtotal: {
+      type: Number,
+      required: true,
+    },
+
+    orderShippingFee: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
     orderTotal: {
       type: Number,
       required: true,

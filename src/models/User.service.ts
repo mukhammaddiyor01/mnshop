@@ -38,12 +38,25 @@ class UserService {
   }
 
   public async login(input: LoginInput): Promise<User> {
-    // TODO: Consider member status later
     const user = await this.userModel
-      .findOne({ userNick: input.userNick }, { userNick: 1, userPassword: 1 })
+      .findOne(
+        {
+          userNick: input.userNick,
+          userStatus: { $ne: UserStatus.DELETED },
+        },
+        {
+          userNick: 1,
+          userPassword: 1,
+          userStatus: 1,
+        },
+      )
       .exec();
     if (!user) {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_USER_NICK);
+    }
+
+    if (user.userStatus === UserStatus.BLOCKED) {
+      throw new Errors(HttpCode.FORBIDDED, Message.BLOCKED_USER);
     }
 
     const isMatch = await bcrypt.compare(input.userPassword, user.userPassword);
@@ -106,6 +119,57 @@ class UserService {
       userGoogleId: profile.googleId,
       userImage: profile.image,
     });
+  }
+
+  public async getUserDetail(user: User): Promise<User> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const result = await this.userModel
+      .findOne({
+        _id: userId,
+        userType: UserType.BUYER,
+        userStatus: UserStatus.ACTIVE,
+      })
+      .lean()
+      .exec();
+
+    if (!result) {
+      throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    }
+
+    return result as User;
+  }
+
+  public async updateUser(
+    user: User,
+    input: UserUpdateInput,
+  ): Promise<User> {
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const update: UserUpdateInput = {};
+
+    if (input.userNick !== undefined) update.userNick = input.userNick;
+    if (input.userPhone !== undefined) update.userPhone = input.userPhone;
+    if (input.userAddress !== undefined) update.userAddress = input.userAddress;
+    if (input.userDesc !== undefined) update.userDesc = input.userDesc;
+    if (input.userImage !== undefined) update.userImage = input.userImage;
+
+    const result = await this.userModel
+      .findOneAndUpdate(
+        {
+          _id: userId,
+          userType: UserType.BUYER,
+          userStatus: UserStatus.ACTIVE,
+        },
+        { $set: update },
+        { new: true, runValidators: true },
+      )
+      .lean()
+      .exec();
+
+    if (!result) {
+      throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+    }
+
+    return result as User;
   }
 
   public async addUserPoint(user: User, point: number): Promise<User> {

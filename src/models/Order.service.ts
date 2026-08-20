@@ -38,6 +38,10 @@ class OrderService {
     input: OrderItemInput[],
     deliveryAddress?: string,
   ): Promise<Order> {
+    let stockUpdated = false;
+    let createdOrderId: Object | null = null;
+    let stockItems: Array<{ productId: string; itemQuantity: number }> = [];
+
     try {
       if (!Array.isArray(input) || input.length === 0) {
         throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -101,6 +105,16 @@ class OrderService {
 
       const orderStatus = this.deriveOrderStatus(paymentStatus, deliveryStatus);
 
+      stockItems = normalizedItems.map((item) => {
+        return {
+          productId: item.productId.toString(),
+          itemQuantity: item.itemSubtotal,
+        };
+      });
+
+      await this.productService.decreaseProductStock(stockItems);
+      stockUpdated = true;
+
       const newOrder = await this.orderModel.create({
         buyerId,
         sellerId,
@@ -108,6 +122,8 @@ class OrderService {
 
         orderAddress: deliveryAddress || user.userAddress || "Address not provided",
 
+        orderSubtotal: amount,
+        orderShippingFee: deliveryFee,
         orderTotal: amount + deliveryFee,
 
         orderPaymentStatus: paymentStatus,
@@ -120,11 +136,22 @@ class OrderService {
         orderTrackingNumber: `MN-${Date.now()}`,
       });
 
+      createdOrderId = newOrder._id;
+
       await this.recordOrderItem(newOrder._id, normalizedItems);
 
       return newOrder as unknown as Order;
     } catch (err) {
       console.log("Error, OrderService.createOrder:", err);
+
+      if (createdOrderId) {
+        await this.orderItemModel.deleteMany({ orderId: createdOrderId }).exec();
+        await this.orderModel.findByIdAndDelete(createdOrderId).exec();
+      }
+
+      if (stockUpdated) {
+        await this.productService.restoreProductStock(stockItems);
+      }
 
       if (err instanceof Errors) {
         throw err;
@@ -158,8 +185,11 @@ class OrderService {
       return this.getAllOrders();
     }
 
-    const buyerId = shapeIntoMongooseObjectId(user._id);
-    const matches: Record<string, unknown> = { buyerId };
+    const userId = shapeIntoMongooseObjectId(user._id);
+    const matches: Record<string, unknown> = {};
+
+    if (user.userType === UserType.SELLER) matches.sellerId = userId;
+    else matches.buyerId = userId;
 
     if (inquiry.orderStatus) {
       matches.orderStatus = inquiry.orderStatus;

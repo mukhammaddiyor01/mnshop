@@ -16,7 +16,7 @@ export interface Order {
   orderItems: Array<T>;
   orderAddress: string;
   orderSubtotal: number;
-  orderShippingFree: number;
+  orderShippingFee: number;
   orderTotal: number;
 
   orderStatus: OrderStatus;

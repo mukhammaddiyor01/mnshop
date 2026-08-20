@@ -43,6 +43,10 @@ productController.getAllProducts = async (
       req.user?.userType === UserType.SELLER ? String(req.user._id) : undefined;
     const data = await productService.getAllProducts(sellerId);
 
+    if (req.path.startsWith("/seller/")) {
+      return res.status(HttpCode.OK).json({ data });
+    }
+
     res.render("products", { products: data });
   } catch (err) {
     console.log("ERROR, getAllProducts:", err);

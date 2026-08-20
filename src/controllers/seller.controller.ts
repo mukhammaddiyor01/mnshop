@@ -31,28 +31,16 @@ sellerController.signup = async (req: Request, res: Response) => {
     console.log("seller signup");
     console.log("body:", req.body);
 
+    if(!req.file)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
+
     const input: SellerInput = req.body;
+    input.sellerImage = req.file.path.replace(/\\/g, "/");
     const result = await sellerService.signup(input);
 
     res.json({ seller: result });
   } catch (err) {
     console.log("Error, seller signup:", err);
-    if (err instanceof Errors) res.status(err.code).json(err);
-    else res.status(Errors.standard.code).json(Errors.standard);
-  }
-};
-
-sellerController.login = async (req: Request, res: Response) => {
-  try {
-    console.log("seller login");
-    console.log("body:", req.body);
-
-    const input: SellerLoginInput = req.body;
-    const result = await sellerService.login(input);
-
-    res.json({ seller: result });
-  } catch (err) {
-    console.log("Error, seller login:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }

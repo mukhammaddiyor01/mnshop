@@ -6,6 +6,7 @@ import {
   User,
   ExtendedRequest,
   GoogleAuthInput,
+  UserUpdateInput,
 } from "../libs/types/user";
 import UserService from "../models/User.service";
 import Errors, { HttpCode, Message } from "../libs/Errors";
@@ -84,6 +85,64 @@ userController.googleAuth = async (req: Request, res: Response) => {
     console.log("ERROR, Google auth:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.getUserDetail = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    console.log("getUserDetail");
+    const result = await userService.getUserDetail(req.user);
+
+    return res.status(HttpCode.OK).json({ user: result });
+  } catch (err) {
+    console.log("ERROR, getUserDetail:", err);
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.logout = async (
+  _req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    console.log("logout");
+    res.cookie("accessToken", "", {
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(HttpCode.OK).json({ logout: true });
+  } catch (err) {
+    console.log("ERROR, logout:", err);
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.updateUser = async (
+  req: ExtendedRequest,
+  res: Response,
+) => {
+  try {
+    console.log("updateUser");
+    const input = req.body as UserUpdateInput;
+
+    if (req.file) {
+      input.userImage = req.file.path.replace(/\\/g, "/");
+    }
+
+    const result = await userService.updateUser(req.user, input);
+    return res.status(HttpCode.OK).json({ user: result });
+  } catch (err) {
+    console.log("ERROR, updateUser:", err);
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

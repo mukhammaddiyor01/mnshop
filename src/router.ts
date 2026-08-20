@@ -18,6 +18,25 @@ router.post("/signup", userController.signup);
 
 router.post("/auth/google", userController.googleAuth);
 
+router.get(
+  "/auth/me",
+  userController.verifyAuth,
+  userController.getUserDetail,
+);
+
+router.post(
+  "/logout",
+  userController.verifyAuth,
+  userController.logout,
+);
+
+router.post(
+  "/user/update",
+  userController.verifyAuth,
+  makeUploader("users").single("userImage"),
+  userController.updateUser,
+);
+
 router.get("/products", productController.getPublicProducts);
 
 router.post(
@@ -47,6 +66,12 @@ router.post(
   paymentController.confirmPayment,
 );
 
+router.post(
+  "/payment/mock-confirm",
+  userController.verifyAuth,
+  paymentController.mockConfirmPayment,
+);
+
 router.get(
   "/payment/all",
   userController.verifyAuth,
@@ -60,8 +85,8 @@ router.get(
 router.post("/seller/login", sellerController.login);
 router.post(
   "/seller/signup",
-  sellerController.signup,
   makeUploader("sellers").single("sellerImages"),
+  sellerController.signup,
 );
 
 /** SELLER OVERVIEW */
@@ -77,6 +102,12 @@ router.post(
   sellerController.verifySeller,
   makeUploader("products").array("productImages", 10),
   productController.createNewProduct,
+);
+
+router.get(
+  "/seller/product/all",
+  sellerController.verifySeller,
+  productController.getAllProducts,
 );
 
 router.get(
@@ -98,6 +129,18 @@ router.post(
 );
 
 /** SELLER ORDER MANAGEMENT */
+
+router.get(
+  "/seller/order/all",
+  sellerController.verifySeller,
+  orderController.getMyOrders,
+);
+
+router.post(
+  "/seller/order/:id/delivery",
+  sellerController.verifySeller,
+  orderController.updateDeliveryStatus,
+);
 
 /** SELLER CHAT MANAGEMENT */
 

@@ -118,6 +118,63 @@ class ProductService {
     }
   }
 
+  public async decreaseProductStock(
+    input: Array<{ productId: string; itemQuantity: number }>,
+  ): Promise<void> {
+    const updatedItems: Array<{ productId: string; itemQuantity: number }> = [];
+
+    try {
+      for (const item of input) {
+        const productId = shapeIntoMongooseObjectId(item.productId);
+        const result = await this.productModel
+          .findOneAndUpdate(
+            {
+              _id: productId,
+              productStatus: ProductStatus.ACTIVE,
+              productLeftCount: { $gte: item.itemQuantity },
+            },
+            {
+              $inc: {
+                productLeftCount: -item.itemQuantity,
+                productSold: item.itemQuantity,
+              },
+            },
+            { new: true },
+          )
+          .exec();
+
+        if (!result)
+          throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
+
+        updatedItems.push(item);
+      }
+    } catch (err) {
+      await this.restoreProductStock(updatedItems);
+
+      if (err instanceof Errors) throw err;
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
+  }
+
+  public async restoreProductStock(
+    input: Array<{ productId: string; itemQuantity: number }>,
+  ): Promise<void> {
+    const promisedList = input.map(async (item) => {
+      const productId = shapeIntoMongooseObjectId(item.productId);
+
+      await this.productModel
+        .findByIdAndUpdate(productId, {
+          $inc: {
+            productLeftCount: item.itemQuantity,
+            productSold: -item.itemQuantity,
+          },
+        })
+        .exec();
+    });
+
+    await Promise.all(promisedList);
+  }
+
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try {
       const product = this.normalizeProductInput(input);

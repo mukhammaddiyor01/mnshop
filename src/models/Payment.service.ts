@@ -3,6 +3,7 @@ import {
   PreparedPayment,
   PreparePaymentInput,
   ConfirmPaymentInput,
+  MockConfirmPaymentInput,
   TossPaymentResult,
 } from "../libs/types/payment";
 import {
@@ -31,7 +32,7 @@ class PaymentService {
   private getTestSecretKey(): string {
     const secretKey = String(process.env.TOSS_SECRET_KEY || "");
 
-    if (!secretKey.startsWith("test_")) {
+    if (!secretKey.startsWith("") || secretKey.length <= 20) {
       throw new Errors(
         HttpCode.INTERNAL_SERVER_ERROR,
         Message.SOMETHING_WENT_WRONG,
@@ -44,7 +45,7 @@ class PaymentService {
   private getTestClientKey(): string {
     const clientKey = String(process.env.TOSS_CLIENT_KEY || "");
 
-    if (!clientKey.startsWith("test_")) {
+    if (!clientKey.startsWith("test_ck_") || clientKey.length <= 20) {
       throw new Errors(
         HttpCode.INTERNAL_SERVER_ERROR,
         Message.SOMETHING_WENT_WRONG,
@@ -61,6 +62,19 @@ class PaymentService {
     );
   }
 
+  private assertMockPaymentEnabled(): void {
+    if (!this.isMockPaymentEnabled()) {
+      throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
+    }
+  }
+
+  private isMockPaymentEnabled(): boolean {
+    return (
+      process.env.NODE_ENV !== "production" &&
+      process.env.TOSS_MOCK_MODE === "true"
+    );
+  }
+
   public async preparePayment(
     user: User,
     input: PreparePaymentInput,
@@ -70,7 +84,8 @@ class PaymentService {
         throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
       }
 
-      const clientKey = this.getTestClientKey();
+      const mockMode = this.isMockPaymentEnabled();
+      const clientKey = mockMode ? undefined : this.getTestClientKey();
 
       const order = await this.orderService.getPayableOrder(
         user,
@@ -149,6 +164,7 @@ class PaymentService {
         successUrl: `${frontendUrl}/payment/success`,
 
         failUrl: `${frontendUrl}/payment/fail`,
+        mockMode,
       };
     } catch (err) {
       console.log("Error, PaymentService.preparePayment:", err);
@@ -269,6 +285,92 @@ class PaymentService {
       return updatedPayment;
     } catch (err) {
       console.log("Error, PaymentService.confirmPayment:", err);
+
+      if (err instanceof Errors) {
+        throw err;
+      }
+
+      throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+    }
+  }
+
+  public async mockConfirmPayment(
+    user: User,
+    input: MockConfirmPaymentInput,
+  ): Promise<Payment> {
+    try {
+      this.assertMockPaymentEnabled();
+
+      if (user.userType !== UserType.BUYER) {
+        throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
+      }
+
+      if (!input.orderId) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
+      }
+
+      const payment = await this.paymentModel
+        .findOne({
+          providerOrderId: input.orderId,
+          buyerId: shapeIntoMongooseObjectId(user._id),
+        })
+        .exec();
+
+      if (!payment) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
+
+      if (payment.paymentStatus === PaymentStatus.PAID) {
+        return payment as unknown as Payment;
+      }
+
+      const order = await this.orderService.getPayableOrder(
+        user,
+        payment.orderId.toString(),
+      );
+
+      if (Math.round(Number(order.orderTotal)) !== payment.amount) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_ALLOWED);
+      }
+
+      const updatedPayment = await this.paymentModel
+        .findOneAndUpdate(
+          {
+            _id: payment._id,
+            buyerId: shapeIntoMongooseObjectId(user._id),
+            paymentStatus: {
+              $in: [PaymentStatus.PENDING, PaymentStatus.FAILED],
+            },
+          },
+          {
+            $set: {
+              paymentKey: `mock_${payment.providerOrderId}`,
+              providerStatus: TossPaymentStatus.DONE,
+              paymentStatus: PaymentStatus.PAID,
+              approvedAt: new Date(),
+              failureCode: undefined,
+              failureMessage: undefined,
+            },
+          },
+          {
+            new: true,
+            runValidators: true,
+          },
+        )
+        .exec();
+
+      if (!updatedPayment) {
+        throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+      }
+
+      await this.orderService.updatePaymentStatus(
+        payment.orderId.toString(),
+        PaymentStatus.PAID,
+      );
+
+      return updatedPayment as unknown as Payment;
+    } catch (err) {
+      console.log("Error, PaymentService.mockConfirmPayment:", err);
 
       if (err instanceof Errors) {
         throw err;
