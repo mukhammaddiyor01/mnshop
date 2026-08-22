@@ -13,13 +13,10 @@ export interface Message {
 }
 
 export interface MessageInput {
-    _id: Types.ObjectId;
-    conversationId: Types.ObjectId;
+    conversationId?: Types.ObjectId;
     senderId: Types.ObjectId;
     readerId: Types.ObjectId;
     messageText: string;
-    messageImage: string;
-    messageRead: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    messageImage?: string;
+    messageRead?: boolean;
 }

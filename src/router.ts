@@ -8,6 +8,7 @@ import orderController from "./controllers/order.controller";
 import { blockPurchasesDuringMaintenance } from "./libs/middleware/mainteance";
 import paymentController from "./controllers/payment.controller";
 import likeController from "./controllers/like.controller";
+import chatController from "./controllers/chat.controller";
 
 /* BUYER */
 
@@ -72,6 +73,10 @@ router.get(
   orderController.getMyOrders,
 );
 
+router.get("/messages", userController.verifyAuth, chatController.getConversations);
+router.get("/messages/:counterpartId", userController.verifyAuth, chatController.getMessages);
+router.post("/messages/:counterpartId", userController.verifyAuth, chatController.sendMessage);
+
 // PAYMENT
 
 router.post(
@@ -120,8 +125,10 @@ router.post(
 );
 
 /** SELLER OVERVIEW */
+router.get("/seller/overview", sellerController.verifySeller, sellerController.getOverview);
 
 /** SELLER ANALYTICS */
+router.get("/seller/analytics", sellerController.verifySeller, sellerController.getAnalytics);
 
 /** SELLER SETTINGS */
 
@@ -173,6 +180,9 @@ router.post(
 );
 
 /** SELLER CHAT MANAGEMENT */
+router.get("/seller/messages", sellerController.verifySeller, chatController.getConversations);
+router.get("/seller/messages/:counterpartId", sellerController.verifySeller, chatController.getMessages);
+router.post("/seller/messages/:counterpartId", sellerController.verifySeller, chatController.sendMessage);
 
 /** SELLER BUYER MANAGEMENT */
 

@@ -228,6 +228,7 @@ class ProductService {
 
   private normalizeProductInput(input: ProductInput): ProductInput {
     const discount = input.productDiscountPrice;
+    const productSale = parseBoolean(input.productSale);
 
     return {
       ...input,
@@ -245,11 +246,11 @@ class ProductService {
       productPrice: Number(input.productPrice),
       productLeftCount: Number(input.productLeftCount),
       productDiscountPrice:
-        discount === undefined || String(discount).trim() === ""
+        !productSale || discount === undefined || String(discount).trim() === ""
           ? undefined
           : Number(discount),
       productFeatured: parseBoolean(input.productFeatured),
-      productSale: parseBoolean(input.productSale),
+      productSale,
     };
   }
 
@@ -270,10 +271,11 @@ class ProductService {
       input.productPrice > 0 &&
       Number.isInteger(input.productLeftCount) &&
       input.productLeftCount >= 0 &&
-      (input.productDiscountPrice === undefined ||
-        (Number.isFinite(input.productDiscountPrice) &&
-          input.productDiscountPrice >= 0 &&
-          input.productDiscountPrice <= input.productPrice));
+      (!input.productSale ||
+        (input.productDiscountPrice !== undefined &&
+          Number.isFinite(input.productDiscountPrice) &&
+          input.productDiscountPrice > 0 &&
+          input.productDiscountPrice < input.productPrice));
 
     if (!validProduct)
       throw new Errors(HttpCode.BAD_REQUEST, Message.INVALID_PRODUCT_DATA);
@@ -286,6 +288,18 @@ class ProductService {
   ): Promise<Product> {
     try {
       const productId = shapeIntoMongooseObjectId(id);
+
+      const query = sellerId
+        ? {
+            _id: productId,
+            sellerId: shapeIntoMongooseObjectId(sellerId),
+          }
+        : { _id: productId };
+
+      const existingProduct = await this.productModel.findOne(query).exec();
+      if (!existingProduct) {
+        throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+      }
 
       const updateData: ProductUpdateInput = {};
 
@@ -337,22 +351,41 @@ class ProductService {
         updateData.productSale = parseBoolean(input.productSale);
       }
 
+      const nextProductPrice =
+        updateData.productPrice ?? existingProduct.productPrice;
+      const nextProductSale =
+        updateData.productSale ?? Boolean(existingProduct.productSale);
+      const nextDiscountPrice =
+        input.productDiscountPrice !== undefined
+          ? Number(input.productDiscountPrice)
+          : existingProduct.productDiscountPrice;
+
+      if (nextProductSale) {
+        if (
+          !Number.isFinite(nextProductPrice) ||
+          nextProductPrice <= 0 ||
+          !Number.isFinite(nextDiscountPrice) ||
+          !nextDiscountPrice ||
+          nextDiscountPrice <= 0 ||
+          nextDiscountPrice >= nextProductPrice
+        ) {
+          throw new Errors(HttpCode.BAD_REQUEST, Message.INVALID_PRODUCT_DATA);
+        }
+        updateData.productDiscountPrice = nextDiscountPrice;
+      } else {
+        delete updateData.productDiscountPrice;
+      }
+
       if (Object.keys(updateData).length === 0) {
         throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
       }
-
-      const query = sellerId
-        ? {
-            _id: productId,
-            sellerId: shapeIntoMongooseObjectId(sellerId),
-          }
-        : { _id: productId };
 
       const result = await this.productModel
         .findOneAndUpdate(
           query,
           {
             $set: updateData,
+            ...(nextProductSale ? {} : { $unset: { productDiscountPrice: 1 } }),
           },
           {
             new: true,

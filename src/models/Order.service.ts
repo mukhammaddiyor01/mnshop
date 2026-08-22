@@ -226,7 +226,18 @@ class OrderService {
             from: "orderItems",
             localField: "_id",
             foreignField: "orderId",
-            as: "orderItems",
+            as: "orderItemDetails",
+          },
+        },
+        {
+          $set: {
+            orderItems: {
+              $cond: [
+                { $gt: [{ $size: "$orderItemDetails" }, 0] },
+                "$orderItemDetails",
+                "$orderItems",
+              ],
+            },
           },
         },
         {

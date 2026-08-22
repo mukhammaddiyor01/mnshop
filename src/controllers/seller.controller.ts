@@ -131,4 +131,24 @@ sellerController.updateProfile = async (req: AdminRequest, res: Response) => {
   }
 };
 
+sellerController.getOverview = async (req: AdminRequest, res: Response) => {
+  try {
+    const data = await analyticsService.getSellerOverview(String(req.user._id));
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+sellerController.getAnalytics = async (req: AdminRequest, res: Response) => {
+  try {
+    const data = await analyticsService.getSellerAnalytics(String(req.user._id));
+    return res.status(HttpCode.OK).json({ data });
+  } catch (err) {
+    if (err instanceof Errors) return res.status(err.code).json(err);
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 export default sellerController;

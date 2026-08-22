@@ -23,3 +23,28 @@ export interface AdminAnalytics {
   categoryPerformance: CategoryPerformance[];
   topProducts: TopProduct[];
 }
+
+export interface SellerOverview {
+  totalSales: number;
+  revenue: number;
+  ordersToday: number;
+  activeListings: number;
+  recentOrders: unknown[];
+}
+
+export interface SellerAnalytics {
+  revenue: number;
+  paidOrders: number;
+  views: number;
+  likes: number;
+  products: number;
+  orderPipeline: Record<string, number>;
+  topProducts: Array<{
+    productId: string;
+    productName: string;
+    sold: number;
+    views: number;
+    likes: number;
+    revenue: number;
+  }>;
+}
