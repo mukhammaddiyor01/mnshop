@@ -248,6 +248,28 @@ class OrderService {
             as: "productData",
           },
         },
+        {
+          $lookup: {
+            from: "users",
+            let: { orderBuyerId: "$buyerId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$_id", "$$orderBuyerId"] },
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  userNick: 1,
+                  userEmail: 1,
+                  userImage: 1,
+                },
+              },
+            ],
+            as: "buyerData",
+          },
+        },
       ])
       .exec();
 

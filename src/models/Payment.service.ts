@@ -56,7 +56,7 @@ class PaymentService {
   }
 
   private getFrontendUrl(): string {
-    return String(process.env.FRONTEND_URL || "http://localhost:1214").replace(
+    return String(process.env.FRONTEND_URL || "http://localhost:1213").replace(
       /\/$/,
       "",
     );
@@ -386,14 +386,17 @@ class PaymentService {
         throw new Errors(HttpCode.FORBIDDED, Message.NOT_ALLOWED);
       }
 
-      return await this.paymentModel
+      return (await this.paymentModel
         .find({ buyerId: shapeIntoMongooseObjectId(user._id) })
         .sort({ updatedAt: -1 })
-        .exec() as unknown as Payment[];
+        .exec()) as unknown as Payment[];
     } catch (err) {
       console.log("Error, PaymentService.getMyPayments:", err);
       if (err instanceof Errors) throw err;
-      throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.SOMETHING_WENT_WRONG);
+      throw new Errors(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        Message.SOMETHING_WENT_WRONG,
+      );
     }
   }
 
