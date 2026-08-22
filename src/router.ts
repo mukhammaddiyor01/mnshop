@@ -20,17 +20,9 @@ router.post("/signup", userController.signup);
 
 router.post("/auth/google", userController.googleAuth);
 
-router.get(
-  "/auth/me",
-  userController.verifyAuth,
-  userController.getUserDetail,
-);
+router.get("/auth/me", userController.verifyAuth, userController.getUserDetail);
 
-router.post(
-  "/logout",
-  userController.verifyAuth,
-  userController.logout,
-);
+router.post("/logout", userController.verifyAuth, userController.logout);
 
 router.post(
   "/user/update",
@@ -73,9 +65,21 @@ router.get(
   orderController.getMyOrders,
 );
 
-router.get("/messages", userController.verifyAuth, chatController.getConversations);
-router.get("/messages/:counterpartId", userController.verifyAuth, chatController.getMessages);
-router.post("/messages/:counterpartId", userController.verifyAuth, chatController.sendMessage);
+router.get(
+  "/messages",
+  userController.verifyAuth,
+  chatController.getConversations,
+);
+router.get(
+  "/messages/:counterpartId",
+  userController.verifyAuth,
+  chatController.getMessages,
+);
+router.post(
+  "/messages/:counterpartId",
+  userController.verifyAuth,
+  chatController.sendMessage,
+);
 
 // PAYMENT
 
@@ -113,10 +117,22 @@ router.post(
   makeUploader("sellers").single("sellerImages"),
   sellerController.signup,
 );
-router.get("/seller/auth/me", sellerController.verifySeller, sellerController.getCurrentSeller);
-router.post("/seller/logout", sellerController.verifySeller, sellerController.logout);
+router.get(
+  "/seller/auth/me",
+  sellerController.verifySeller,
+  sellerController.getCurrentSeller,
+);
+router.post(
+  "/seller/logout",
+  sellerController.verifySeller,
+  sellerController.logout,
+);
 
-router.get("/seller/profile", sellerController.verifySeller, sellerController.getProfile);
+router.get(
+  "/seller/profile",
+  sellerController.verifySeller,
+  sellerController.getProfile,
+);
 router.post(
   "/seller/profile/update",
   sellerController.verifySeller,
@@ -125,10 +141,18 @@ router.post(
 );
 
 /** SELLER OVERVIEW */
-router.get("/seller/overview", sellerController.verifySeller, sellerController.getOverview);
+router.get(
+  "/seller/overview",
+  sellerController.verifySeller,
+  sellerController.getOverview,
+);
 
 /** SELLER ANALYTICS */
-router.get("/seller/analytics", sellerController.verifySeller, sellerController.getAnalytics);
+router.get(
+  "/seller/analytics",
+  sellerController.verifySeller,
+  sellerController.getAnalytics,
+);
 
 /** SELLER SETTINGS */
 
@@ -180,99 +204,24 @@ router.post(
 );
 
 /** SELLER CHAT MANAGEMENT */
-router.get("/seller/messages", sellerController.verifySeller, chatController.getConversations);
-router.get("/seller/messages/:counterpartId", sellerController.verifySeller, chatController.getMessages);
-router.post("/seller/messages/:counterpartId", sellerController.verifySeller, chatController.sendMessage);
+router.get(
+  "/seller/messages",
+  sellerController.verifySeller,
+  chatController.getConversations,
+);
+router.get(
+  "/seller/messages/:counterpartId",
+  sellerController.verifySeller,
+  chatController.getMessages,
+);
+router.post(
+  "/seller/messages/:counterpartId",
+  sellerController.verifySeller,
+  chatController.sendMessage,
+);
 
 /** SELLER BUYER MANAGEMENT */
 
 // DELIVERY
-
-// router.post(
-//   "/seller/order/:id/delivery",
-//   sellerController.verifySeller,
-//   orderController.updateDeliveryStatus,
-// );
-
-/**
- 
-
-
-// SIGNUP
-
- routerSeller.get(['/', '/home'], sellerController.goHome);
-
- routerSeller
-    .get("/login", sellerController.getLogin)
-    .post("login", sellerController.processLogin);
-
-routerSeller
-    .get("/signup", sellerController.getSignup)
-    .post("/signup",
-        makeUploader("users").single("userImage"),
-        sellerController.processSignup
-    );
-
-routerSeller.get("/logout", routerSeller.logout);
-routerSeller.get("/check-me", routerSeller.checkAuthSession);
-
-
-// OverView
-
-routerSeller.get("/overview", 
-    sellerController.verifySeller, 
-    sellerController.getOverview);
-
-
-// PRODUCTS
-
-routerSeller.get("/product/all", 
-    sellerController.verifySeller, 
-    sellerController.getAllProducts);
-
-routerSeller.post("/product/create",
-    sellerController.verifySeller,
-    makeUploader("products").array("productImages", 10),
-    productController.createNewProduct);
-
-routerSeller.post("/product/:id", 
-    sellerController.verifySeller, 
-    sellerController.updateChosenProduct);
-
-
-// ORDERS
-
-routerSeller.get("/orders", 
-    sellerController.verifySeller, 
-    sellerController.getOrders);
-
-routerSeller.post("/order/:id", 
-    sellerController.verifySeller, 
-    sellerController.updateChosenOrder);
-
-
-
-
-//MESSAGES
-
-routerSeller.get("/messages", 
-    sellerController.verifySeller, 
-    sellerController.getMessages);
-
-
-// ANALYTICS
-
-routerSeller.get("/analytics", 
-    sellerController.verifySeller, 
-    sellerController.getAnalytics);
-    
-// SETTINGS
-
-routerSeller.get("/settings", 
-    sellerController.verifySeller, 
-    sellerController.getSettings);
-
-
- */
 
 export default router;
