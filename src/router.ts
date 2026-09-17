@@ -31,7 +31,13 @@ router.post(
   userController.updateUser,
 );
 
-router.get("/products", productController.getPublicProducts);
+router.get("/api/products", productController.getPublicProducts);
+// Compatibility for older clients; HTML navigation belongs to the buyer app.
+router.get("/products", (req, res, next) => {
+  res.vary("Accept");
+  if (req.headers.accept?.includes("text/html")) return next();
+  return productController.getPublicProducts(req, res);
+});
 router.get("/sellers", sellerController.getPublicSellers);
 
 router.post(

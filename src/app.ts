@@ -3,6 +3,7 @@ import path from "path";
 import morgan from "morgan";
 import router from "./router";
 import routerAdmin from "./router-admin";
+import { buyerHtml } from "./controllers/seo.controller";
 import { MORGAN_FORMAT } from "./libs/config";
 
 import session from "express-session";
@@ -48,7 +49,13 @@ app.use((req, res, next) => {
     return next();
 });
 
-app.use(express.static(path.join(__dirname, "public"))); // Public folderni ochiqlayapmiz
+app.use((req, res, next) => {
+    if (/^\/(admin|seller|api|auth|user|product|order|payment|login|signup|logout|cart|checkout|likes|chat|notifications|orders|user-page)(\/|$)/.test(req.path)) {
+        res.set("X-Robots-Tag", "noindex, nofollow");
+    }
+    next();
+});
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use(express.urlencoded({extended: true})); // Traditional API
 app.use(express.json()); //Rest API
@@ -91,19 +98,15 @@ const frontendRoot = path.resolve(__dirname, "..", "..", "mnshop-react");
 const buyerBuildDirectory = path.join(frontendRoot, "build");
 const sellerBuildDirectory = path.join(frontendRoot, "src-seller", "build");
 
-app.use("/seller", express.static(sellerBuildDirectory));
-app.get(["/seller", "/seller/*"], (_req, res) => {
-    res.sendFile(path.join(sellerBuildDirectory, "index.html"));
+app.use("/seller", express.static(sellerBuildDirectory, { index: false }));
+app.get(["/seller", "/seller/*"], (req, res) => {
+    const valid = /^\/seller(?:\/seller)?(?:\/(?:login|signup|overview|products|orders|messages|analytics|settings))?\/?$/.test(req.path);
+    res.status(valid ? 200 : 404).sendFile(path.join(sellerBuildDirectory, "index.html"));
 });
 
-app.use(express.static(buyerBuildDirectory));
-app.get("*", (req, res) => {
-    if (req.path.startsWith("/admin")) {
-        return res.status(404).send("Admin route was not found.");
-    }
-
-    return res.sendFile(path.join(buyerBuildDirectory, "index.html"));
-});
+app.get("/index.html", (_req, res) => res.redirect(301, "/"));
+app.use(express.static(buyerBuildDirectory, { index: false }));
+app.get("*", buyerHtml(buyerBuildDirectory));
 
 
 export default app;
