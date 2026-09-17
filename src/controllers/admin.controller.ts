@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
-import { AdminRequest, UserInput } from "../libs/types/user";
+import { AdminRequest } from "../libs/types/user";
 import { UserType } from "../libs/enums/user.enum";
 import UserService from "../models/User.service";
 import { LoginInput } from "../libs/types/user";
@@ -133,49 +133,6 @@ adminController.getMessages = (req: Request, res: Response) => {
   renderAdminPage(res, "messages");
 };
 
-adminController.processSignup = async (req: AdminRequest, res: Response) => {
-  try {
-    console.log("processSignup");
-    const file = req.file;
-
-    if (!file)
-      throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
-
-    const newUser: UserInput = req.body;
-    newUser.userImage = file?.path;
-    newUser.userType = UserType.ADMIN;
-
-    const result = await userService.processSignup(newUser);
-
-    req.session.user = result;
-    req.session.save(function () {
-      res.redirect("/admin/overview");
-    });
-  } catch (err) {
-    console.log("Error, processSignup:", err);
-    const message =
-      err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-    res.send(
-      `<script> alert("${message}"); window.location.replace('/admin/signup'); </script>`,
-    );
-  }
-};
-
-adminController.getSignup = (req: Request, res: Response) => {
-  try {
-    res.set("Cache-Control", "no-store");
-    const sessionInstance = req.session as T;
-
-    if (sessionInstance.user?.userType === UserType.ADMIN) {
-      return res.redirect("/admin/overview");
-    }
-
-    res.render("signup");
-  } catch (err) {
-    console.log("Error, getSignUp:", err);
-    res.redirect("/admin");
-  }
-};
 
 adminController.getLogin = (req: Request, res: Response) => {
   try {
