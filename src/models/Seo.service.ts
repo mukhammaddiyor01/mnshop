@@ -4,6 +4,7 @@ import ProductService from "./Product.service";
 
 const origin = "https://mnshop.uz";
 const description = "Shop Korean hoodies, T-shirts, caps and cups at MNShop, with delivery to Uzbekistan.";
+const defaultSocialImage = `${origin}/og/mnshop-preview.jpg`;
 const categories: Record<string, string> = { hoodies: "Hoodies", tshirts: "T-Shirts", caps: "Caps", cups: "Cups", sale: "Sale Collection" };
 const topics: Record<string, string> = { delivery: "Delivery", "size-guide": "Size Guide", returns: "Returns", "secure-payment": "Secure Payment", "order-tracking": "Order Tracking", "product-questions": "Product Questions" };
 const escape = (value: string) => value.replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]!));
@@ -18,7 +19,7 @@ export default class SeoService {
     let canonical = origin + route;
     let status = 200;
     let noindex = false;
-    let image = "";
+    let image = defaultSocialImage;
     let schema: object | undefined;
     if (route === "/") schema = { "@context": "https://schema.org", "@type": "WebSite", name: "MNShop", url: origin + "/" };
     else if (route === "/products") {
@@ -47,7 +48,8 @@ export default class SeoService {
     else { title = "Page not found | MNShop"; status = 404; noindex = true; }
     let html = await fs.readFile(path.join(directory, "index.html"), "utf8");
     html = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, "").replace(/<meta\b[^>]*(?:name|property)\s*=\s*["'](?:description|robots|og:[^"']*|twitter:[^"']*)["'][^>]*>/gi, "").replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi, "");
-    const tags = `<title>${escape(title)}</title><meta name="description" content="${escape(summary)}"><meta name="robots" content="${noindex ? "noindex, follow" : "index, follow, max-image-preview:large"}">${noindex ? "" : `<link rel="canonical" href="${escape(canonical)}">`}<meta property="og:site_name" content="MNShop"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(summary)}"><meta property="og:url" content="${escape(canonical)}"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(summary)}">${image ? `<meta property="og:image" content="${escape(image)}"><meta name="twitter:image" content="${escape(image)}">` : ""}${schema ? `<script id="mnshop-seo-jsonld" type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : ""}`;
+    const imageMetadata = `<meta property="og:image" content="${escape(image)}"><meta property="og:image:secure_url" content="${escape(image)}"><meta property="og:image:alt" content="${escape(title)}">${image === defaultSocialImage ? '<meta property="og:image:type" content="image/jpeg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">' : ""}<meta name="twitter:image" content="${escape(image)}"><meta name="twitter:image:alt" content="${escape(title)}">`;
+    const tags = `<title>${escape(title)}</title><meta name="description" content="${escape(summary)}"><meta name="robots" content="${noindex ? "noindex, follow" : "index, follow, max-image-preview:large"}">${noindex ? "" : `<link rel="canonical" href="${escape(canonical)}">`}<meta property="og:site_name" content="MNShop"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(summary)}"><meta property="og:url" content="${escape(canonical)}">${imageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(summary)}">${schema ? `<script id="mnshop-seo-jsonld" type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>` : ""}`;
     html = html.replace(/<\/head>/i, `${tags}</head>`);
     if (status === 404) html = html.replace('<div id="root"></div>', '<div id="root"><h1>Page not found</h1><a href="/">Back to MNShop</a></div>');
     return { html, status, noindex };
