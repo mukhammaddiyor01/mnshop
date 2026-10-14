@@ -19,6 +19,10 @@ import PaymentModel from "../schema/Payment.model";
 import OrderService from "./Order.service";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { randomUUID } from "crypto";
+import {
+  getPaymentFrontendUrl,
+  isSupportedTossTestKeyPair,
+} from "../libs/toss.config";
 
 class PaymentService {
   private readonly paymentModel;
@@ -29,37 +33,21 @@ class PaymentService {
     this.orderService = new OrderService();
   }
 
-  private getTestSecretKey(): string {
-    const secretKey = String(process.env.TOSS_SECRET_KEY || "");
-
-    if (!secretKey.startsWith("") || secretKey.length <= 20) {
+  private getTestCredentials(): { clientKey: string; secretKey: string } {
+    const clientKey = String(process.env.TOSS_CLIENT_KEY || "").trim();
+    const secretKey = String(process.env.TOSS_SECRET_KEY || "").trim();
+    if (!isSupportedTossTestKeyPair(clientKey, secretKey)) {
       throw new Errors(
         HttpCode.INTERNAL_SERVER_ERROR,
         Message.SOMETHING_WENT_WRONG,
       );
     }
 
-    return secretKey;
-  }
-
-  private getTestClientKey(): string {
-    const clientKey = String(process.env.TOSS_CLIENT_KEY || "");
-
-    if (!clientKey.startsWith("test_ck_") || clientKey.length <= 20) {
-      throw new Errors(
-        HttpCode.INTERNAL_SERVER_ERROR,
-        Message.SOMETHING_WENT_WRONG,
-      );
-    }
-
-    return clientKey;
+    return { clientKey, secretKey };
   }
 
   private getFrontendUrl(): string {
-    return String(process.env.FRONTEND_URL || "http://localhost:1213").replace(
-      /\/$/,
-      "",
-    );
+    return getPaymentFrontendUrl(process.env);
   }
 
   private assertMockPaymentEnabled(): void {
@@ -85,7 +73,9 @@ class PaymentService {
       }
 
       const mockMode = this.isMockPaymentEnabled();
-      const clientKey = mockMode ? undefined : this.getTestClientKey();
+      const clientKey = mockMode
+        ? undefined
+        : this.getTestCredentials().clientKey;
 
       const order = await this.orderService.getPayableOrder(
         user,
@@ -403,7 +393,7 @@ class PaymentService {
   private async requestTossConfirmation(
     input: ConfirmPaymentInput,
   ): Promise<TossPaymentResult> {
-    const secretKey = this.getTestSecretKey();
+    const secretKey = this.getTestCredentials().secretKey;
 
     const authorization = Buffer.from(`${secretKey}:`).toString("base64");
 
