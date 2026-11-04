@@ -33,10 +33,13 @@
         <% }) %>
       </nav>
 
-      <a class="side-link sidebar-logout" href="/admin/logout">
-        <span><i data-lucide="log-out" aria-hidden="true"></i>Log out</span>
-        <i data-lucide="chevron-right" aria-hidden="true"></i>
-      </a>
+      <form class="sidebar-logout" action="/admin/logout" method="POST">
+        <input type="hidden" name="csrf" value="<%= adminCsrfToken %>" />
+        <button class="side-link" type="submit">
+          <span><i data-lucide="log-out" aria-hidden="true"></i>Log out</span>
+          <i data-lucide="chevron-right" aria-hidden="true"></i>
+        </button>
+      </form>
     </aside>
 
     <main class="admin-main">

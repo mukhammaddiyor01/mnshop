@@ -8,7 +8,9 @@
       </a>
       <h1>Welcome back</h1>
       <p>Sign in to manage buyers, sellers, products, orders, and messages.</p>
+      <% if (error) { %><p role="alert"><%= error %></p><% } %>
       <form class="auth-form" action="/admin/login" method="POST">
+        <input type="hidden" name="csrf" value="<%= adminCsrfToken %>" />
         <label>Admin nick<input name="userNick" type="text" placeholder="admin" required /></label>
         <label>Password<input name="userPassword" type="password" placeholder="Password" required /></label>
         <button class="primary-button full" type="submit">Sign In</button>

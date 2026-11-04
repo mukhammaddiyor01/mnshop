@@ -13,6 +13,7 @@ import { ProductStatus } from "../libs/enums/product.enum";
 import { OrderStatus, PaymentStatus } from "../libs/enums/order.enum";
 import AnalyticsService from "../models/Analytics.service";
 import SettingsService from "../models/Settings.service";
+import { timingSafeEqual } from "crypto";
 
 const settingsService = new SettingsService();
 const analyticsService = new AnalyticsService();
@@ -22,6 +23,14 @@ const productService = new ProductService();
 const orderService = new OrderService();
 
 const adminController: T = {};
+const validAdminCsrf = (req: Request): boolean => {
+  const expected = (req.session as T).adminCsrfToken;
+  const received = req.body?.csrf;
+  if (typeof expected !== "string" || typeof received !== "string") return false;
+  const first = Buffer.from(expected);
+  const second = Buffer.from(received);
+  return first.length === second.length && timingSafeEqual(first, second);
+};
 
 const renderAdminPage = (res: Response, view: string, data: T = {}) => {
   res.render(view, data);
@@ -143,7 +152,7 @@ adminController.getLogin = (req: Request, res: Response) => {
       return res.redirect("/admin/overview");
     }
 
-    res.render("login");
+    res.render("login", { error: null });
   } catch (err) {
     console.log("Error, Login:", err);
     res.redirect("/admin");
@@ -152,27 +161,30 @@ adminController.getLogin = (req: Request, res: Response) => {
 
 adminController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
+    if (!validAdminCsrf(req)) return res.sendStatus(403);
     console.log("processLogin");
 
     const input: LoginInput = req.body;
     const result = await userService.processLogin(input);
 
-    req.session.user = result;
-    req.session.save(function () {
-      res.redirect("/admin/overview");
+    if (result.userType !== UserType.ADMIN) return res.sendStatus(403);
+    req.session.regenerate((error) => {
+      if (error) return res.sendStatus(500);
+      req.session.user = result;
+      req.session.save((saveError) => {
+        if (saveError) return res.sendStatus(500);
+        return res.redirect("/admin/overview");
+      });
     });
   } catch (err) {
     console.log("Error, processLogin:", err);
-    const message =
-      err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-    res.send(
-      `<script> alert("${message}"); window.location.replace('/admin/login'); </script>`,
-    );
+    return res.status(401).render("login", { error: "Unable to sign in." });
   }
 };
 
 adminController.logout = async (req: AdminRequest, res: Response) => {
   try {
+    if (!validAdminCsrf(req)) return res.sendStatus(403);
     console.log("processlogout");
     req.session.destroy(function () {
       res.redirect("/admin");
@@ -384,15 +396,12 @@ adminController.getSettings = async (req: Request, res: Response) => {
 
 adminController.updateSettings = async (req: Request, res: Response) => {
   try {
+    if (!validAdminCsrf(req)) return res.sendStatus(403);
     await settingsService.updateSettings(req.body);
     return res.redirect("/admin/settings");
   } catch (err) {
     console.log("Error, updateSettings:", err);
-    const message =
-      err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-    return res.send(
-      `<script> alert("${message}"); window.location.replace('/admin/settings'); </script>`,
-    );
+    return res.sendStatus(500);
   }
 };
 

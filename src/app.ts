@@ -9,6 +9,7 @@ import { MORGAN_FORMAT } from "./libs/config";
 import session from "express-session";
 import ConnectMongoDB from "connect-mongodb-session";
 import { T } from "./libs/types/common";
+import { randomBytes } from "crypto";
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
@@ -18,7 +19,20 @@ const store = new MongoDBStore({
 
 /** 1-Entrance */
 const app = express();
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
 console.log("__dirname:", __dirname);
+
+app.use((req, res, next) => {
+    res.set("X-Content-Type-Options", "nosniff");
+    res.set("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'self'");
+    res.set("Strict-Transport-Security", "max-age=31536000");
+    next();
+});
+app.use((req, res, next) => {
+    if (/\.map$/i.test(req.path)) return res.sendStatus(404);
+    next();
+});
 
 const allowedFrontendOrigins = new Set([
     process.env.BUYER_FRONTEND_URL || "http://localhost:1214",
@@ -48,6 +62,24 @@ app.use((req, res, next) => {
 
     return next();
 });
+// Browsers attach Origin to cross-site mutations. Reject those before a session is used.
+app.use((req, res, next) => {
+    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
+    if (req.headers["sec-fetch-site"] === "cross-site" && !allowedFrontendOrigins.has(req.headers.origin || "")) {
+        return res.status(403).json({ message: "Cross-site request is not allowed" });
+    }
+    let origin = req.headers.origin;
+    try {
+        if (!origin && req.headers.referer) origin = new URL(req.headers.referer).origin;
+    } catch {
+        return res.status(403).json({ message: "Request origin is not allowed" });
+    }
+    const requestOrigin = `${req.protocol}://${req.get("host")}`;
+    if (origin && origin !== requestOrigin && !allowedFrontendOrigins.has(origin)) {
+        return res.status(403).json({ message: "Request origin is not allowed" });
+    }
+    return next();
+});
 
 app.use((req, res, next) => {
     if (/^\/(admin|seller|api|auth|user|product|order|payment|login|signup|logout|cart|checkout|likes|chat|notifications|orders|user-page)(\/|$)/.test(req.path)) {
@@ -68,12 +100,24 @@ app.use(
         secret: String(process.env.SESSION_SECRET),
         cookie: {
             maxAge: 1000 * 3600 * 3,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
         },
         store: store,
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false
     })
 );
+
+app.use((req, res, next) => {
+    if (req.path.startsWith("/admin")) {
+        const adminSession = req.session as T;
+        if (!adminSession.adminCsrfToken) adminSession.adminCsrfToken = randomBytes(32).toString("hex");
+        res.locals.adminCsrfToken = adminSession.adminCsrfToken;
+    }
+    next();
+});
 
 
 app.use(function(req, res, next) {

@@ -11,7 +11,7 @@ routerAdmin
   .get("/login", adminController.getLogin)
   .post("/login", adminController.processLogin);
 
-routerAdmin.get("/logout", adminController.logout);
+routerAdmin.post("/logout", adminController.logout);
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
 /** ADMIN BSSR FRONTEND: OVERVIEW */

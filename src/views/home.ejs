@@ -33,11 +33,10 @@
         <% } else { %>
           <a class="home-button home-button-secondary" href="/admin/product/all">Products</a>
           <a class="home-button home-button-secondary" href="/admin/user/all">Users</a>
-          <a
-            class="home-button home-button-primary"
-            href="/admin/logout"
-            onclick="return confirm('Do you want to logout?')"
-          >Logout</a>
+          <form action="/admin/logout" method="POST">
+            <input type="hidden" name="csrf" value="<%= adminCsrfToken %>" />
+            <button class="home-button home-button-primary" type="submit">Logout</button>
+          </form>
         <% } %>
       </nav>
     </header>

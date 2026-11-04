@@ -35,6 +35,7 @@ button { color: inherit; }
 .side-link.active { background: rgb(7, 134, 194); color: #000; }
 .sidebar-logout { margin-top: auto; border: 1px solid rgba(244, 63, 94, 0.22); color: #fda4af; }
 .sidebar-logout:hover { border-color: rgba(244, 63, 94, 0.42); background: rgba(244, 63, 94, 0.1); color: #fecdd3; }
+.sidebar-logout > button { width: 100%; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .sidebar-backdrop { display: none; }
 .admin-main { display: grid; align-content: start; gap: 24px; min-width: 0; }
 .admin-topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255, 255, 255, 0.03); }
