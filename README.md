@@ -1,3 +1,6 @@
+# MNShop
+
+[Visit the live storefront](https://mnshop.uz/)
 Admin: can see both seller and buyer lists and can adjust their status.
 able to make conversation with both seller and buyer
 able to see how many purchases has been made
