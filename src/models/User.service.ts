@@ -49,8 +49,8 @@ class UserService {
       });
       result.userPassword = "";
       return result.toJSON();
-    } catch (err) {
-      console.error("ERROR, modelsignup", err);
+    } catch (_err) {
+      console.error("Buyer signup failed");
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
     }
   }
@@ -234,8 +234,8 @@ class UserService {
       result.userPassword = "";
 
       return result;
-    } catch (err) {
-      console.log("Real signup error:", err);
+    } catch (_err) {
+      console.log("Admin signup failed");
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }

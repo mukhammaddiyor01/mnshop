@@ -20,6 +20,8 @@ const store = new MongoDBStore({
 const app = express();
 console.log("__dirname:", __dirname);
 
+morgan.token("safe-url", (req) => req.url?.split("?", 1)[0] || "-");
+
 const allowedFrontendOrigins = new Set([
     process.env.BUYER_FRONTEND_URL || "http://localhost:1214",
     process.env.SELLER_FRONTEND_URL || "http://localhost:1215",

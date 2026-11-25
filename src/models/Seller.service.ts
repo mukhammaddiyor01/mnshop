@@ -33,8 +33,8 @@ class SellerService {
             const result = await this.sellerModel.create(input);
             result.sellerPassword= "";
             return result.toJSON();
-        } catch(err) {
-            console.error("Error, sellersignup", err)
+        } catch(_err) {
+            console.error("Seller signup failed")
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
         }
     }
@@ -73,7 +73,6 @@ class SellerService {
         const result = await this.sellerModel
             .find({userType: UserType.SELLER})
             .exec();
-            console.log("result:", result);
             if(!result)
                 throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
