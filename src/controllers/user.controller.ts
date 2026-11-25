@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
 import {
-  UserInput,
+  BuyerSignupInput,
   LoginInput,
   User,
   ExtendedRequest,
@@ -34,7 +34,15 @@ userController.signup = async (req: Request, res: Response) => {
   try {
     console.log("signup");
 
-    const input: UserInput = req.body,
+    const input: BuyerSignupInput = {
+      userNick: req.body.userNick,
+      userEmail: req.body.userEmail,
+      userPhone: req.body.userPhone,
+      userPassword: req.body.userPassword,
+      userAddress: req.body.userAddress,
+      userDesc: req.body.userDesc,
+      userImage: req.body.userImage,
+    },
       result: User = await userService.signup(input);
     //TODO: TOKENS AUTHENTICATION
     const token = await authService.createToken(result);

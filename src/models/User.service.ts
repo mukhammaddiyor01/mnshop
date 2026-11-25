@@ -1,6 +1,7 @@
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import {
   LoginInput,
+  BuyerSignupInput,
   GoogleProfile,
   User,
   UserInput,
@@ -23,12 +24,29 @@ class UserService {
 
   /** SPA */
 
-  public async signup(input: UserInput): Promise<User> {
+  public async signup(input: BuyerSignupInput): Promise<User> {
+    return this.createBuyer(input);
+  }
+
+  private async createBuyer(
+    input: BuyerSignupInput & Pick<UserInput, "userGoogleId">,
+  ): Promise<User> {
     const salt = await bcrypt.genSalt();
-    input.userPassword = await bcrypt.hash(input.userPassword, salt);
+    const userPassword = await bcrypt.hash(input.userPassword, salt);
 
     try {
-      const result = await this.userModel.create(input);
+      const result = await this.userModel.create({
+        userType: UserType.BUYER,
+        userStatus: UserStatus.ACTIVE,
+        userNick: input.userNick,
+        userEmail: input.userEmail,
+        userPhone: input.userPhone,
+        userPassword,
+        userGoogleId: input.userGoogleId,
+        userAddress: input.userAddress,
+        userDesc: input.userDesc,
+        userImage: input.userImage,
+      });
       result.userPassword = "";
       return result.toJSON();
     } catch (err) {
@@ -111,8 +129,7 @@ class UserService {
       .slice(0, 20) || "mnshopuser";
     const userNick = `${nicknameBase}-${profile.googleId.slice(-6)}`;
 
-    return this.signup({
-      userType: UserType.BUYER,
+    return this.createBuyer({
       userNick,
       userEmail: profile.email,
       userPassword: randomBytes(48).toString("hex"),
@@ -207,15 +224,11 @@ class UserService {
     const exist = await this.userModel
       .findOne({ userType: UserType.ADMIN })
       .exec();
-    console.log("exist:", exist);
-
     if (exist) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
 
     // Bu yerda kodni vijr vijr qilyapmiz
     const salt = await bcrypt.genSalt();
     input.userPassword = await bcrypt.hash(input.userPassword, salt);
-    console.log("after", input.userPassword);
-
     try {
       const result = await this.userModel.create(input);
       result.userPassword = "";

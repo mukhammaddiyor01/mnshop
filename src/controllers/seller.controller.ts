@@ -33,7 +33,6 @@ const sanitizeSeller = (seller: T) => {
 sellerController.signup = async (req: Request, res: Response) => {
   try {
     console.log("seller signup");
-    console.log("body:", req.body);
 
     const input: SellerInput = req.body;
     if(req.file) input.sellerImage = req.file.path.replace(/\\/g, "/");

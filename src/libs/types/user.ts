@@ -44,6 +44,16 @@ export interface UserInput {
   myOrders?: string;
 }
 
+export interface BuyerSignupInput {
+  userNick: string;
+  userEmail: string;
+  userPhone?: string;
+  userPassword: string;
+  userAddress?: string;
+  userDesc?: string;
+  userImage?: string;
+}
+
 export interface LoginInput {
   userNick: string;
   userPassword: string;
