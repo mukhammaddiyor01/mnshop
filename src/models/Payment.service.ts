@@ -200,7 +200,15 @@ class PaymentService {
         payment.paymentStatus === PaymentStatus.PAID &&
         payment.paymentKey === input.paymentKey
       ) {
+        await this.orderService.updatePaymentStatus(
+          payment.orderId.toString(),
+          PaymentStatus.PAID,
+        );
         return payment;
+      }
+
+      if (payment.paymentStatus === PaymentStatus.PAID) {
+        throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_ALLOWED);
       }
 
       const requestedAmount = Math.round(Number(input.amount));
@@ -311,6 +319,10 @@ class PaymentService {
       }
 
       if (payment.paymentStatus === PaymentStatus.PAID) {
+        await this.orderService.updatePaymentStatus(
+          payment.orderId.toString(),
+          PaymentStatus.PAID,
+        );
         return payment as unknown as Payment;
       }
 
@@ -426,7 +438,10 @@ class PaymentService {
     };
 
     if (!response.ok) {
-      console.log("Toss confirmation failed:", result);
+      console.log("Toss confirmation failed", {
+        status: response.status,
+        code: result.code,
+      });
 
       throw new Errors(HttpCode.BAD_REQUEST, Message.UPDATE_FAILED);
     }
