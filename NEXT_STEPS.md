@@ -41,7 +41,7 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - CSRF headers for admin product, seller, and user fetch requests;
 - admin logout changed from `GET` to `POST`.
 
-- TypeScript no-emit check, production build, diff whitespace check, and direct CSRF middleware checks passed.
+- TypeScript no-emit check, production build, diff whitespace check, and direct CSRF middleware checks passed. Re-run the CSRF check with `npm run test:admin-csrf`.
 - Browser and production proxy behavior have not been tested.
 
 ## Remaining findings

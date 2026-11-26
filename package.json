@@ -7,6 +7,7 @@
     "start": "ts-node src/server.ts",
     "start:dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
+    "test:admin-csrf": "node -r ts-node/register scripts/check-admin-csrf.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mukhammaddiyor (ADAM)",
