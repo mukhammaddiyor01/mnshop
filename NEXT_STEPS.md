@@ -49,9 +49,16 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - Added `AGENTS.md`, `SKILLS.md`, `skills/mnshop-mobile-development/SKILL.md`, and the `docs/ai/` source-of-truth set.
 - Documented Expo as a future target only; no mobile code, dependency, workspace migration, API behavior, database, payment provider, or deployment changed.
 
+7. `feat: add native token persistence`
+
+- Added `authVersion` plus refresh-session and revoked-access-token TTL schemas.
+- Added HMAC-hashed opaque refresh-token generation and `npm run test:native-token-primitives`.
+- The primitive check, TypeScript no-emit check, and diff whitespace check passed.
+- No database connection, native HTTP endpoint, browser auth behavior, or Expo code was exercised or changed.
+
 ## Remaining findings
 
-1. Implement `feat: add native token persistence` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Use an isolated test database for persistence tests; do not use private or production data.
+1. Implement `feat: expose native auth endpoints` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Keep browser cookie routes unchanged and use an isolated test database for persistence tests; do not use private or production data.
 2. Add focused HTTP-boundary tests for rejected privileged signup fields, invalid upload MIME/size, payment retry reconciliation, missing/invalid admin CSRF, and admin session regeneration.
 3. Re-run backend typecheck/build after each small commit. Record API, browser, and device results separately; file presence is not runtime verification.
 

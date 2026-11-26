@@ -19,6 +19,7 @@ export interface User {
   userFollowing?: number;
   userFollowers?: number;
   userLikes: number;
+  authVersion: number;
   myProducts?: string;
   myOrders?: string;
   createdAt: Date;

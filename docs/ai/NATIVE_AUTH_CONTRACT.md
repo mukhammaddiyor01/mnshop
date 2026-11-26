@@ -2,7 +2,7 @@
 
 ## Status
 
-**Proposed design, not implemented.** Existing browser authentication remains unchanged until the staged implementation below is complete. This document is the reviewable source of truth for native auth work.
+**Partially implemented.** The first persistence increment now provides `authVersion`, refresh-session and revoked-access-token schemas, TTL indexes, and HMAC-hashed opaque refresh-token primitives. Existing browser authentication remains unchanged. Native endpoints, access-token verification, rotation, and Expo integration are not implemented yet.
 
 ## Goals
 
@@ -89,3 +89,12 @@ Successful native login/refresh responses use:
 4. `feat: add Expo auth foundation` — Expo SecureStore adapter, API client interceptor, auth query state, and only then protected routes.
 
 Each step requires its own Markdown update and focused tests. Use an isolated test database for persistence tests; no production or private database is part of this work.
+
+## Implementation progress
+
+- [x] `authVersion` defaults safely on each user record.
+- [x] Refresh sessions persist only a keyed hash, device metadata, expiry, idle expiry, and revocation metadata.
+- [x] Revoked access-token IDs use a TTL-backed denylist schema.
+- [x] A focused primitive check verifies random opaque token generation, deterministic hashing, and expiry ordering.
+- [ ] Native routes, safe response envelopes, access-JWT verification, refresh rotation, reuse detection, and logout behavior.
+- [ ] An isolated-database persistence test for MongoDB indexes and queries.
