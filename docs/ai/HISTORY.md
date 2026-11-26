@@ -23,3 +23,5 @@ Updated direct Moment from 2.30.1 to 2.31.0, the audit-provided compatible fix f
 Updated the Express-compatible transitive `proxy-addr` resolution from 2.0.7 to 2.0.8, which removes the critical IP-spoofing advisory without a framework migration. Native refresh integration and build checks passed; the production-only audit reduced to 6 findings (0 critical, 3 high, 3 moderate).
 
 Updated the Express-compatible transitive `body-parser` resolution from 1.20.6 to 1.20.9, which removes the high-severity compressed-request DoS advisory without a framework migration. Native refresh integration and build checks passed; the production-only audit reduced to 5 findings (0 critical, 2 high, 3 moderate).
+
+Updated the MongoDB driver path's compatible transitive `ip-address` resolution from 10.2.0 to 10.7.6, which removes its high-severity SSRF/trust-boundary advisories without a driver migration. Native refresh integration and build checks passed; the production-only audit reduced to 4 findings (0 critical, 1 high, 3 moderate).

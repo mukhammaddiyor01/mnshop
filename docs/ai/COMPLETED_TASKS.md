@@ -13,5 +13,6 @@
 - Updated Moment from 2.30.1 to 2.31.0. The production-only audit reduced from 8 findings to 7; remaining transitive dependency remediation stays separate.
 - Updated the compatible transitive `proxy-addr` resolution from 2.0.7 to 2.0.8. The production-only audit reduced from 7 findings to 6 and has no remaining critical finding.
 - Updated the compatible transitive `body-parser` resolution from 1.20.6 to 1.20.9. The production-only audit reduced from 6 findings to 5 and has one fewer high finding.
+- Updated the MongoDB driver path's compatible transitive `ip-address` resolution from 10.2.0 to 10.7.6. The production-only audit reduced from 5 findings to 4 and has one fewer high finding.
 
 See Git history and `NEXT_STEPS.md` for completed security commits and the mutable next-task list.

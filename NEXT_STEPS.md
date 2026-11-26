@@ -107,13 +107,19 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
 - Production-only audit improved from 6 findings (0 critical, 3 high, 3 moderate) to 5 (0 critical, 2 high, 3 moderate). The remaining transitive dependency findings require separate review.
 
+16. `fix: update ip address security patch`
+
+- Updated the MongoDB driver path's compatible transitive `ip-address` resolution from `10.2.0` to `10.7.6`; no driver upgrade or direct manifest dependency was added.
+- Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
+- Production-only audit improved from 5 findings (0 critical, 2 high, 3 moderate) to 4 (0 critical, 1 high, 3 moderate). The remaining transitive dependency findings require separate review.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 0 — Runtime dependency security
 
-1. `fix: review transitive runtime dependencies` — trace each remaining production-only audit path, starting with the high-severity MongoDB `ip-address` path, then apply only compatible, separately verified patches. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+1. `fix: review transitive runtime dependencies` — trace the one remaining high-severity production audit path, then apply only a compatible, separately verified patch. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
 
 ### Gate 1 — Native auth correctness and privacy
 
