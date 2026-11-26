@@ -7,5 +7,6 @@
 - Added the first native-auth persistence increment: user `authVersion`, refresh-session and revoked-access-token TTL schemas, and HMAC-hashed opaque token primitives.
 - Added `npm run test:native-token-primitives` for deterministic token-primitive checks; no database connection is used by that check.
 - Added buyer-only `POST /auth/native/login` with runtime-allowlisted input, a safe response envelope, and no browser-cookie mutation.
+- Implemented transactional `POST /auth/native/refresh` and a mock transaction check. An isolated MongoDB and real HTTP test are still required before this endpoint is accepted as verified.
 
 See Git history and `NEXT_STEPS.md` for completed security commits and the mutable next-task list.

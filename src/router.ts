@@ -22,6 +22,8 @@ router.post("/auth/google", userController.googleAuth);
 
 router.post("/auth/native/login", userController.nativeLogin);
 
+router.post("/auth/native/refresh", userController.nativeRefresh);
+
 router.get("/auth/me", userController.verifyAuth, userController.getUserDetail);
 
 router.post("/logout", userController.verifyAuth, userController.logout);

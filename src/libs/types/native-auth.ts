@@ -43,6 +43,10 @@ export interface NativeAccessToken {
   expiresAt: Date;
 }
 
+export interface NativeRefreshRotation extends NativeRefreshTokenPair {
+  userId: Types.ObjectId;
+}
+
 export interface NativeBuyer {
   _id: Types.ObjectId;
   userNick: string;

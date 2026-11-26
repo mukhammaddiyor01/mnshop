@@ -54,4 +54,76 @@ if (
   throw new Error("Native access token claims are not safe");
 }
 
+const originalStartSession = require("mongoose").startSession;
+const originalRefreshModel = service.nativeRefreshSessionModel;
+const activeSession = {
+  _id: "current-session",
+  userId: "507f1f77bcf86cd799439011",
+  deviceId: "device-1",
+  deviceLabel: "Test device",
+  expiresAt: new Date("2026-12-26T00:00:00.000Z"),
+  idleExpiresAt: new Date("2026-12-03T00:00:00.000Z"),
+  revokedAt: undefined,
+  saveCalls: 0,
+  async save() {
+    this.saveCalls += 1;
+  },
+};
+let createdSession;
+let endedSession = false;
+require("mongoose").startSession = async () => ({
+  async withTransaction(callback) {
+    await callback();
+  },
+  async endSession() {
+    endedSession = true;
+  },
+});
+service.nativeRefreshSessionModel = {
+  findOne(query) {
+    if (query.tokenHash !== first.tokenHash) {
+      throw new Error("Refresh rotation looked up an unexpected token hash");
+    }
+    return {
+      select() {
+        return this;
+      },
+      session() {
+        return this;
+      },
+      async exec() {
+        return activeSession;
+      },
+    };
+  },
+  async create(records) {
+    createdSession = { _id: "replacement-session", ...records[0] };
+    return [createdSession];
+  },
+};
+
+service.rotateRefreshSession(first.token, now)
+  .then((rotation) => {
+    if (
+      !rotation
+      || rotation.token === first.token
+      || activeSession.revokedAt?.getTime() !== now.getTime()
+      || activeSession.replacedBySessionId !== "replacement-session"
+      || activeSession.saveCalls !== 1
+      || createdSession.tokenHash === first.token
+      || !endedSession
+    ) {
+      throw new Error("Refresh rotation did not replace the session safely");
+    }
+  })
+  .finally(() => {
+    require("mongoose").startSession = originalStartSession;
+    service.nativeRefreshSessionModel = originalRefreshModel;
+  })
+  .then(() => console.log("Native refresh transaction checks passed"))
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+
 console.log("Native token primitive checks passed");

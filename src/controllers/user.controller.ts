@@ -15,6 +15,7 @@ import { AUTH_TIMER } from "../libs/config";
 import {
   NativeBuyer,
   NativeLoginInput,
+  NativeRefreshRotation,
 } from "../libs/types/native-auth";
 import NativeAuthService from "../models/NativeAuth.service";
 import { UserStatus, UserType } from "../libs/enums/user.enum";
@@ -68,6 +69,37 @@ const toNativeBuyer = (user: User): NativeBuyer => ({
   userPoints: user.userPoints,
   userLikes: user.userLikes,
 });
+
+const parseNativeRefresh = (body: unknown): string => {
+  if (!body || typeof body !== "object") throw nativeLoginFailure();
+
+  const refreshToken = (body as Record<string, unknown>).refreshToken;
+  if (
+    typeof refreshToken !== "string"
+    || refreshToken.length < 48
+    || refreshToken.length > 256
+  ) {
+    throw nativeLoginFailure();
+  }
+
+  return refreshToken;
+};
+
+const sendNativeAuthResponse = (
+  res: Response,
+  user: User,
+  refreshToken: NativeRefreshRotation | { token: string; expiresAt: Date },
+) => {
+  const accessToken = authService.createNativeAccessToken(user);
+
+  return res.status(HttpCode.OK).json({
+    user: toNativeBuyer(user),
+    accessToken: accessToken.token,
+    accessTokenExpiresAt: accessToken.expiresAt.toISOString(),
+    refreshToken: refreshToken.token,
+    refreshTokenExpiresAt: refreshToken.expiresAt.toISOString(),
+  });
+};
 
 const setAccessTokenCookie = (res: Response, token: string) => {
   res.cookie("accessToken", token, {
@@ -140,26 +172,39 @@ userController.nativeLogin = async (req: Request, res: Response) => {
       throw nativeLoginFailure();
     }
 
-    const accessToken = authService.createNativeAccessToken(user);
     const refreshToken = await nativeAuthService.createRefreshSession({
       userId: user._id,
       deviceId: input.deviceId,
       deviceLabel: input.deviceLabel,
     });
 
-    return res.status(HttpCode.OK).json({
-      user: toNativeBuyer(user),
-      accessToken: accessToken.token,
-      accessTokenExpiresAt: accessToken.expiresAt.toISOString(),
-      refreshToken: refreshToken.token,
-      refreshTokenExpiresAt: refreshToken.expiresAt.toISOString(),
-    });
+    return sendNativeAuthResponse(res, user, refreshToken);
   } catch (err) {
     if (err instanceof Errors) {
       return res.status(HttpCode.UNAUTHORIZED).json(nativeLoginFailure());
     }
 
     console.error("Native buyer login failed");
+    return res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.nativeRefresh = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = parseNativeRefresh(req.body);
+    const rotation = await nativeAuthService.rotateRefreshSession(refreshToken);
+    if (!rotation) throw nativeLoginFailure();
+
+    const user = await userService.getActiveBuyerById(rotation.userId);
+    if (!user) throw nativeLoginFailure();
+
+    return sendNativeAuthResponse(res, user, rotation);
+  } catch (err) {
+    if (err instanceof Errors) {
+      return res.status(HttpCode.UNAUTHORIZED).json(nativeLoginFailure());
+    }
+
+    console.error("Native buyer refresh failed");
     return res.status(Errors.standard.code).json(Errors.standard);
   }
 };

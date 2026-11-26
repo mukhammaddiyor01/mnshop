@@ -64,13 +64,19 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - The token primitive check, TypeScript no-emit check, production build, and diff whitespace check passed.
 - No MongoDB connection, HTTP integration test, browser, Expo, Android, iOS, or device check was run.
 
+9. `feat: add native refresh endpoint`
+
+- Added `POST /auth/native/refresh`, which transactionally validates, revokes, and replaces one refresh-session record before returning the existing safe token envelope.
+- The focused mock transaction check, TypeScript no-emit check, production build, and diff whitespace check passed.
+- No isolated MongoDB replica set or real HTTP request was available, so transaction behavior and route responses are not accepted as runtime-verified.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 1 — Native auth correctness and privacy
 
-1. `feat: add native refresh endpoint` — atomically rotate one refresh session, enforce absolute and idle expiry, and return the existing safe response envelope. An isolated MongoDB test must cover the successful rotation and expired token.
+1. `fix: verify native refresh rotation` — run isolated, transaction-capable MongoDB and real HTTP checks for successful rotation, expired/idle-expired tokens, no cookie mutation, and secret-free responses. Do not begin later native auth gates until this passes.
 2. `fix: detect native refresh reuse` — revoke all native sessions for the buyer if a revoked token is reused. Test the reuse path with an isolated database.
 3. `fix: enforce native bearer verification` — validate HS256, audience, expiry, subject, role, `authVersion`, and revoked `jti` before native protected routes use a bearer identity.
 4. `feat: add native logout endpoints` — support per-device and all-device logout without changing browser cookie logout. Test revocation and `authVersion` invalidation.
@@ -109,4 +115,4 @@ git diff --check
 git diff
 ```
 
-Preserve the existing commits and do not mix native auth work into a different security change. The next implementation task is Gate 1.1: `feat: add native refresh endpoint`.
+Preserve the existing commits and do not mix native auth work into a different security change. The next implementation task is Gate 1.1 verification: `fix: verify native refresh rotation`.

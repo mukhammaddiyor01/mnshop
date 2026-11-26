@@ -14,6 +14,7 @@ import * as bcrypt from "bcryptjs";
 import { Product } from "../libs/types/product";
 import { Seller } from "../libs/types/seller";
 import { randomBytes } from "crypto";
+import { Types } from "mongoose";
 
 class UserService {
   private readonly userModel;
@@ -154,6 +155,21 @@ class UserService {
     }
 
     return result as User;
+  }
+
+  public async getActiveBuyerById(
+    userId: Types.ObjectId,
+  ): Promise<User | null> {
+    const result = await this.userModel
+      .findOne({
+        _id: userId,
+        userType: UserType.BUYER,
+        userStatus: UserStatus.ACTIVE,
+      })
+      .lean()
+      .exec();
+
+    return result as User | null;
   }
 
   public async updateUser(

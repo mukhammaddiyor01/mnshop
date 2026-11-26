@@ -1,11 +1,12 @@
 import { createHmac, randomBytes } from "crypto";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import {
   NATIVE_REFRESH_IDLE_DAYS,
   NATIVE_REFRESH_TOKEN_DAYS,
 } from "../libs/config";
 import {
   NativeRefreshTokenPair,
+  NativeRefreshRotation,
 } from "../libs/types/native-auth";
 import NativeRefreshSessionModel from "../schema/NativeRefreshSession.model";
 import RevokedNativeAccessTokenModel from "../schema/RevokedNativeAccessToken.model";
@@ -72,6 +73,62 @@ class NativeAuthService {
     });
 
     return pair;
+  }
+
+  public async rotateRefreshSession(
+    rawToken: string,
+    now = new Date(),
+  ): Promise<NativeRefreshRotation | null> {
+    const tokenHash = this.hashRefreshToken(rawToken);
+    const databaseSession = await mongoose.startSession();
+    let rotation: NativeRefreshRotation | null = null;
+
+    try {
+      await databaseSession.withTransaction(async () => {
+        const current = await this.nativeRefreshSessionModel
+          .findOne({ tokenHash })
+          .select("+tokenHash")
+          .session(databaseSession)
+          .exec();
+
+        if (
+          !current
+          || current.revokedAt
+          || current.expiresAt <= now
+          || current.idleExpiresAt <= now
+        ) {
+          return;
+        }
+
+        const pair = this.createRefreshTokenPair(now);
+        const [replacement] = await this.nativeRefreshSessionModel.create(
+          [{
+            userId: current.userId,
+            tokenHash: pair.tokenHash,
+            deviceId: current.deviceId,
+            deviceLabel: current.deviceLabel,
+            expiresAt: pair.expiresAt,
+            idleExpiresAt: pair.idleExpiresAt,
+            lastUsedAt: now,
+          }],
+          { session: databaseSession },
+        );
+
+        current.revokedAt = now;
+        current.replacedBySessionId = replacement._id;
+        current.lastUsedAt = now;
+        await current.save({ session: databaseSession });
+
+        rotation = {
+          ...pair,
+          userId: current.userId,
+        };
+      });
+
+      return rotation;
+    } finally {
+      await databaseSession.endSession();
+    }
   }
 
   public async revokeAccessToken(
