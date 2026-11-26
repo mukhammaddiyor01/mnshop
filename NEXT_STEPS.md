@@ -89,13 +89,19 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - Token primitive check, TypeScript no-emit, and production build passed.
 - Production-only audit improved from 9 findings (1 critical, 3 high, 5 moderate) to 8 (1 critical, 3 high, 4 moderate). The remaining runtime dependency findings are separate work.
 
+13. `fix: update moment security patch`
+
+- Updated Moment from `2.30.1` to the compatible `2.31.0` audit-fix release.
+- Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
+- Production-only audit improved from 8 findings (1 critical, 3 high, 4 moderate) to 7 (1 critical, 3 high, 3 moderate). The remaining transitive runtime dependency findings require a separate dependency-path review.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 0 — Runtime dependency security
 
-1. `fix: update vulnerable runtime dependencies` — continue with the remaining production-only audit findings, starting with direct Moment and then Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+1. `fix: review transitive runtime dependencies` — trace each remaining production-only audit path, starting with the critical Express/proxy dependency path, then apply only compatible, separately verified patches. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
 
 ### Gate 1 — Native auth correctness and privacy
 
