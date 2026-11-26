@@ -21,3 +21,5 @@ Updated direct Morgan from 1.11.0 to 1.12.1, the audit-provided compatible fix f
 Updated direct Moment from 2.30.1 to 2.31.0, the audit-provided compatible fix for the locale path traversal advisory. Native refresh integration and build checks passed; the production-only audit reduced to 7 findings (1 critical, 3 high, 3 moderate).
 
 Updated the Express-compatible transitive `proxy-addr` resolution from 2.0.7 to 2.0.8, which removes the critical IP-spoofing advisory without a framework migration. Native refresh integration and build checks passed; the production-only audit reduced to 6 findings (0 critical, 3 high, 3 moderate).
+
+Updated the Express-compatible transitive `body-parser` resolution from 1.20.6 to 1.20.9, which removes the high-severity compressed-request DoS advisory without a framework migration. Native refresh integration and build checks passed; the production-only audit reduced to 5 findings (0 critical, 2 high, 3 moderate).
