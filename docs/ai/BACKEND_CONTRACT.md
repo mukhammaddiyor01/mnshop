@@ -8,4 +8,4 @@ Browser authentication currently uses an HttpOnly `accessToken` cookie. The back
 
 ## Native contract
 
-The proposed native auth design is documented in [NATIVE_AUTH_CONTRACT.md](NATIVE_AUTH_CONTRACT.md). It has not been implemented. Until its staged rollout is complete, an Expo app must not invent a token response or persist browser cookies as mobile credentials.
+The staged native auth design is documented in [NATIVE_AUTH_CONTRACT.md](NATIVE_AUTH_CONTRACT.md). `POST /auth/native/login` is implemented for active password-authenticated buyers and returns a safe access/refresh envelope without setting a cookie. Refresh, logout, Google login, and native bearer verification are not implemented. Until those stages are complete, an Expo app must not invent additional token behavior or persist browser cookies as mobile credentials.

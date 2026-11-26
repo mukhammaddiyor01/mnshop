@@ -12,6 +12,12 @@ import UserService from "../models/User.service";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
+import {
+  NativeBuyer,
+  NativeLoginInput,
+} from "../libs/types/native-auth";
+import NativeAuthService from "../models/NativeAuth.service";
+import { UserStatus, UserType } from "../libs/enums/user.enum";
 
 // SPA - React uchun
 
@@ -20,6 +26,48 @@ const userController: T = {};
 const userService = new UserService();
 
 const authService = new AuthService();
+
+const nativeAuthService = new NativeAuthService();
+
+const nativeLoginFailure = () =>
+  new Errors(HttpCode.UNAUTHORIZED, Message.NATIVE_AUTH_FAILED);
+
+const parseNativeLogin = (body: unknown): NativeLoginInput => {
+  if (!body || typeof body !== "object") throw nativeLoginFailure();
+
+  const input = body as Record<string, unknown>;
+  const userNick = typeof input.userNick === "string"
+    ? input.userNick.trim()
+    : "";
+  const userPassword = typeof input.userPassword === "string"
+    ? input.userPassword
+    : "";
+  const deviceId = typeof input.deviceId === "string"
+    ? input.deviceId.trim()
+    : "";
+  const deviceLabel = typeof input.deviceLabel === "string"
+    ? input.deviceLabel.trim()
+    : undefined;
+
+  if (!userNick || !userPassword || !deviceId || userNick.length > 128
+    || deviceId.length > 128 || (deviceLabel && deviceLabel.length > 128)) {
+    throw nativeLoginFailure();
+  }
+
+  return { userNick, userPassword, deviceId, deviceLabel };
+};
+
+const toNativeBuyer = (user: User): NativeBuyer => ({
+  _id: user._id,
+  userNick: user.userNick,
+  userEmail: user.userEmail,
+  userPhone: user.userPhone,
+  userAddress: user.userAddress,
+  userDesc: user.userDesc,
+  userImage: user.userImage,
+  userPoints: user.userPoints,
+  userLikes: user.userLikes,
+});
 
 const setAccessTokenCookie = (res: Response, token: string) => {
   res.cookie("accessToken", token, {
@@ -74,6 +122,45 @@ userController.login = async (req: Request, res: Response) => {
     console.log("ERROR, login:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+userController.nativeLogin = async (req: Request, res: Response) => {
+  try {
+    const input = parseNativeLogin(req.body);
+    const user = await userService.login({
+      userNick: input.userNick,
+      userPassword: input.userPassword,
+    });
+
+    if (
+      user.userType !== UserType.BUYER
+      || user.userStatus !== UserStatus.ACTIVE
+    ) {
+      throw nativeLoginFailure();
+    }
+
+    const accessToken = authService.createNativeAccessToken(user);
+    const refreshToken = await nativeAuthService.createRefreshSession({
+      userId: user._id,
+      deviceId: input.deviceId,
+      deviceLabel: input.deviceLabel,
+    });
+
+    return res.status(HttpCode.OK).json({
+      user: toNativeBuyer(user),
+      accessToken: accessToken.token,
+      accessTokenExpiresAt: accessToken.expiresAt.toISOString(),
+      refreshToken: refreshToken.token,
+      refreshTokenExpiresAt: refreshToken.expiresAt.toISOString(),
+    });
+  } catch (err) {
+    if (err instanceof Errors) {
+      return res.status(HttpCode.UNAUTHORIZED).json(nativeLoginFailure());
+    }
+
+    console.error("Native buyer login failed");
+    return res.status(Errors.standard.code).json(Errors.standard);
   }
 };
 

@@ -27,6 +27,7 @@ export enum Message {
   GOOGLE_AUTH_FAILED = "Google authentication failed!",
   GOOGLE_PROFILE_REQUIRED = "Username and phone are required to create a Google buyer account!",
   BUYER_ACCOUNT_REQUIRED = "A buyer account is required!",
+  NATIVE_AUTH_FAILED = "Native authentication failed!",
   NOT_ALLOWED = "NOT_ALLOWED",
 }
 

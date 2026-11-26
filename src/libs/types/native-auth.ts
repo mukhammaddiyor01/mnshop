@@ -30,3 +30,27 @@ export interface NativeRefreshTokenPair {
   expiresAt: Date;
   idleExpiresAt: Date;
 }
+
+export interface NativeLoginInput {
+  userNick: string;
+  userPassword: string;
+  deviceId: string;
+  deviceLabel?: string;
+}
+
+export interface NativeAccessToken {
+  token: string;
+  expiresAt: Date;
+}
+
+export interface NativeBuyer {
+  _id: Types.ObjectId;
+  userNick: string;
+  userEmail: string;
+  userPhone?: string;
+  userAddress?: string;
+  userDesc?: string;
+  userImage?: string;
+  userPoints: number;
+  userLikes: number;
+}

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Partially implemented.** The first persistence increment now provides `authVersion`, refresh-session and revoked-access-token schemas, TTL indexes, and HMAC-hashed opaque refresh-token primitives. Existing browser authentication remains unchanged. Native endpoints, access-token verification, rotation, and Expo integration are not implemented yet.
+**Partially implemented.** The first persistence increment provides `authVersion`, refresh-session and revoked-access-token schemas, TTL indexes, and HMAC-hashed opaque refresh-token primitives. `POST /auth/native/login` now creates buyer-only native sessions with a safe token response. Existing browser authentication remains unchanged. Google login, access-token verification, rotation, logout, and Expo integration are not implemented yet.
 
 ## Goals
 
@@ -28,6 +28,10 @@ New endpoints are versioned by intent, not by user-provided headers:
 | `POST /auth/native/logout-all` | Revoke all native sessions for the authenticated buyer |
 
 `/login`, `/signup`, `/auth/google`, `/auth/me`, and `/logout` retain their current browser-compatible behavior. Native routes are buyer-only. Seller/admin native support is not part of the mobile MVP.
+
+### Implemented native endpoint
+
+`POST /auth/native/login` accepts only `userNick`, `userPassword`, `deviceId`, and an optional non-sensitive `deviceLabel`. It authenticates an active buyer, creates one refresh-session record, and responds with the documented safe user/access/refresh envelope. Invalid credentials, blocked buyers, and non-buyer accounts all return the same `401` native-auth failure response. It does not set a browser cookie.
 
 ## Token format and lifetime
 
@@ -96,5 +100,6 @@ Each step requires its own Markdown update and focused tests. Use an isolated te
 - [x] Refresh sessions persist only a keyed hash, device metadata, expiry, idle expiry, and revocation metadata.
 - [x] Revoked access-token IDs use a TTL-backed denylist schema.
 - [x] A focused primitive check verifies random opaque token generation, deterministic hashing, and expiry ordering.
-- [ ] Native routes, safe response envelopes, access-JWT verification, refresh rotation, reuse detection, and logout behavior.
+- [x] Password buyer login endpoint with allowlisted input, a safe response envelope, explicit HS256/audience access-token claims, and no browser cookie mutation.
+- [ ] Google login, access-token verification, refresh rotation, reuse detection, and logout behavior.
 - [ ] An isolated-database persistence test for MongoDB indexes and queries.

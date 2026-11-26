@@ -6,5 +6,6 @@
 - Defined the unimplemented native buyer auth contract and its incremental rollout sequence.
 - Added the first native-auth persistence increment: user `authVersion`, refresh-session and revoked-access-token TTL schemas, and HMAC-hashed opaque token primitives.
 - Added `npm run test:native-token-primitives` for deterministic token-primitive checks; no database connection is used by that check.
+- Added buyer-only `POST /auth/native/login` with runtime-allowlisted input, a safe response envelope, and no browser-cookie mutation.
 
 See Git history and `NEXT_STEPS.md` for completed security commits and the mutable next-task list.

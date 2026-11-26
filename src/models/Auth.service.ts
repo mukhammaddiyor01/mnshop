@@ -1,8 +1,10 @@
-import { AUTH_TIMER } from "../libs/config";
+import { AUTH_TIMER, NATIVE_ACCESS_TOKEN_MINUTES } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { GoogleProfile, User } from "../libs/types/user";
+import { NativeAccessToken } from "../libs/types/native-auth";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import { randomUUID } from "crypto";
 
 class AuthService {
     private readonly secretToken: string;
@@ -45,6 +47,28 @@ class AuthService {
     public async checkAuth(token: string): Promise<User> {
         const result = jwt.verify(token, this.secretToken) as User;
         return result;
+    }
+
+    public createNativeAccessToken(user: User): NativeAccessToken {
+        const expiresAt = new Date(
+            Date.now() + NATIVE_ACCESS_TOKEN_MINUTES * 60 * 1000,
+        );
+        const token = jwt.sign(
+            {
+                role: user.userType,
+                authVersion: user.authVersion ?? 0,
+            },
+            this.secretToken,
+            {
+                algorithm: "HS256",
+                audience: "mnshop-mobile",
+                subject: String(user._id),
+                jwtid: randomUUID(),
+                expiresIn: NATIVE_ACCESS_TOKEN_MINUTES * 60,
+            },
+        );
+
+        return { token, expiresAt };
     }
 
     public async verifyGoogleCredential(

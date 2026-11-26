@@ -56,9 +56,17 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - The primitive check, TypeScript no-emit check, and diff whitespace check passed.
 - No database connection, native HTTP endpoint, browser auth behavior, or Expo code was exercised or changed.
 
+8. `feat: add native login endpoint`
+
+- Added buyer-only `POST /auth/native/login` with allowlisted runtime input and a safe JSON token response.
+- Browser `/login` and cookie behavior remain unchanged; the native endpoint does not set a cookie.
+- Native credential failures intentionally use one `401` response to avoid account-type and username enumeration.
+- The token primitive check, TypeScript no-emit check, production build, and diff whitespace check passed.
+- No MongoDB connection, HTTP integration test, browser, Expo, Android, iOS, or device check was run.
+
 ## Remaining findings
 
-1. Implement `feat: expose native auth endpoints` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Keep browser cookie routes unchanged and use an isolated test database for persistence tests; do not use private or production data.
+1. Implement `feat: add native refresh endpoint` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Rotate refresh sessions atomically, detect reuse, and keep browser cookie routes unchanged. Use an isolated test database for persistence tests; do not use private or production data.
 2. Add focused HTTP-boundary tests for rejected privileged signup fields, invalid upload MIME/size, payment retry reconciliation, missing/invalid admin CSRF, and admin session regeneration.
 3. Re-run backend typecheck/build after each small commit. Record API, browser, and device results separately; file presence is not runtime verification.
 
