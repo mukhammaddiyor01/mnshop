@@ -5,7 +5,7 @@
 | Backend route/service | typecheck/build and focused API or middleware check |
 | Admin session/CSRF | `npm run test:admin-csrf`, build, browser check when available |
 | Native password login | `npm run test:native-token-primitives`, typecheck/build; later add isolated MongoDB HTTP and persistence tests |
-| Native refresh/revocation | mock rotation check currently passes; isolated transaction-capable MongoDB + HTTP tests for rotation, expiry, reuse, per-device logout, all-device logout, and safe response allowlists remain required |
+| Native refresh/revocation | `npm run test:native-refresh` verifies rotation, absolute/idle expiry rejection, safe response allowlists, and no cookie; reuse and logout tests remain required |
 | Expo feature | TypeScript/lint/test plus relevant Android/iOS/device check |
 | Checkout/payment | backend validation and provider-safe integration check; do not use production credentials without authorization |
 

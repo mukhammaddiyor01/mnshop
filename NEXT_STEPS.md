@@ -70,13 +70,22 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - The focused mock transaction check, TypeScript no-emit check, production build, and diff whitespace check passed.
 - No isolated MongoDB replica set or real HTTP request was available, so transaction behavior and route responses are not accepted as runtime-verified.
 
+10. `fix: verify native refresh rotation`
+
+- Added `mongodb-memory-server` as a test-only development dependency and `npm run test:native-refresh`.
+- A temporary replica set and localhost Express server verified successful rotation, absolute/idle expiry rejection, safe response fields, raw-token absence, and no `Set-Cookie` header.
+- No private/application database, browser, Expo, Android, iOS, or device was used.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
+### Gate 0 — Runtime dependency security
+
+1. `fix: update vulnerable runtime dependencies` — resolve the current `npm audit --omit=dev` findings in small compatibility-preserving updates, starting with direct Mongoose, Morgan, Moment, and their Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+
 ### Gate 1 — Native auth correctness and privacy
 
-1. `fix: verify native refresh rotation` — run isolated, transaction-capable MongoDB and real HTTP checks for successful rotation, expired/idle-expired tokens, no cookie mutation, and secret-free responses. Do not begin later native auth gates until this passes.
 2. `fix: detect native refresh reuse` — revoke all native sessions for the buyer if a revoked token is reused. Test the reuse path with an isolated database.
 3. `fix: enforce native bearer verification` — validate HS256, audience, expiry, subject, role, `authVersion`, and revoked `jti` before native protected routes use a bearer identity.
 4. `feat: add native logout endpoints` — support per-device and all-device logout without changing browser cookie logout. Test revocation and `authVersion` invalidation.
@@ -115,4 +124,4 @@ git diff --check
 git diff
 ```
 
-Preserve the existing commits and do not mix native auth work into a different security change. The next implementation task is Gate 1.1 verification: `fix: verify native refresh rotation`.
+Preserve the existing commits and do not mix native auth work into a different security change. The next implementation task is Gate 0.1: `fix: update vulnerable runtime dependencies`.

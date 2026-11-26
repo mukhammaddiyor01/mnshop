@@ -10,4 +10,6 @@ Implemented the first native-auth persistence building block: an `authVersion` f
 
 Added `POST /auth/native/login` for active password-authenticated buyers. It emits a minimal HS256 access token with an explicit mobile audience and an opaque refresh token, while keeping browser cookie login unchanged. Google login, refresh rotation, native bearer verification, and logout remain unimplemented.
 
-Implemented `POST /auth/native/refresh` as a transaction: a valid, current refresh session is revoked and replaced before a new safe response is returned. The focused check uses a mocked transaction only because no isolated MongoDB service is available; MongoDB transaction and HTTP-boundary verification remain open.
+Implemented `POST /auth/native/refresh` as a transaction: a valid, current refresh session is revoked and replaced before a new safe response is returned. A temporary isolated MongoDB replica set and localhost HTTP server verified successful rotation, absolute/idle expiry rejection, safe responses, and cookie absence; no private database was used.
+
+The production-only dependency audit found existing runtime advisories (11 total, including 2 critical). The audit resulted in a documented, separate remediation gate; no broad or forced dependency upgrade was applied during native-refresh verification.

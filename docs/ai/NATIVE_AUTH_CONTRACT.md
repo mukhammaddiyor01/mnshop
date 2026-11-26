@@ -2,7 +2,7 @@
 
 ## Status
 
-**Partially implemented.** The first persistence increment provides `authVersion`, refresh-session and revoked-access-token schemas, TTL indexes, and HMAC-hashed opaque refresh-token primitives. `POST /auth/native/login` creates buyer-only native sessions and `POST /auth/native/refresh` performs transactional rotation with a safe token response. Existing browser authentication remains unchanged. The refresh path still requires isolated MongoDB and HTTP verification before the next auth gate. Google login, access-token verification, reuse handling, logout, and Expo integration are not implemented yet.
+**Partially implemented.** The first persistence increment provides `authVersion`, refresh-session and revoked-access-token schemas, TTL indexes, and HMAC-hashed opaque refresh-token primitives. `POST /auth/native/login` creates buyer-only native sessions and `POST /auth/native/refresh` performs verified transactional rotation with a safe token response. Existing browser authentication remains unchanged. Google login, access-token verification, reuse handling, logout, and Expo integration are not implemented yet.
 
 ## Goals
 
@@ -33,7 +33,7 @@ New endpoints are versioned by intent, not by user-provided headers:
 
 `POST /auth/native/login` accepts only `userNick`, `userPassword`, `deviceId`, and an optional non-sensitive `deviceLabel`. It authenticates an active buyer, creates one refresh-session record, and responds with the documented safe user/access/refresh envelope. Invalid credentials, blocked buyers, and non-buyer accounts all return the same `401` native-auth failure response. It does not set a browser cookie.
 
-`POST /auth/native/refresh` accepts only a raw `refreshToken`. It hashes the value, checks the current session's revocation, absolute expiry, and idle expiry inside a MongoDB transaction, marks that session revoked, creates its replacement, then responds with the same safe envelope. It does not set a browser cookie. A transaction-capable isolated MongoDB test and a real HTTP boundary test remain mandatory before treating this path as verified.
+`POST /auth/native/refresh` accepts only a raw `refreshToken`. It hashes the value, checks the current session's revocation, absolute expiry, and idle expiry inside a MongoDB transaction, marks that session revoked, creates its replacement, then responds with the same safe envelope. It does not set a browser cookie. Its isolated replica-set and real HTTP checks cover successful rotation plus absolute/idle expiry rejection, response allowlisting, and cookie absence.
 
 ## Token format and lifetime
 
@@ -103,6 +103,6 @@ Each step requires its own Markdown update and focused tests. Use an isolated te
 - [x] Revoked access-token IDs use a TTL-backed denylist schema.
 - [x] A focused primitive check verifies random opaque token generation, deterministic hashing, and expiry ordering.
 - [x] Password buyer login endpoint with allowlisted input, a safe response envelope, explicit HS256/audience access-token claims, and no browser cookie mutation.
-- [-] Refresh endpoint implementation and mock transaction check; isolated MongoDB and HTTP verification remain open.
+- [x] Refresh endpoint, mock transaction check, isolated replica-set persistence check, and HTTP boundary check.
 - [ ] Google login, access-token verification, refresh reuse detection, and logout behavior.
 - [ ] An isolated-database persistence test for MongoDB indexes and queries.
