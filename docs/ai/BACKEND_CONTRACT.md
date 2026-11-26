@@ -6,14 +6,6 @@ The current API includes buyer login/signup, Google auth, `/auth/me`, buyer prod
 
 Browser authentication currently uses an HttpOnly `accessToken` cookie. The backend also accepts a Bearer token, but login does not return a token body intended for native storage.
 
-## Required decision before mobile implementation
+## Native contract
 
-Define and implement, in a separate small commit series:
-
-1. Native access-token response shape and expiry.
-2. Refresh-token rotation, storage, and revocation model.
-3. Browser cookie compatibility during migration.
-4. Logout behavior for a lost/stolen device.
-5. Authenticated API error contract and retry policy.
-
-Until this is decided, an Expo app must not invent a token response or persist browser cookies as mobile credentials.
+The proposed native auth design is documented in [NATIVE_AUTH_CONTRACT.md](NATIVE_AUTH_CONTRACT.md). It has not been implemented. Until its staged rollout is complete, an Expo app must not invent a token response or persist browser cookies as mobile credentials.

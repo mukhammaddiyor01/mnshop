@@ -51,13 +51,8 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 
 ## Remaining findings
 
-1. Define the native auth contract before changing responses:
-   - access token delivery for mobile;
-   - refresh token rotation and storage;
-   - logout/revocation semantics;
-   - SecureStore/Android Keystore ownership in the mobile app;
-   - browser cookie behavior must remain compatible.
-2. Add focused HTTP-boundary tests for rejected privileged signup fields, invalid upload MIME/size, payment retry reconciliation, missing/invalid admin CSRF, and admin session regeneration. Use an isolated test database if persistence is exercised.
+1. Implement `feat: add native token persistence` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Use an isolated test database for persistence tests; do not use private or production data.
+2. Add focused HTTP-boundary tests for rejected privileged signup fields, invalid upload MIME/size, payment retry reconciliation, missing/invalid admin CSRF, and admin session regeneration.
 3. Re-run backend typecheck/build after each small commit. Record API, browser, and device results separately; file presence is not runtime verification.
 
 ## Resume command

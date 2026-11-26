@@ -11,3 +11,7 @@ Every implementation or documentation unit is committed separately with only `fi
 ## 2026-11-26: platform-independent sharing only
 
 Potential shared packages are limited to verified types, pure validation, mappings, domain rules, and design tokens. Platform UI and storage remain separate.
+
+## 2026-11-26: native auth is additive and device-scoped
+
+Native buyer authentication will use separate `/auth/native/*` endpoints with a short-lived JWT, opaque rotation refresh token, per-device revocation, and an all-device auth version. Browser cookie behavior remains compatible during rollout. See `NATIVE_AUTH_CONTRACT.md`; implementation is intentionally split into small commits.
