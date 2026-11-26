@@ -95,13 +95,19 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
 - Production-only audit improved from 8 findings (1 critical, 3 high, 4 moderate) to 7 (1 critical, 3 high, 3 moderate). The remaining transitive runtime dependency findings require a separate dependency-path review.
 
+14. `fix: update proxy addr security patch`
+
+- Updated Express's compatible transitive `proxy-addr` resolution from `2.0.7` to `2.0.8`; no framework migration or direct manifest dependency was added.
+- Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
+- Production-only audit improved from 7 findings (1 critical, 3 high, 3 moderate) to 6 (0 critical, 3 high, 3 moderate). The remaining transitive dependency findings require separate review.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 0 — Runtime dependency security
 
-1. `fix: review transitive runtime dependencies` — trace each remaining production-only audit path, starting with the critical Express/proxy dependency path, then apply only compatible, separately verified patches. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+1. `fix: review transitive runtime dependencies` — trace each remaining production-only audit path, starting with the high-severity Express/body-parser path, then apply only compatible, separately verified patches. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
 
 ### Gate 1 — Native auth correctness and privacy
 

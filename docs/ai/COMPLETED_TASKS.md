@@ -11,5 +11,6 @@
 - Updated Mongoose from 6.2.9 to 6.13.13 and adapted service type boundaries to its stricter inference. The production-only audit reduced from 11 findings to 9; remaining dependency remediation stays separate.
 - Updated Morgan from 1.11.0 to 1.12.1. The production-only audit reduced from 9 findings to 8; remaining dependency remediation stays separate.
 - Updated Moment from 2.30.1 to 2.31.0. The production-only audit reduced from 8 findings to 7; remaining transitive dependency remediation stays separate.
+- Updated the compatible transitive `proxy-addr` resolution from 2.0.7 to 2.0.8. The production-only audit reduced from 7 findings to 6 and has no remaining critical finding.
 
 See Git history and `NEXT_STEPS.md` for completed security commits and the mutable next-task list.
