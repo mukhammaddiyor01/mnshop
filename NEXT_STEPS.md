@@ -83,13 +83,19 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
 - Production-only audit improved from 11 findings (2 critical, 3 high, 6 moderate) to 9 (1 critical, 3 high, 5 moderate). The remaining runtime dependency findings are separate work.
 
+12. `fix: update morgan security patch`
+
+- Updated Morgan from `1.11.0` to the compatible `1.12.1` audit-fix release.
+- Token primitive check, TypeScript no-emit, and production build passed.
+- Production-only audit improved from 9 findings (1 critical, 3 high, 5 moderate) to 8 (1 critical, 3 high, 4 moderate). The remaining runtime dependency findings are separate work.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 0 — Runtime dependency security
 
-1. `fix: update vulnerable runtime dependencies` — continue with the remaining production-only audit findings, starting with direct Morgan and Moment and then their Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+1. `fix: update vulnerable runtime dependencies` — continue with the remaining production-only audit findings, starting with direct Moment and then Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
 
 ### Gate 1 — Native auth correctness and privacy
 

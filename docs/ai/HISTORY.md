@@ -15,3 +15,5 @@ Implemented `POST /auth/native/refresh` as a transaction: a valid, current refre
 The production-only dependency audit found existing runtime advisories (11 total, including 2 critical). The audit resulted in a documented, separate remediation gate; no broad or forced dependency upgrade was applied during native-refresh verification.
 
 Updated direct Mongoose from 6.2.9 to 6.13.13, the audit-provided compatible fix. Service return casts make the pre-existing runtime schemas explicit to the newer Mongoose TypeScript inference. Native refresh integration and build checks passed; the production-only audit reduced to 9 findings (1 critical, 3 high, 5 moderate).
+
+Updated direct Morgan from 1.11.0 to 1.12.1, the audit-provided compatible fix for log injection advisories. Typecheck and build passed; the production-only audit reduced to 8 findings (1 critical, 3 high, 4 moderate).
