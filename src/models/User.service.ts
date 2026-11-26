@@ -49,7 +49,7 @@ class UserService {
         userImage: input.userImage,
       });
       result.userPassword = "";
-      return result.toJSON();
+      return result.toJSON() as unknown as User;
     } catch (_err) {
       console.error("Buyer signup failed");
       throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
@@ -121,7 +121,7 @@ class UserService {
       }
 
       await existingUser.save();
-      return existingUser.toJSON();
+      return existingUser.toJSON() as unknown as User;
     }
 
     const nicknameBase = (profile.name || profile.email.split("@")[0])

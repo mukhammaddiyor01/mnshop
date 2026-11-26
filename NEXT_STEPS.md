@@ -76,13 +76,20 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - A temporary replica set and localhost Express server verified successful rotation, absolute/idle expiry rejection, safe response fields, raw-token absence, and no `Set-Cookie` header.
 - No private/application database, browser, Expo, Android, iOS, or device was used.
 
+11. `fix: update mongoose security patch`
+
+- Updated Mongoose from `6.2.9` to the compatible `6.13.13` audit-fix release.
+- Adapted only service return-type boundaries to Mongoose's stricter TypeScript inference; business behavior and schema values are unchanged.
+- Native refresh integration, token primitive checks, TypeScript no-emit, and production build passed.
+- Production-only audit improved from 11 findings (2 critical, 3 high, 6 moderate) to 9 (1 critical, 3 high, 5 moderate). The remaining runtime dependency findings are separate work.
+
 ## Ordered rollout
 
 Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
 
 ### Gate 0 — Runtime dependency security
 
-1. `fix: update vulnerable runtime dependencies` — resolve the current `npm audit --omit=dev` findings in small compatibility-preserving updates, starting with direct Mongoose, Morgan, Moment, and their Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
+1. `fix: update vulnerable runtime dependencies` — continue with the remaining production-only audit findings, starting with direct Morgan and Moment and then their Express-path transitive dependencies. Re-run focused checks, typecheck/build, and a fresh production-only audit after each change. Do not use `npm audit fix --force` or perform a framework migration without a separate review.
 
 ### Gate 1 — Native auth correctness and privacy
 

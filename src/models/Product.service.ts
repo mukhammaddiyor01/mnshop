@@ -65,7 +65,7 @@ class ProductService {
         })
         .exec();
 
-      return result;
+      return result as unknown as Product[];
     } catch (err) {
       console.log("Error, ProductService.getAllProducts:", err);
 
@@ -78,13 +78,13 @@ class ProductService {
 
   public async getPublicProducts(): Promise<Product[]> {
     try {
-      return await this.productModel
+      return (await this.productModel
         .find({
           productStatus: ProductStatus.ACTIVE,
           productLeftCount: { $gt: 0 },
         })
         .sort({ createdAt: -1 })
-        .exec();
+        .exec()) as unknown as Product[];
     } catch (err) {
       console.log("Error, ProductService.getPublicProducts:", err);
       throw new Errors(
@@ -144,7 +144,7 @@ class ProductService {
         throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
       }
 
-      return products;
+      return products as unknown as Product[];
     } catch (err) {
       console.log("Error, ProductService.getProductsByIds:", err);
 
@@ -218,7 +218,7 @@ class ProductService {
       const product = this.normalizeProductInput(input);
       this.validateProductInput(product);
 
-      return await this.productModel.create(product);
+      return (await this.productModel.create(product)) as unknown as Product;
     } catch (err) {
       console.error("Error, model:createNewProduct:", err);
       if (err instanceof Errors) throw err;
@@ -398,7 +398,7 @@ class ProductService {
         throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
       }
 
-      return result;
+      return result as unknown as Product;
     } catch (err) {
       console.log("Error, ProductService.updateChosenProduct:", err);
 

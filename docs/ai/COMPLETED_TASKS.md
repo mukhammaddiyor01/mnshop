@@ -8,5 +8,6 @@
 - Added `npm run test:native-token-primitives` for deterministic token-primitive checks; no database connection is used by that check.
 - Added buyer-only `POST /auth/native/login` with runtime-allowlisted input, a safe response envelope, and no browser-cookie mutation.
 - Implemented transactional `POST /auth/native/refresh`, a mock transaction check, and isolated MongoDB replica-set/HTTP verification for rotation, expiry rejection, safe responses, and cookie absence.
+- Updated Mongoose from 6.2.9 to 6.13.13 and adapted service type boundaries to its stricter inference. The production-only audit reduced from 11 findings to 9; remaining dependency remediation stays separate.
 
 See Git history and `NEXT_STEPS.md` for completed security commits and the mutable next-task list.

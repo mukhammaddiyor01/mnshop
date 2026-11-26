@@ -32,7 +32,7 @@ class SellerService {
         try{
             const result = await this.sellerModel.create(input);
             result.sellerPassword= "";
-            return result.toJSON();
+            return result.toJSON() as unknown as Seller;
         } catch(_err) {
             console.error("Seller signup failed")
             throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);

@@ -16,6 +16,8 @@ const { UserStatus, UserType } = require("../src/libs/enums/user.enum");
 
 const nativeAuthService = new NativeAuthService();
 
+mongoose.set("strictQuery", false);
+
 const closeServer = (server) => new Promise((resolve, reject) => {
   server.close((error) => (error ? reject(error) : resolve()));
 });

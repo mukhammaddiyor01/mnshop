@@ -13,3 +13,5 @@ Added `POST /auth/native/login` for active password-authenticated buyers. It emi
 Implemented `POST /auth/native/refresh` as a transaction: a valid, current refresh session is revoked and replaced before a new safe response is returned. A temporary isolated MongoDB replica set and localhost HTTP server verified successful rotation, absolute/idle expiry rejection, safe responses, and cookie absence; no private database was used.
 
 The production-only dependency audit found existing runtime advisories (11 total, including 2 critical). The audit resulted in a documented, separate remediation gate; no broad or forced dependency upgrade was applied during native-refresh verification.
+
+Updated direct Mongoose from 6.2.9 to 6.13.13, the audit-provided compatible fix. Service return casts make the pre-existing runtime schemas explicit to the newer Mongoose TypeScript inference. Native refresh integration and build checks passed; the production-only audit reduced to 9 findings (1 critical, 3 high, 5 moderate).
