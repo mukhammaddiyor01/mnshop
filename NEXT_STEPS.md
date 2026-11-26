@@ -64,11 +64,40 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - The token primitive check, TypeScript no-emit check, production build, and diff whitespace check passed.
 - No MongoDB connection, HTTP integration test, browser, Expo, Android, iOS, or device check was run.
 
-## Remaining findings
+## Ordered rollout
 
-1. Implement `feat: add native refresh endpoint` from `docs/ai/NATIVE_AUTH_CONTRACT.md`. Rotate refresh sessions atomically, detect reuse, and keep browser cookie routes unchanged. Use an isolated test database for persistence tests; do not use private or production data.
-2. Add focused HTTP-boundary tests for rejected privileged signup fields, invalid upload MIME/size, payment retry reconciliation, missing/invalid admin CSRF, and admin session regeneration.
-3. Re-run backend typecheck/build after each small commit. Record API, browser, and device results separately; file presence is not runtime verification.
+Work through these gates in order. Each numbered item is a separate small `feat:` or `fix:` commit with a Markdown update. Do not start a later gate because an earlier file merely exists.
+
+### Gate 1 — Native auth correctness and privacy
+
+1. `feat: add native refresh endpoint` — atomically rotate one refresh session, enforce absolute and idle expiry, and return the existing safe response envelope. An isolated MongoDB test must cover the successful rotation and expired token.
+2. `fix: detect native refresh reuse` — revoke all native sessions for the buyer if a revoked token is reused. Test the reuse path with an isolated database.
+3. `fix: enforce native bearer verification` — validate HS256, audience, expiry, subject, role, `authVersion`, and revoked `jti` before native protected routes use a bearer identity.
+4. `feat: add native logout endpoints` — support per-device and all-device logout without changing browser cookie logout. Test revocation and `authVersion` invalidation.
+5. `feat: add native auth boundary tests` — add isolated HTTP tests for malformed input, buyer-only access, credential enumeration resistance, refresh rotation/reuse, logout, and secret-free responses.
+
+### Gate 2 — Contract and backend readiness
+
+6. `fix: define mobile api error contract` — document stable, non-sensitive error codes and the safe DTO allowlists actually returned by mobile routes.
+7. `feat: add verified mobile catalog contract` — audit and document only the existing catalog/search/filter/product-detail endpoints and pagination; do not invent fields or business rules.
+8. `feat: add verified mobile commerce contract` — audit order, checkout, payment, history, and profile routes. Preserve backend price/stock/discount/payment authority and provider boundaries.
+9. `fix: add focused backend security checks` — cover privileged signup fields, uploads, payment retry reconciliation, admin CSRF, and session regeneration with focused checks.
+
+### Gate 3 — Expo foundation, after Gates 1–2 pass
+
+10. `feat: add Expo app foundation` — create `apps/mobile` only after the backend gates; add Expo managed TypeScript, Router, SecureStore, and the smallest supported native dependencies.
+11. `feat: add mobile auth client` — SecureStore adapter, one-refresh retry policy, auth view-model/controllers, and login/signup/profile views. Never persist secrets in query cache or logs.
+12. `feat: add mobile catalog` — catalog, search/filter, product detail, loading/empty/error states, and verified DTO mapping.
+13. `feat: add mobile cart checkout` — local cart draft only; server-confirmed checkout/payment/order states; no card-data proxying.
+14. `feat: add mobile order history` — history and profile routes based only on verified contracts.
+
+### Cross-cutting acceptance gates
+
+- Privacy: request logs, errors, analytics, crash reports, screenshots, and query caches exclude passwords, access/refresh tokens, payment keys, addresses, phone numbers, and private order data unless strictly required by a reviewed backend response.
+- Security: mobile secrets stay in SecureStore; `EXPO_PUBLIC_*` is public-only; API validates all authorization and commerce values; dependency additions are minimal and documented.
+- Logic: the backend is final authority for role, account status, ownership, price, discount, stock, total, payment, and order status. Mobile renders confirmed server state.
+- Verification: record typecheck/build, isolated API/database, browser, Expo bundle, Android, iOS, and device results independently. A passing backend build is not mobile verification.
+- Design: preserve adapted MVC: view -> hook/use case -> typed service -> API client -> backend. Share only pure contracts, validation, mappings, and tokens; never DOM, EJS, SCSS, MUI, native UI, or storage code.
 
 ## Resume command
 
@@ -80,4 +109,4 @@ git diff --check
 git diff
 ```
 
-Preserve the existing commits and do not mix native auth work into a different security change.
+Preserve the existing commits and do not mix native auth work into a different security change. The next implementation task is Gate 1.1: `feat: add native refresh endpoint`.

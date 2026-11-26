@@ -15,3 +15,7 @@ Potential shared packages are limited to verified types, pure validation, mappin
 ## 2026-11-26: native auth is additive and device-scoped
 
 Native buyer authentication will use separate `/auth/native/*` endpoints with a short-lived JWT, opaque rotation refresh token, per-device revocation, and an all-device auth version. Browser cookie behavior remains compatible during rollout. See `NATIVE_AUTH_CONTRACT.md`; implementation is intentionally split into small commits.
+
+## 2026-11-26: security gates precede Expo scaffolding
+
+The backend native-auth lifecycle, safe API contracts, and isolated boundary tests must be complete before creating `apps/mobile`. This prevents a native client from normalizing an incomplete or unsafe login, refresh, logout, checkout, or error contract. The ordered plan lives in `NEXT_STEPS.md`.
