@@ -143,7 +143,7 @@ adminController.getLogin = (req: Request, res: Response) => {
       return res.redirect("/admin/overview");
     }
 
-    res.render("login");
+    res.render("login", { error: null });
   } catch (err) {
     console.log("Error, Login:", err);
     res.redirect("/admin");
@@ -157,17 +157,24 @@ adminController.processLogin = async (req: AdminRequest, res: Response) => {
     const input: LoginInput = req.body;
     const result = await userService.processLogin(input);
 
-    req.session.user = result;
-    req.session.save(function () {
-      res.redirect("/admin/overview");
+    if (result.userType !== UserType.ADMIN) {
+      return res.sendStatus(HttpCode.FORBIDDED);
+    }
+
+    req.session.regenerate((error) => {
+      if (error) return res.sendStatus(HttpCode.INTERNAL_SERVER_ERROR);
+
+      req.session.user = result;
+      req.session.save((saveError) => {
+        if (saveError) return res.sendStatus(HttpCode.INTERNAL_SERVER_ERROR);
+        return res.redirect("/admin/overview");
+      });
     });
   } catch (err) {
     console.log("Error, processLogin:", err);
-    const message =
-      err instanceof Error ? err.message : Message.SOMETHING_WENT_WRONG;
-    res.send(
-      `<script> alert("${message}"); window.location.replace('/admin/login'); </script>`,
-    );
+    return res.status(HttpCode.UNAUTHORIZED).render("login", {
+      error: "Unable to sign in.",
+    });
   }
 };
 

@@ -3,6 +3,9 @@ const routerAdmin = express.Router();
 import adminController from "./controllers/admin.controller";
 import productController from "./controllers/product.controller";
 import orderController from "./controllers/order.controller";
+import { verifyAdminCsrf } from "./libs/middleware/admin-csrf";
+
+routerAdmin.use(verifyAdminCsrf);
 
 /** ADMIN AUTH */
 routerAdmin.get(["/", "/home"], adminController.goHome);
@@ -11,7 +14,7 @@ routerAdmin
   .get("/login", adminController.getLogin)
   .post("/login", adminController.processLogin);
 
-routerAdmin.get("/logout", adminController.logout);
+routerAdmin.post("/logout", adminController.logout);
 routerAdmin.get("/check-me", adminController.checkAuthSession);
 
 /** ADMIN BSSR FRONTEND: OVERVIEW */

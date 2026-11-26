@@ -8,6 +8,10 @@
   const bulkEndpoint = isAdminPage
     ? "/admin/product/bulk-status"
     : "/seller/product/bulk-status";
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  const jsonHeaders = csrfToken
+    ? { "Content-Type": "application/json", "X-CSRF-Token": csrfToken }
+    : { "Content-Type": "application/json" };
 
   function updateSelectedCount() {
     const selected = document.querySelectorAll("[data-product-select]:checked").length;
@@ -33,7 +37,7 @@
       try {
         const response = await fetch(`${updateEndpoint}/${button.dataset.productId}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: jsonHeaders,
           body: JSON.stringify({ productFeatured: !previousValue }),
         });
 
@@ -62,7 +66,7 @@
       try {
         const response = await fetch(`${updateEndpoint}/${select.dataset.productId}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: jsonHeaders,
           body: JSON.stringify({ productStatus: select.value }),
         });
 
@@ -99,7 +103,7 @@
       try {
         const response = await fetch(bulkEndpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: jsonHeaders,
           body: JSON.stringify({ productIds, productStatus }),
         });
 

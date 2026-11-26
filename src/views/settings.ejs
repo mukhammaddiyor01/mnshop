@@ -6,6 +6,7 @@
     <section class="glass-panel settings-form-panel">
       <h3>Site Settings</h3>
       <form class="admin-form" action="/admin/settings" method="POST">
+        <input type="hidden" name="csrf" value="<%= adminCsrfToken %>" />
         <label>Site name<input name="siteName" value="<%= settings.siteName %>" required /></label>
         <label>Contact email<input name="contactEmail" type="email" value="<%= settings.contactEmail %>" required /></label>
         <label>Default commission %<input name="defaultCommission" type="number" min="0" max="100" value="<%= settings.defaultCommission %>" required /></label>

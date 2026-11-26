@@ -33,7 +33,9 @@ button { color: inherit; }
 .side-link svg { width: 17px; height: 17px; }
 .side-link:hover { background: rgba(255, 255, 255, 0.1); color: rgb(7, 134, 194); }
 .side-link.active { background: rgb(7, 134, 194); color: #000; }
+.admin-sidebar > form { margin-top: auto; }
 .sidebar-logout { margin-top: auto; border: 1px solid rgba(244, 63, 94, 0.22); color: #fda4af; }
+.sidebar-logout[type="submit"] { width: 100%; border: 1px solid rgba(244, 63, 94, 0.22); background: transparent; text-align: left; }
 .sidebar-logout:hover { border-color: rgba(244, 63, 94, 0.42); background: rgba(244, 63, 94, 0.1); color: #fecdd3; }
 .sidebar-backdrop { display: none; }
 .admin-main { display: grid; align-content: start; gap: 24px; min-width: 0; }

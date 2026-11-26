@@ -1,4 +1,5 @@
 (function () {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
   document.querySelectorAll(".user-status").forEach(function (select) {
     select.addEventListener("focus", function () {
       select.dataset.previousStatus = select.value;
@@ -11,7 +12,10 @@
       try {
         const response = await fetch("/admin/user/edit", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": csrfToken,
+          },
           body: JSON.stringify({
             _id: select.dataset.userId,
             userStatus: select.value,

@@ -9,6 +9,7 @@ import { MORGAN_FORMAT } from "./libs/config";
 import session from "express-session";
 import ConnectMongoDB from "connect-mongodb-session";
 import { T } from "./libs/types/common";
+import { issueAdminCsrf } from "./libs/middleware/admin-csrf";
 
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
@@ -18,9 +19,21 @@ const store = new MongoDBStore({
 
 /** 1-Entrance */
 const app = express();
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
 console.log("__dirname:", __dirname);
 
 morgan.token("safe-url", (req) => req.url?.split("?", 1)[0] || "-");
+
+app.use((_req, res, next) => {
+    res.set("X-Content-Type-Options", "nosniff");
+    res.set("X-Frame-Options", "DENY");
+    res.set("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'self'");
+    if (process.env.NODE_ENV === "production") {
+        res.set("Strict-Transport-Security", "max-age=31536000");
+    }
+    next();
+});
 
 const allowedFrontendOrigins = new Set([
     process.env.BUYER_FRONTEND_URL || "http://localhost:1214",
@@ -70,12 +83,17 @@ app.use(
         secret: String(process.env.SESSION_SECRET),
         cookie: {
             maxAge: 1000 * 3600 * 3,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
         },
         store: store,
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false
     })
 );
+
+app.use("/admin", issueAdminCsrf);
 
 
 app.use(function(req, res, next) {
