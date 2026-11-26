@@ -1,0 +1,13 @@
+# Decisions
+
+## 2026-11-26: documentation before mobile scaffolding
+
+Expo/React Native architecture, libraries, and security gates are documented before creating `apps/mobile` or a workspace. Reason: backend/mobile authentication contract is incomplete, and the existing backend and CRA storefront are separate repositories.
+
+## 2026-11-26: small logical commits
+
+Every implementation or documentation unit is committed separately with only `fix: <description>` or `feat: <description>`. This preserves reviewable history and keeps work within the incremental-change limit.
+
+## 2026-11-26: platform-independent sharing only
+
+Potential shared packages are limited to verified types, pure validation, mappings, domain rules, and design tokens. Platform UI and storage remain separate.

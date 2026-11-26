@@ -44,6 +44,11 @@ All four committed stages passed `tsc --noEmit --incremental false`.
 - TypeScript no-emit check, production build, diff whitespace check, and direct CSRF middleware checks passed. Re-run the CSRF check with `npm run test:admin-csrf`.
 - Browser and production proxy behavior have not been tested.
 
+6. `feat: add mobile architecture guides`
+
+- Added `AGENTS.md`, `SKILLS.md`, `skills/mnshop-mobile-development/SKILL.md`, and the `docs/ai/` source-of-truth set.
+- Documented Expo as a future target only; no mobile code, dependency, workspace migration, API behavior, database, payment provider, or deployment changed.
+
 ## Remaining findings
 
 1. Define the native auth contract before changing responses:
