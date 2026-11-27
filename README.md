@@ -14,3 +14,11 @@ can add cart
 can do payment
 
 Seller:
+can see client information 
+can update delivery information 
+can create products
+can update products
+
+MNShop mobile Application:
+Used technologies:
+React-Native, Expo Framework, React
